@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -108,17 +109,24 @@ class _MyHomePageState extends State<MyHomePage> {
             Stack(
               alignment: Alignment.centerLeft,
               children: [
-                SelectableText.rich(
-                  TextSpan(
-                    text: 'First ',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    children: const <TextSpan>[
-                      TextSpan(
-                          text: 'SECOND ',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      TextSpan(text: 'Third'),
-                    ],
+                GestureDetector(
+                  child: SelectableText.rich(
+                    TextSpan(
+                      text: 'First ',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      children: const <TextSpan>[
+                        TextSpan(
+                            text: 'SECOND ',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        TextSpan(text: 'Third'),
+                      ],
+                    ),
                   ),
+                  onTapDown: (details) {
+                    if (kDebugMode) {
+                      print(details.globalPosition);
+                    }
+                  },
                 ),
                 Container(
                   width: 2,
