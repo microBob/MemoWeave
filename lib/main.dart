@@ -108,7 +108,8 @@ class _MyHomePageState extends State<MyHomePage> {
             Stack(
               alignment: Alignment.centerLeft,
               children: [
-                SelectableText.rich(TextSpan(
+                SelectableText.rich(
+                  TextSpan(
                     text: 'First ',
                     style: Theme.of(context).textTheme.bodyMedium,
                     children: const <TextSpan>[
@@ -116,7 +117,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           text: 'SECOND ',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                       TextSpan(text: 'Third'),
-                    ])),
+                    ],
+                  ),
+                ),
                 Container(
                   width: 2,
                   height: 18,
