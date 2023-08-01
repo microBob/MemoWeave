@@ -108,9 +108,15 @@ class _MyHomePageState extends State<MyHomePage> {
             Stack(
               alignment: Alignment.centerLeft,
               children: [
-                const Text(
-                  'You have pushed the button this many times:',
-                ),
+                SelectableText.rich(TextSpan(
+                    text: 'First ',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    children: const <TextSpan>[
+                      TextSpan(
+                          text: 'SECOND ',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: 'Third'),
+                    ])),
                 Container(
                   width: 2,
                   height: 18,
