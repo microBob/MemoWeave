@@ -22,7 +22,12 @@ class MemoWeave extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           title: const Text('MemoWeave'),
         ),
-        body: const Block(),
+        body: ListView(
+          children: const [
+            Block(),
+            Block(),
+          ],
+        ),
       ),
     );
   }
