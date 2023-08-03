@@ -3,7 +3,7 @@ import 'package:memoweave/viewmodels/editor_viewmodel.dart';
 
 /// Text editor interface
 ///
-/// Combines [BlockWidget]s together and handles input
+/// Renders text, handles input, and drawing the cursor
 class EditorWidget extends StatelessWidget {
   const EditorWidget({super.key});
 
@@ -14,7 +14,9 @@ class EditorWidget extends StatelessWidget {
         Expanded(
           child: Stack(
             children: [
-              SelectableText.rich(EditorViewModel().rootToTextSpan()),
+              SelectableText.rich(
+                EditorViewModel().rootToTextSpan(),
+              ),
             ],
           ),
         ),
