@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:memoweave/widgets/block_widget.dart';
+import 'package:memoweave/viewmodels/editor_viewmodel.dart';
 
 /// Text editor interface
 ///
@@ -9,21 +9,15 @@ class EditorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
         Expanded(
-            child: Stack(
-          children: [
-            SelectableText.rich(
-              TextSpan(
-                children: [
-                  BlockWidget(id: 'first'),
-                  BlockWidget(id: 'second'),
-                ],
-              ),
-            ),
-          ],
-        ))
+          child: Stack(
+            children: [
+              SelectableText.rich(EditorViewModel().rootToTextSpan()),
+            ],
+          ),
+        ),
       ],
     );
   }
