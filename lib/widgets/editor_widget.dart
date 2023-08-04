@@ -9,17 +9,19 @@ class EditorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Stack(
       children: [
-        Expanded(
-          child: Stack(
-            children: [
-              SelectableText.rich(
-                EditorViewModel().rootToTextSpan(),
-              ),
-            ],
-          ),
+        SelectableText.rich(
+          EditorViewModel().rootToTextSpan(),
         ),
+        AnimatedContainer(
+          width: 2,
+          height: 18,
+          alignment: Alignment.topLeft,
+          margin: const EdgeInsets.only(left: 18, top: 1),
+          duration: const Duration(milliseconds: 100),
+          color: Theme.of(context).colorScheme.onSurface,
+        )
       ],
     );
   }
