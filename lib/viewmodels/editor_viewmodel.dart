@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:memoweave/models/block_model.dart';
 
 /// Text editor logic
@@ -16,6 +17,15 @@ class EditorViewModel {
       BlockModel('My ID\n'),
     ],
   );
+
+  void handleTap(TapDownDetails details, RenderParagraph renderParagraph) {
+    final tapAsTextPosition =
+        renderParagraph.getPositionForOffset(details.localPosition);
+    final caretOffset =
+        renderParagraph.getOffsetForCaret(tapAsTextPosition, Rect.zero);
+    print(
+        'Tap: ${details.localPosition}; TP: $tapAsTextPosition; Offset: $caretOffset');
+  }
 
   /// Render the text into a [TextSpan]
   TextSpan rootToTextSpan() {

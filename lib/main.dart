@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memoweave/widgets/editor_widget.dart';
 
 void main() {
-  runApp(const MemoWeave());
+  runApp(const ProviderScope(child: MemoWeave()));
 }
 
 class MemoWeave extends StatelessWidget {
