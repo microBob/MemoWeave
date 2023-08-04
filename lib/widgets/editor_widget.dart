@@ -1,17 +1,17 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memoweave/viewmodels/editor_viewmodel.dart';
 
 /// Text editor interface
 ///
 /// Renders text, handles input, and drawing the cursor
-class EditorWidget extends StatelessWidget {
+class EditorWidget extends ConsumerWidget {
   const EditorWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Listener(
       child: Stack(
         children: [
           SelectableText.rich(
@@ -24,39 +24,48 @@ class EditorWidget extends StatelessWidget {
             margin: const EdgeInsets.only(left: 18, top: 1),
             duration: const Duration(milliseconds: 100),
             color: Theme.of(context).colorScheme.onSurface,
-          )
+          ),
         ],
       ),
-      onTapDown: (details) {
-        print('Hello');
-        if (kDebugMode) {
-          print('World');
-        }
-        EditorViewModel().handleTap(
-            details, _getRenderParagraph(context.findRenderObject()));
-      },
+      onPointerDown: (pointerDownEvent) => EditorViewModel()
+          .handleTap(pointerDownEvent, _getRenderParagraph(context)),
     );
   }
 
-  /// Get the [RenderParagraph] in the [SelectableText.rich]
+  /// Get the [RenderParagraph] in the [SelectableText.rich].
   ///
-  /// [renderObject] must be from the top level [GestureDetector]
-  /// Should never return `null`
-  RenderParagraph _getRenderParagraph(RenderObject? renderObject) {
-    // If the object is the RenderParagraph we have found it and can exit
-    if (renderObject is RenderParagraph) {
-      return renderObject;
-    } else if (renderObject == null) {
-      // Should never reach this state
-      throw Exception("Couldn't find RenderObject. It doesn't exist.");
+  /// [renderObject] must be from the top level [Listener].
+  /// Should never fail.
+  RenderParagraph _getRenderParagraph(BuildContext listenerBuildContext) {
+    // Check if we started in the Listener.
+    if (listenerBuildContext.findRenderObject() is! RenderPointerListener) {
+      throw Exception('Invalid input: Expected to start in Listener');
     }
 
-    // Recurse through children
-    renderObject.visitChildren((child) {
-      _getRenderParagraph(child);
-    });
+    // Hierarchy should be Stack -> SelectableText.
+    RenderParagraph? renderParagraph;
+    listenerBuildContext.visitChildElements(
+      (stackElement) {
+        // Continue when at Stack
+        if (stackElement.findRenderObject() is RenderStack) {
+          // Check Stack for SelectableText.
+          stackElement.visitChildren(
+            (element) {
+              if (element.findRenderObject() is RenderParagraph) {
+                renderParagraph = element.findRenderObject() as RenderParagraph;
 
-    // Should never reach this state
-    throw Exception("Couldn't find RenderParagraph. Search depth too deep.");
+                // Exit once found.
+                return;
+              }
+            },
+          );
+        }
+      },
+    );
+
+    if (renderParagraph != null) {
+      return renderParagraph!;
+    }
+    throw Exception("Invalid state: Couldn't find RenderParagraph.");
   }
 }

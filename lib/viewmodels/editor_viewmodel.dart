@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:memoweave/models/block_model.dart';
 
@@ -18,13 +18,16 @@ class EditorViewModel {
     ],
   );
 
-  void handleTap(TapDownDetails details, RenderParagraph renderParagraph) {
+  void handleTap(
+      PointerDownEvent pointerDownEvent, RenderParagraph renderParagraph) {
     final tapAsTextPosition =
-        renderParagraph.getPositionForOffset(details.localPosition);
+        renderParagraph.getPositionForOffset(pointerDownEvent.localPosition);
     final caretOffset =
         renderParagraph.getOffsetForCaret(tapAsTextPosition, Rect.zero);
-    print(
-        'Tap: ${details.localPosition}; TP: $tapAsTextPosition; Offset: $caretOffset');
+    if (kDebugMode) {
+      print(
+          'Tap: ${pointerDownEvent.localPosition}; TP: $tapAsTextPosition; Offset: $caretOffset');
+    }
   }
 
   /// Render the text into a [TextSpan]
