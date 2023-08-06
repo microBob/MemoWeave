@@ -9,4 +9,9 @@ class EditorState {
   EditorState({required this.textKey});
 
   EditorState.rootBlock({required this.textKey, required this.rootBlock});
+
+  EditorState.copy(
+      {required this.textKey,
+      required this.cursorInsets,
+      required this.rootBlock});
 }

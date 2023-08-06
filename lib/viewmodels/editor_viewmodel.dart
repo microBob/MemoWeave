@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:memoweave/models/block_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -54,11 +55,17 @@ class EditorViewModel extends _$EditorViewModel {
 
     // Compute cursor location
     final tapAsTextPosition =
-        _renderParagraph!.getPositionForOffset(pointerDownEvent.localPosition);
+    _renderParagraph!.getPositionForOffset(pointerDownEvent.localPosition);
     final caretOffset =
-        _renderParagraph!.getOffsetForCaret(tapAsTextPosition, Rect.zero);
-    state.cursorInsets =
-        EdgeInsets.only(left: caretOffset.dx, top: caretOffset.dy);
+    _renderParagraph!.getOffsetForCaret(tapAsTextPosition, Rect.zero);
+    state = EditorState.copy(
+        textKey: textKey,
+        cursorInsets:
+        EdgeInsets.only(left: caretOffset.dx, top: caretOffset.dy),
+        rootBlock: state.rootBlock);
+    if (kDebugMode) {
+      print('cursorInsets: ${state.cursorInsets}');
+    }
   }
 
   /// Render the text into a [TextSpan]
