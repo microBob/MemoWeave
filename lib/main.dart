@@ -19,11 +19,17 @@ class MemoWeave extends StatelessWidget {
         useMaterial3: true,
       ),
       home: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            title: const Text('MemoWeave'),
-          ),
-          body: const EditorWidget()),
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          title: const Text('MemoWeave'),
+        ),
+        body: const Column(
+          children: [
+            EditorWidget(),
+            EditorWidget(),
+          ],
+        ),
+      ),
     );
   }
 }
