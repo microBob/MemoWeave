@@ -23,7 +23,7 @@ class MemoWeave extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           title: const Text('MemoWeave'),
         ),
-        body: const Column(
+        body: Column(
           children: [
             EditorWidget(),
             EditorWidget(),

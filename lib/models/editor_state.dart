@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:memoweave/models/block_model.dart';
 
 class EditorState {
-  final GlobalKey textKey = GlobalKey();
+  final GlobalKey textKey;
   EdgeInsets cursorInsets = EdgeInsets.zero;
   BlockModel rootBlock = BlockModel.empty();
 
-  EditorState();
+  EditorState({required this.textKey});
 
-  EditorState.rootBlock(this.rootBlock);
+  EditorState.rootBlock({required this.textKey, required this.rootBlock});
 }

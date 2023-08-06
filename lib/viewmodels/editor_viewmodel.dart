@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:memoweave/models/block_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,10 +12,12 @@ part 'editor_viewmodel.g.dart';
 /// Utilized by [EditorWidget]
 @riverpod
 class EditorViewModel extends _$EditorViewModel {
+  // Initialize a default editor
   @override
-  EditorState build() {
+  EditorState build(GlobalKey textKey) {
     return EditorState.rootBlock(
-      BlockModel.join(
+      textKey: textKey,
+      rootBlock: BlockModel.join(
         [
           BlockModel('First '),
           BlockModel('Second ', style: 'bold'),
@@ -29,27 +30,35 @@ class EditorViewModel extends _$EditorViewModel {
     );
   }
 
-  // Getters
-  GlobalKey get textKey => state.textKey;
-
-  EdgeInsets get cursorInsets => state.cursorInsets;
-
-  BlockModel get rootBlock => state.rootBlock;
+  /// Cached reference to the text's [RenderParagraph]
+  RenderParagraph? _renderParagraph;
 
   void handleTap(PointerDownEvent pointerDownEvent) {
-    if (kDebugMode) {
-      print('Key: ${textKey}');
+    // RenderParagraph may not have been found yet
+    if (_renderParagraph == null) {
+      // Extract RenderParagraph from key
+      // Widget tree should be Text -> MouseRegion -> RichText (RenderParagraph)
+      textKey.currentContext?.visitChildElements((element) {
+        // This should be the MouseRegion
+        element.visitChildElements((element) {
+          // This should be the RichText
+          if (element.findRenderObject() is RenderParagraph) {
+            _renderParagraph = element.findRenderObject() as RenderParagraph;
+          } else {
+            throw const FormatException(
+                'Could not find RenderParagraph with the given key');
+          }
+        });
+      });
     }
-    RenderParagraph renderParagraph =
-        textKey.currentContext?.findRenderObject() as RenderParagraph;
+
+    // Compute cursor location
     final tapAsTextPosition =
-        renderParagraph.getPositionForOffset(pointerDownEvent.localPosition);
+        _renderParagraph!.getPositionForOffset(pointerDownEvent.localPosition);
     final caretOffset =
-        renderParagraph.getOffsetForCaret(tapAsTextPosition, Rect.zero);
-    if (kDebugMode) {
-      print(
-          'Tap: ${pointerDownEvent.localPosition}; TP: $tapAsTextPosition; Offset: $caretOffset');
-    }
+        _renderParagraph!.getOffsetForCaret(tapAsTextPosition, Rect.zero);
+    state.cursorInsets =
+        EdgeInsets.only(left: caretOffset.dx, top: caretOffset.dy);
   }
 
   /// Render the text into a [TextSpan]
