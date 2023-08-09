@@ -1,12 +1,18 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:memoweave/models/block_model.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/editor_state.dart';
 
 part 'editor_viewmodel.g.dart';
+
+@riverpod
+Future<String> fetchDatabase(FetchDatabaseRef ref) async {
+  final dir = await getApplicationDocumentsDirectory();
+  return dir.path;
+}
 
 /// Text editor logic
 ///
@@ -55,17 +61,16 @@ class EditorViewModel extends _$EditorViewModel {
 
     // Compute cursor location
     final tapAsTextPosition =
-    _renderParagraph!.getPositionForOffset(pointerDownEvent.localPosition);
+        _renderParagraph!.getPositionForOffset(pointerDownEvent.localPosition);
     final caretOffset =
-    _renderParagraph!.getOffsetForCaret(tapAsTextPosition, Rect.zero);
+        _renderParagraph!.getOffsetForCaret(tapAsTextPosition, Rect.zero);
+
+    // Update the cursor location in state
     state = EditorState.copy(
-        textKey: textKey,
-        cursorInsets:
-        EdgeInsets.only(left: caretOffset.dx, top: caretOffset.dy),
-        rootBlock: state.rootBlock);
-    if (kDebugMode) {
-      print('cursorInsets: ${state.cursorInsets}');
-    }
+      textKey: textKey,
+      cursorInsets: EdgeInsets.only(left: caretOffset.dx, top: caretOffset.dy),
+      rootBlock: state.rootBlock,
+    );
   }
 
   /// Render the text into a [TextSpan]
@@ -76,9 +81,9 @@ class EditorViewModel extends _$EditorViewModel {
   /// Conversion method to build a [TextSpan] from [BlockModel]s
   TextSpan _blockModelToTextSpan(BlockModel root) {
     return TextSpan(
-        text: root.text,
-        children: root.children
-            ?.map((child) => _blockModelToTextSpan(child))
-            .toList());
+      text: root.text,
+      children:
+          root.children?.map((child) => _blockModelToTextSpan(child)).toList(),
+    );
   }
 }

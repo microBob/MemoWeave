@@ -6,7 +6,23 @@ part of 'editor_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editorViewModelHash() => r'4f22f4cb4200167d261103f6d69a730a9736e61f';
+String _$fetchDatabaseHash() => r'7b38397980585dddb95e77ca2bf57e6a4731ea02';
+
+/// See also [fetchDatabase].
+@ProviderFor(fetchDatabase)
+final fetchDatabaseProvider = AutoDisposeFutureProvider<String>.internal(
+  fetchDatabase,
+  name: r'fetchDatabaseProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$fetchDatabaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef FetchDatabaseRef = AutoDisposeFutureProviderRef<String>;
+
+String _$editorViewModelHash() => r'd0e1ed09bcc718af21845d36eb3003e7cd007896';
 
 /// Copied from Dart SDK
 class _SystemHash {
