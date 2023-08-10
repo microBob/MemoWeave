@@ -1,18 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:memoweave/models/block_model.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/editor_state.dart';
 
 part 'editor_viewmodel.g.dart';
-
-@riverpod
-Future<String> fetchDatabase(FetchDatabaseRef ref) async {
-  final dir = await getApplicationDocumentsDirectory();
-  return dir.path;
-}
 
 /// Text editor logic
 ///

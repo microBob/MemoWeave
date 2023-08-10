@@ -12,39 +12,27 @@ class EditorWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final database = ref.watch(fetchDatabaseProvider);
-
     return Listener(
       onPointerDown:
           ref.read(editorViewModelProvider(textKey).notifier).handleTap,
-      child: Column(
+      child: Stack(
         children: [
-          Stack(
-            children: [
-              SelectionArea(
-                child: Text.rich(
-                  key: textKey,
-                  ref
-                      .watch(editorViewModelProvider(textKey).notifier)
-                      .rootToTextSpan(),
-                ),
-              ),
-              AnimatedContainer(
-                width: 2,
-                height: 18,
-                alignment: Alignment.topLeft,
-                margin:
-                    ref.watch(editorViewModelProvider(textKey)).cursorInsets,
-                duration: const Duration(milliseconds: 100),
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ],
+          SelectionArea(
+            child: Text.rich(
+              key: textKey,
+              ref
+                  .watch(editorViewModelProvider(textKey).notifier)
+                  .rootToTextSpan(),
+            ),
           ),
-          database.when(
-            data: (loc) => Text(loc),
-            error: (err, stack) => Text('Error: $err'),
-            loading: () => const CircularProgressIndicator(),
-          )
+          AnimatedContainer(
+            width: 2,
+            height: 18,
+            alignment: Alignment.topLeft,
+            margin: ref.watch(editorViewModelProvider(textKey)).cursorInsets,
+            duration: const Duration(milliseconds: 100),
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ],
       ),
     );
