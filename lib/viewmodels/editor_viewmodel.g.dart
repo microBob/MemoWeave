@@ -6,7 +6,7 @@ part of 'editor_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editorViewModelHash() => r'4f22f4cb4200167d261103f6d69a730a9736e61f';
+String _$editorViewModelHash() => r'd0e1ed09bcc718af21845d36eb3003e7cd007896';
 
 /// Copied from Dart SDK
 class _SystemHash {
