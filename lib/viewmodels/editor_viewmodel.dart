@@ -2,7 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:isar/isar.dart';
+import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/block_model.dart';
+import 'package:memoweave/models/text_node.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/editor_state.dart';
@@ -25,22 +28,18 @@ class EditorViewModel extends _$EditorViewModel {
 
   /// Get props and initialize a default editor
   @override
-  EditorState build(GlobalKey textKey, FocusNode inputFocusNode) {
+  EditorState build(GlobalKey textKey, FocusNode inputFocusNode,
+      {Id? blockId}) {
     _textKey = textKey;
     _inputFocusNode = inputFocusNode;
 
-    return EditorState.rootBlock(
-      rootBlock: BlockModel.join(
-        [
-          BlockModel('First '),
-          BlockModel('Second ', style: 'bold'),
-          BlockModel('Third\n'),
-          BlockModel(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Diam donec adipiscing tristique risus nec feugiat. Vestibulum morbi blandit cursus risus. Faucibus in ornare quam viverra orci sagittis eu volutpat odio. Quam viverra orci sagittis eu volutpat odio facilisis mauris sit. Mattis rhoncus urna neque viverra justo nec ultrices. Molestie nunc non blandit massa enim nec dui nunc mattis. Aliquet bibendum enim facilisis gravida neque. Purus faucibus ornare suspendisse sed nisi lacus. Tristique sollicitudin nibh sit amet commodo nulla facilisi. Cras tincidunt lobortis feugiat vivamus at augue.\n'),
-          BlockModel('My ID\n'),
-        ],
-      ),
-    );
+    final blockCollection = BlockCollection()
+      ..text = [
+        TextNode.plain(text: 'Hello World'),
+        TextNode.plain(text: ' this is a test.')
+      ];
+
+    return EditorState()..rootBlock = blockCollection;
   }
 
   void handleTap(PointerDownEvent pointerDownEvent) {
@@ -87,11 +86,11 @@ class EditorViewModel extends _$EditorViewModel {
   }
 
   /// Conversion method to build a [TextSpan] from [BlockModel]s
-  TextSpan _blockModelToTextSpan(BlockModel root) {
+  TextSpan _blockModelToTextSpan(BlockCollection root) {
     return TextSpan(
-      text: root.text,
+      text: root.text.map((textNode) => textNode.text).join(),
       children:
-          root.children?.map((child) => _blockModelToTextSpan(child)).toList(),
+          root.children.map((child) => _blockModelToTextSpan(child)).toList(),
     );
   }
 }

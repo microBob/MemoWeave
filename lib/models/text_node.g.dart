@@ -36,18 +36,8 @@ int _textNodeEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  {
-    final value = object.format;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.text;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.format.length * 3;
+  bytesCount += 3 + object.text.length * 3;
   return bytesCount;
 }
 
@@ -68,8 +58,8 @@ TextNode _textNodeDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = TextNode();
-  object.format = reader.readStringOrNull(offsets[0]);
-  object.text = reader.readStringOrNull(offsets[1]);
+  object.format = reader.readString(offsets[0]);
+  object.text = reader.readString(offsets[1]);
   return object;
 }
 
@@ -81,9 +71,9 @@ P _textNodeDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -91,24 +81,8 @@ P _textNodeDeserializeProp<P>(
 
 extension TextNodeQueryFilter
     on QueryBuilder<TextNode, TextNode, QFilterCondition> {
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'format',
-      ));
-    });
-  }
-
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'format',
-      ));
-    });
-  }
-
   QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -121,7 +95,7 @@ extension TextNodeQueryFilter
   }
 
   QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -136,7 +110,7 @@ extension TextNodeQueryFilter
   }
 
   QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -151,8 +125,8 @@ extension TextNodeQueryFilter
   }
 
   QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -237,24 +211,8 @@ extension TextNodeQueryFilter
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'text',
-      ));
-    });
-  }
-
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'text',
-      ));
-    });
-  }
-
   QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -267,7 +225,7 @@ extension TextNodeQueryFilter
   }
 
   QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -282,7 +240,7 @@ extension TextNodeQueryFilter
   }
 
   QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -297,8 +255,8 @@ extension TextNodeQueryFilter
   }
 
   QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,

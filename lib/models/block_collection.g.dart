@@ -17,13 +17,8 @@ const BlockCollectionSchema = CollectionSchema(
   name: r'BlockCollection',
   id: 5417308939645646360,
   properties: {
-    r'children': PropertySchema(
-      id: 0,
-      name: r'children',
-      type: IsarType.longList,
-    ),
     r'text': PropertySchema(
-      id: 1,
+      id: 0,
       name: r'text',
       type: IsarType.objectList,
       target: r'TextNode',
@@ -35,7 +30,14 @@ const BlockCollectionSchema = CollectionSchema(
   deserializeProp: _blockCollectionDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'children': LinkSchema(
+      id: 2596747912997977508,
+      name: r'children',
+      target: r'BlockCollection',
+      single: false,
+    )
+  },
   embeddedSchemas: {r'TextNode': TextNodeSchema},
   getId: _blockCollectionGetId,
   getLinks: _blockCollectionGetLinks,
@@ -49,23 +51,12 @@ int _blockCollectionEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.text.length * 3;
   {
-    final value = object.children;
-    if (value != null) {
-      bytesCount += 3 + value.length * 8;
-    }
-  }
-  {
-    final list = object.text;
-    if (list != null) {
-      bytesCount += 3 + list.length * 3;
-      {
-        final offsets = allOffsets[TextNode]!;
-        for (var i = 0; i < list.length; i++) {
-          final value = list[i];
-          bytesCount += TextNodeSchema.estimateSize(value, offsets, allOffsets);
-        }
-      }
+    final offsets = allOffsets[TextNode]!;
+    for (var i = 0; i < object.text.length; i++) {
+      final value = object.text[i];
+      bytesCount += TextNodeSchema.estimateSize(value, offsets, allOffsets);
     }
   }
   return bytesCount;
@@ -77,9 +68,8 @@ void _blockCollectionSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLongList(offsets[0], object.children);
   writer.writeObjectList<TextNode>(
-    offsets[1],
+    offsets[0],
     allOffsets,
     TextNodeSchema.serialize,
     object.text,
@@ -93,13 +83,13 @@ BlockCollection _blockCollectionDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = BlockCollection();
-  object.children = reader.readLongList(offsets[0]);
   object.text = reader.readObjectList<TextNode>(
-    offsets[1],
-    TextNodeSchema.deserialize,
-    allOffsets,
-    TextNode(),
-  );
+        offsets[0],
+        TextNodeSchema.deserialize,
+        allOffsets,
+        TextNode(),
+      ) ??
+      [];
   return object;
 }
 
@@ -111,14 +101,13 @@ P _blockCollectionDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLongList(offset)) as P;
-    case 1:
       return (reader.readObjectList<TextNode>(
-        offset,
-        TextNodeSchema.deserialize,
-        allOffsets,
-        TextNode(),
-      )) as P;
+            offset,
+            TextNodeSchema.deserialize,
+            allOffsets,
+            TextNode(),
+          ) ??
+          []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -129,11 +118,14 @@ Id _blockCollectionGetId(BlockCollection object) {
 }
 
 List<IsarLinkBase<dynamic>> _blockCollectionGetLinks(BlockCollection object) {
-  return [];
+  return [object.children];
 }
 
 void _blockCollectionAttach(
-    IsarCollection<dynamic> col, Id id, BlockCollection object) {}
+    IsarCollection<dynamic> col, Id id, BlockCollection object) {
+  object.children
+      .attach(col, col.isar.collection<BlockCollection>(), r'children', id);
+}
 
 extension BlockCollectionQueryWhereSort
     on QueryBuilder<BlockCollection, BlockCollection, QWhere> {
@@ -218,169 +210,6 @@ extension BlockCollectionQueryWhere
 extension BlockCollectionQueryFilter
     on QueryBuilder<BlockCollection, BlockCollection, QFilterCondition> {
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'children',
-      ));
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'children',
-      ));
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenElementEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'children',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenElementGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'children',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenElementLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'children',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenElementBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'children',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenLengthEqualTo(int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'children',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'children',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'children',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'children',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'children',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'children',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
       idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -432,24 +261,6 @@ extension BlockCollectionQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      textIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'text',
-      ));
-    });
-  }
-
-  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      textIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'text',
       ));
     });
   }
@@ -555,7 +366,68 @@ extension BlockCollectionQueryObject
 }
 
 extension BlockCollectionQueryLinks
-    on QueryBuilder<BlockCollection, BlockCollection, QFilterCondition> {}
+    on QueryBuilder<BlockCollection, BlockCollection, QFilterCondition> {
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      children(FilterQuery<BlockCollection> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'children');
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      childrenLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'children', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      childrenIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'children', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      childrenIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'children', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      childrenLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'children', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      childrenLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'children', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      childrenLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'children', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
 
 extension BlockCollectionQuerySortBy
     on QueryBuilder<BlockCollection, BlockCollection, QSortBy> {}
@@ -576,14 +448,7 @@ extension BlockCollectionQuerySortThenBy
 }
 
 extension BlockCollectionQueryWhereDistinct
-    on QueryBuilder<BlockCollection, BlockCollection, QDistinct> {
-  QueryBuilder<BlockCollection, BlockCollection, QDistinct>
-      distinctByChildren() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'children');
-    });
-  }
-}
+    on QueryBuilder<BlockCollection, BlockCollection, QDistinct> {}
 
 extension BlockCollectionQueryProperty
     on QueryBuilder<BlockCollection, BlockCollection, QQueryProperty> {
@@ -593,14 +458,7 @@ extension BlockCollectionQueryProperty
     });
   }
 
-  QueryBuilder<BlockCollection, List<int>?, QQueryOperations>
-      childrenProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'children');
-    });
-  }
-
-  QueryBuilder<BlockCollection, List<TextNode>?, QQueryOperations>
+  QueryBuilder<BlockCollection, List<TextNode>, QQueryOperations>
       textProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'text');

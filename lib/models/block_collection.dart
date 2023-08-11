@@ -10,8 +10,10 @@ class BlockCollection {
   final Id id = Isar.autoIncrement;
 
   /// Text that comprise the contents of this block.
-  List<TextNode>? text;
+  List<TextNode> text = [];
 
-  /// Ordered list of hierarchical children to this block.
-  List<Id>? children;
+  /// Ordered set of hierarchical children to this block.
+  final children = IsarLinks<BlockCollection>();
+
+  BlockCollection();
 }

@@ -6,8 +6,12 @@ part 'text_node.g.dart';
 @embedded
 class TextNode {
   /// Text content.
-  String? text;
+  String text = '';
 
   // Text format.
-  String? format;
+  String format = '';
+
+  TextNode();
+
+  TextNode.plain({required this.text});
 }

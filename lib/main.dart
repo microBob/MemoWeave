@@ -29,6 +29,7 @@ class MemoWeave extends ConsumerWidget {
         body: SafeArea(
           minimum: const EdgeInsets.all(8),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               EditorWidget(),
               database.when(

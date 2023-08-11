@@ -6,7 +6,7 @@ part of 'editor_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editorViewModelHash() => r'c0a9271e7b39f08fcc3968884cb7b0d11f793bc3';
+String _$editorViewModelHash() => r'aef1cf924e8af955729f5188a163f623940577a6';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -33,11 +33,13 @@ abstract class _$EditorViewModel
     extends BuildlessAutoDisposeNotifier<EditorState> {
   late final GlobalKey<State<StatefulWidget>> textKey;
   late final FocusNode inputFocusNode;
+  late final int? blockId;
 
   EditorState build(
     GlobalKey<State<StatefulWidget>> textKey,
-    FocusNode inputFocusNode,
-  );
+    FocusNode inputFocusNode, {
+    int? blockId,
+  });
 }
 
 /// Text editor logic
@@ -68,11 +70,13 @@ class EditorViewModelFamily extends Family<EditorState> {
   /// Copied from [EditorViewModel].
   EditorViewModelProvider call(
     GlobalKey<State<StatefulWidget>> textKey,
-    FocusNode inputFocusNode,
-  ) {
+    FocusNode inputFocusNode, {
+    int? blockId,
+  }) {
     return EditorViewModelProvider(
       textKey,
       inputFocusNode,
+      blockId: blockId,
     );
   }
 
@@ -83,6 +87,7 @@ class EditorViewModelFamily extends Family<EditorState> {
     return call(
       provider.textKey,
       provider.inputFocusNode,
+      blockId: provider.blockId,
     );
   }
 
@@ -115,11 +120,13 @@ class EditorViewModelProvider
   /// Copied from [EditorViewModel].
   EditorViewModelProvider(
     this.textKey,
-    this.inputFocusNode,
-  ) : super.internal(
+    this.inputFocusNode, {
+    this.blockId,
+  }) : super.internal(
           () => EditorViewModel()
             ..textKey = textKey
-            ..inputFocusNode = inputFocusNode,
+            ..inputFocusNode = inputFocusNode
+            ..blockId = blockId,
           from: editorViewModelProvider,
           name: r'editorViewModelProvider',
           debugGetCreateSourceHash:
@@ -133,12 +140,14 @@ class EditorViewModelProvider
 
   final GlobalKey<State<StatefulWidget>> textKey;
   final FocusNode inputFocusNode;
+  final int? blockId;
 
   @override
   bool operator ==(Object other) {
     return other is EditorViewModelProvider &&
         other.textKey == textKey &&
-        other.inputFocusNode == inputFocusNode;
+        other.inputFocusNode == inputFocusNode &&
+        other.blockId == blockId;
   }
 
   @override
@@ -146,6 +155,7 @@ class EditorViewModelProvider
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, textKey.hashCode);
     hash = _SystemHash.combine(hash, inputFocusNode.hashCode);
+    hash = _SystemHash.combine(hash, blockId.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -157,6 +167,7 @@ class EditorViewModelProvider
     return notifier.build(
       textKey,
       inputFocusNode,
+      blockId: blockId,
     );
   }
 }
