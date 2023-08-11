@@ -19,35 +19,41 @@ class EditorWidget extends ConsumerWidget {
     final EditorViewModelProvider provider =
         editorViewModelProvider(_textKey, _inputFocusNode);
 
-    return Listener(
-      onPointerDown: ref.read(provider.notifier).handleTap,
-      child: Stack(
-        children: [
-          Visibility(
-            visible: false,
-            maintainState: true,
-            child: TextField(
-              focusNode: _inputFocusNode,
-              maxLines: null,
-              keyboardType: TextInputType.multiline,
+    final editorViewModelWatch = ref.watch(provider);
+
+    return editorViewModelWatch.when(
+      data: (editorState) => Listener(
+        onPointerDown: ref.read(provider.notifier).handleTap,
+        child: Stack(
+          children: [
+            Visibility(
+              visible: false,
+              maintainState: true,
+              child: TextField(
+                focusNode: _inputFocusNode,
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+              ),
             ),
-          ),
-          SelectionArea(
-            child: Text.rich(
-              key: _textKey,
-              ref.watch(provider.notifier).rootToTextSpan(),
+            SelectionArea(
+              child: Text.rich(
+                key: _textKey,
+                ref.read(provider.notifier).rootToTextSpan(),
+              ),
             ),
-          ),
-          AnimatedContainer(
-            width: 2,
-            height: 18,
-            alignment: Alignment.topLeft,
-            margin: ref.watch(provider).cursorInsets,
-            duration: const Duration(milliseconds: 100),
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-        ],
+            AnimatedContainer(
+              width: 2,
+              height: 18,
+              alignment: Alignment.topLeft,
+              margin: editorState.cursorInsets,
+              duration: const Duration(milliseconds: 100),
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+          ],
+        ),
       ),
+      error: (error, stack) => Text('ERROR: $error'),
+      loading: () => const LinearProgressIndicator(),
     );
   }
 }

@@ -6,7 +6,7 @@ part of 'editor_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editorViewModelHash() => r'aef1cf924e8af955729f5188a163f623940577a6';
+String _$editorViewModelHash() => r'3b4800f18be7a898dba2c47ef8256a04abb683bb';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,16 +30,16 @@ class _SystemHash {
 }
 
 abstract class _$EditorViewModel
-    extends BuildlessAutoDisposeNotifier<EditorState> {
+    extends BuildlessAutoDisposeAsyncNotifier<EditorState> {
   late final GlobalKey<State<StatefulWidget>> textKey;
   late final FocusNode inputFocusNode;
   late final int? blockId;
 
-  EditorState build(
+  FutureOr<EditorState> build(
     GlobalKey<State<StatefulWidget>> textKey,
-    FocusNode inputFocusNode, {
+    FocusNode inputFocusNode, [
     int? blockId,
-  });
+  ]);
 }
 
 /// Text editor logic
@@ -55,7 +55,7 @@ const editorViewModelProvider = EditorViewModelFamily();
 /// Utilized by [EditorWidget]
 ///
 /// Copied from [EditorViewModel].
-class EditorViewModelFamily extends Family<EditorState> {
+class EditorViewModelFamily extends Family<AsyncValue<EditorState>> {
   /// Text editor logic
   ///
   /// Utilized by [EditorWidget]
@@ -70,13 +70,13 @@ class EditorViewModelFamily extends Family<EditorState> {
   /// Copied from [EditorViewModel].
   EditorViewModelProvider call(
     GlobalKey<State<StatefulWidget>> textKey,
-    FocusNode inputFocusNode, {
+    FocusNode inputFocusNode, [
     int? blockId,
-  }) {
+  ]) {
     return EditorViewModelProvider(
       textKey,
       inputFocusNode,
-      blockId: blockId,
+      blockId,
     );
   }
 
@@ -87,7 +87,7 @@ class EditorViewModelFamily extends Family<EditorState> {
     return call(
       provider.textKey,
       provider.inputFocusNode,
-      blockId: provider.blockId,
+      provider.blockId,
     );
   }
 
@@ -112,7 +112,7 @@ class EditorViewModelFamily extends Family<EditorState> {
 ///
 /// Copied from [EditorViewModel].
 class EditorViewModelProvider
-    extends AutoDisposeNotifierProviderImpl<EditorViewModel, EditorState> {
+    extends AutoDisposeAsyncNotifierProviderImpl<EditorViewModel, EditorState> {
   /// Text editor logic
   ///
   /// Utilized by [EditorWidget]
@@ -120,9 +120,9 @@ class EditorViewModelProvider
   /// Copied from [EditorViewModel].
   EditorViewModelProvider(
     this.textKey,
-    this.inputFocusNode, {
+    this.inputFocusNode, [
     this.blockId,
-  }) : super.internal(
+  ]) : super.internal(
           () => EditorViewModel()
             ..textKey = textKey
             ..inputFocusNode = inputFocusNode
@@ -161,13 +161,13 @@ class EditorViewModelProvider
   }
 
   @override
-  EditorState runNotifierBuild(
+  FutureOr<EditorState> runNotifierBuild(
     covariant EditorViewModel notifier,
   ) {
     return notifier.build(
       textKey,
       inputFocusNode,
-      blockId: blockId,
+      blockId,
     );
   }
 }
