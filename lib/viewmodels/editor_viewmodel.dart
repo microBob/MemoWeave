@@ -12,11 +12,15 @@ part 'editor_viewmodel.g.dart';
 /// Utilized by [EditorWidget]
 @riverpod
 class EditorViewModel extends _$EditorViewModel {
+  /// Reference to the text's [RenderParagraph]
+  RenderParagraph? _renderParagraph;
+
   // Initialize a default editor
   @override
   EditorState build(GlobalKey textKey) {
     return EditorState.rootBlock(
       textKey: textKey,
+      inputFocusNode: FocusNode(),
       rootBlock: BlockModel.join(
         [
           BlockModel('First '),
@@ -29,9 +33,6 @@ class EditorViewModel extends _$EditorViewModel {
       ),
     );
   }
-
-  /// Cached reference to the text's [RenderParagraph]
-  RenderParagraph? _renderParagraph;
 
   void handleTap(PointerDownEvent pointerDownEvent) {
     // RenderParagraph may not have been found yet
@@ -54,13 +55,14 @@ class EditorViewModel extends _$EditorViewModel {
 
     // Compute cursor location
     final tapAsTextPosition =
-        _renderParagraph!.getPositionForOffset(pointerDownEvent.localPosition);
+    _renderParagraph!.getPositionForOffset(pointerDownEvent.localPosition);
     final caretOffset =
-        _renderParagraph!.getOffsetForCaret(tapAsTextPosition, Rect.zero);
+    _renderParagraph!.getOffsetForCaret(tapAsTextPosition, Rect.zero);
 
     // Update the cursor location in state
     state = EditorState.copy(
       textKey: textKey,
+      inputFocusNode: state.inputFocusNode,
       cursorInsets: EdgeInsets.only(left: caretOffset.dx, top: caretOffset.dy),
       rootBlock: state.rootBlock,
     );
@@ -76,7 +78,7 @@ class EditorViewModel extends _$EditorViewModel {
     return TextSpan(
       text: root.text,
       children:
-          root.children?.map((child) => _blockModelToTextSpan(child)).toList(),
+      root.children?.map((child) => _blockModelToTextSpan(child)).toList(),
     );
   }
 }
