@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:memoweave/models/block_model.dart';
@@ -65,13 +67,16 @@ class EditorViewModel extends _$EditorViewModel {
 
     // Compute cursor location
     final tapAsTextPosition =
-    _renderParagraph!.getPositionForOffset(pointerDownEvent.localPosition);
+        _renderParagraph!.getPositionForOffset(pointerDownEvent.localPosition);
     final caretOffset =
-    _renderParagraph!.getOffsetForCaret(tapAsTextPosition, Rect.zero);
+        _renderParagraph!.getOffsetForCaret(tapAsTextPosition, Rect.zero);
 
     // Update the cursor location in state
     state = EditorState.copy(
-      cursorInsets: EdgeInsets.only(left: caretOffset.dx, top: caretOffset.dy),
+      cursorInsets: EdgeInsets.only(
+        left: max(0, caretOffset.dx),
+        top: max(0, caretOffset.dy),
+      ),
       rootBlock: state.rootBlock,
     );
   }
@@ -86,7 +91,7 @@ class EditorViewModel extends _$EditorViewModel {
     return TextSpan(
       text: root.text,
       children:
-      root.children?.map((child) => _blockModelToTextSpan(child)).toList(),
+          root.children?.map((child) => _blockModelToTextSpan(child)).toList(),
     );
   }
 }

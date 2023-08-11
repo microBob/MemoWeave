@@ -7,12 +7,12 @@ part 'database_handler.g.dart';
 
 @riverpod
 class DatabaseHandler extends _$DatabaseHandler {
-  late Isar isar;
+  late Isar _isar;
 
   @override
   FutureOr<Isar> build() async {
     final dir = await getApplicationDocumentsDirectory();
-    isar = await Isar.open([BlockCollectionSchema], directory: dir.path);
-    return isar;
+    _isar = await Isar.open([BlockCollectionSchema], directory: dir.path);
+    return _isar;
   }
 }

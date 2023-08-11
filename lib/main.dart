@@ -26,16 +26,18 @@ class MemoWeave extends ConsumerWidget {
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           title: const Text('MemoWeave'),
         ),
-        body: Column(
-          children: [
-            EditorWidget(),
-            EditorWidget(),
-            database.when(
-              data: (data) => Text('Database opened: ${data.path}'),
-              error: (error, stat) => Text(error.toString()),
-              loading: () => const CircularProgressIndicator(),
-            ),
-          ],
+        body: SafeArea(
+          minimum: const EdgeInsets.all(8),
+          child: Column(
+            children: [
+              EditorWidget(),
+              database.when(
+                data: (data) => Text('Database opened: ${data.path}'),
+                error: (error, stat) => Text(error.toString()),
+                loading: () => const CircularProgressIndicator(),
+              ),
+            ],
+          ),
         ),
       ),
     );
