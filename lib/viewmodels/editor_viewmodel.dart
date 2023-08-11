@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/block_collection.dart';
-import 'package:memoweave/models/block_model.dart';
 import 'package:memoweave/models/text_node.dart';
 import 'package:memoweave/utils/database_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

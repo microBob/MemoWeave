@@ -9,6 +9,7 @@ part 'database_handler.g.dart';
 class DatabaseHandler extends _$DatabaseHandler {
   late Isar _isar;
 
+  /// Open Isar database.
   @override
   FutureOr<Isar> build() async {
     final dir = await getApplicationDocumentsDirectory();
@@ -16,6 +17,7 @@ class DatabaseHandler extends _$DatabaseHandler {
     return _isar;
   }
 
+  /// Returns the block record with a given [Id]
   Future<BlockCollection?> getBlockById(Id id) {
     return _isar.blockCollections.get(id);
   }

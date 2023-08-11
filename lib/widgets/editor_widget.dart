@@ -14,13 +14,17 @@ class EditorWidget extends ConsumerWidget {
   /// [FocusNode] used to control and handle input
   final FocusNode _inputFocusNode = FocusNode();
 
+  /// Attach to [EditorViewModel] and build UI
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Define provider with text key and focus node
     final EditorViewModelProvider provider =
         editorViewModelProvider(_textKey, _inputFocusNode);
 
+    // Update against provider
     final editorViewModelWatch = ref.watch(provider);
 
+    // Split behavior based on data state
     return editorViewModelWatch.when(
       data: (editorState) => Listener(
         onPointerDown: ref.read(provider.notifier).handleTap,

@@ -8,10 +8,12 @@ class TextNode {
   /// Text content.
   String text = '';
 
-  // Text format.
+  /// Text format.
   String format = '';
 
+  /// Default constructor.
   TextNode();
 
+  /// Construct a node with the supplied text and no text formatting.
   TextNode.plain({required this.text});
 }
