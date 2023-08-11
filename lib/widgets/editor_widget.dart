@@ -8,12 +8,16 @@ import 'package:memoweave/viewmodels/editor_viewmodel.dart';
 class EditorWidget extends ConsumerWidget {
   EditorWidget({super.key});
 
-  // Text key for code access
+  /// Key used to access the [RenderParagraph]
   final GlobalKey _textKey = GlobalKey();
+
+  /// [FocusNode] used to control and handle input
+  final FocusNode _inputFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final EditorViewModelProvider provider = editorViewModelProvider(_textKey);
+    final EditorViewModelProvider provider =
+        editorViewModelProvider(_textKey, _inputFocusNode);
 
     return Listener(
       onPointerDown: ref.read(provider.notifier).handleTap,
@@ -23,7 +27,9 @@ class EditorWidget extends ConsumerWidget {
             visible: false,
             maintainState: true,
             child: TextField(
-              focusNode: ref.read(provider).inputFocusNode,
+              focusNode: _inputFocusNode,
+              maxLines: null,
+              keyboardType: TextInputType.multiline,
             ),
           ),
           SelectionArea(

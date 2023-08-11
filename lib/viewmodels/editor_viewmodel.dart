@@ -12,15 +12,22 @@ part 'editor_viewmodel.g.dart';
 /// Utilized by [EditorWidget]
 @riverpod
 class EditorViewModel extends _$EditorViewModel {
+  /// Key used to access the [RenderParagraph]
+  late GlobalKey _textKey;
+
+  /// [FocusNode] used to control and handle input
+  late FocusNode _inputFocusNode;
+
   /// Reference to the text's [RenderParagraph]
   RenderParagraph? _renderParagraph;
 
-  // Initialize a default editor
+  /// Get props and initialize a default editor
   @override
-  EditorState build(GlobalKey textKey) {
+  EditorState build(GlobalKey textKey, FocusNode inputFocusNode) {
+    _textKey = textKey;
+    _inputFocusNode = inputFocusNode;
+
     return EditorState.rootBlock(
-      textKey: textKey,
-      inputFocusNode: FocusNode(),
       rootBlock: BlockModel.join(
         [
           BlockModel('First '),
@@ -35,11 +42,14 @@ class EditorViewModel extends _$EditorViewModel {
   }
 
   void handleTap(PointerDownEvent pointerDownEvent) {
+    // Get input focus
+    _inputFocusNode.requestFocus();
+
     // RenderParagraph may not have been found yet
     if (_renderParagraph == null) {
       // Extract RenderParagraph from key
       // Widget tree should be Text -> MouseRegion -> RichText (RenderParagraph)
-      textKey.currentContext?.visitChildElements((element) {
+      _textKey.currentContext?.visitChildElements((element) {
         // This should be the MouseRegion
         element.visitChildElements((element) {
           // This should be the RichText
@@ -61,8 +71,6 @@ class EditorViewModel extends _$EditorViewModel {
 
     // Update the cursor location in state
     state = EditorState.copy(
-      textKey: textKey,
-      inputFocusNode: state.inputFocusNode,
       cursorInsets: EdgeInsets.only(left: caretOffset.dx, top: caretOffset.dy),
       rootBlock: state.rootBlock,
     );

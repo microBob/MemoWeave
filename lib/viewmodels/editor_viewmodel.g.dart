@@ -6,7 +6,7 @@ part of 'editor_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editorViewModelHash() => r'aca0d7678c0dd6dd96685b409b073e0ed1591b2a';
+String _$editorViewModelHash() => r'e17c3abcbb7bad838457da194a3f05f854d734aa';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,9 +32,11 @@ class _SystemHash {
 abstract class _$EditorViewModel
     extends BuildlessAutoDisposeNotifier<EditorState> {
   late final GlobalKey<State<StatefulWidget>> textKey;
+  late final FocusNode inputFocusNode;
 
   EditorState build(
     GlobalKey<State<StatefulWidget>> textKey,
+    FocusNode inputFocusNode,
   );
 }
 
@@ -66,9 +68,11 @@ class EditorViewModelFamily extends Family<EditorState> {
   /// Copied from [EditorViewModel].
   EditorViewModelProvider call(
     GlobalKey<State<StatefulWidget>> textKey,
+    FocusNode inputFocusNode,
   ) {
     return EditorViewModelProvider(
       textKey,
+      inputFocusNode,
     );
   }
 
@@ -78,6 +82,7 @@ class EditorViewModelFamily extends Family<EditorState> {
   ) {
     return call(
       provider.textKey,
+      provider.inputFocusNode,
     );
   }
 
@@ -110,8 +115,11 @@ class EditorViewModelProvider
   /// Copied from [EditorViewModel].
   EditorViewModelProvider(
     this.textKey,
+    this.inputFocusNode,
   ) : super.internal(
-          () => EditorViewModel()..textKey = textKey,
+          () => EditorViewModel()
+            ..textKey = textKey
+            ..inputFocusNode = inputFocusNode,
           from: editorViewModelProvider,
           name: r'editorViewModelProvider',
           debugGetCreateSourceHash:
@@ -124,16 +132,20 @@ class EditorViewModelProvider
         );
 
   final GlobalKey<State<StatefulWidget>> textKey;
+  final FocusNode inputFocusNode;
 
   @override
   bool operator ==(Object other) {
-    return other is EditorViewModelProvider && other.textKey == textKey;
+    return other is EditorViewModelProvider &&
+        other.textKey == textKey &&
+        other.inputFocusNode == inputFocusNode;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, textKey.hashCode);
+    hash = _SystemHash.combine(hash, inputFocusNode.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -144,6 +156,7 @@ class EditorViewModelProvider
   ) {
     return notifier.build(
       textKey,
+      inputFocusNode,
     );
   }
 }
