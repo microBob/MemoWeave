@@ -12,14 +12,17 @@ class EditorWidget extends ConsumerWidget {
   final GlobalKey _textKey = GlobalKey();
 
   /// [FocusNode] used to control and handle input
-  final FocusNode _inputFocusNode = FocusNode();
+  final FocusNode _keyboardFocusNode = FocusNode();
+
+  /// [TextEditingController] for handling input
+  final TextEditingController textEditingController = TextEditingController();
 
   /// Attach to [EditorViewModel] and build UI
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Define provider with text key and focus node
-    final EditorViewModelProvider provider =
-        editorViewModelProvider(_textKey, _inputFocusNode);
+    final provider = editorViewModelProvider(
+        _textKey, _keyboardFocusNode, textEditingController);
 
     // Update against provider
     final editorViewModelWatch = ref.watch(provider);
@@ -30,19 +33,17 @@ class EditorWidget extends ConsumerWidget {
         onPointerDown: ref.read(provider.notifier).handleTap,
         child: Stack(
           children: [
-            Visibility(
-              visible: false,
-              maintainState: true,
-              child: TextField(
-                focusNode: _inputFocusNode,
-                maxLines: null,
-                keyboardType: TextInputType.multiline,
-              ),
-            ),
-            SelectionArea(
-              child: Text.rich(
-                key: _textKey,
-                ref.read(provider.notifier).rootToTextSpan(),
+            Focus(
+              focusNode: _keyboardFocusNode,
+              onKeyEvent: (focusNode, event) {
+                print('${_textKey.toString()}: ${event.character}');
+                return KeyEventResult.handled;
+              },
+              child: SelectionArea(
+                child: Text.rich(
+                  key: _textKey,
+                  ref.read(provider.notifier).rootToTextSpan(),
+                ),
               ),
             ),
             AnimatedContainer(

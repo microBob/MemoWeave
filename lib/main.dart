@@ -32,6 +32,7 @@ class MemoWeave extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               EditorWidget(),
+              EditorWidget(),
               database.when(
                 data: (data) => Text('Database opened: ${data.path}'),
                 error: (error, stat) => Text(error.toString()),

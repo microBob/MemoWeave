@@ -21,18 +21,19 @@ class EditorViewModel extends _$EditorViewModel {
   late GlobalKey _textKey;
 
   /// [FocusNode] used to control and handle input.
-  late FocusNode _inputFocusNode;
+  late FocusNode _keyboardFocusNode;
 
   /// Reference to the text's [RenderParagraph].
   RenderParagraph? _renderParagraph;
 
   /// Get props and initialize a default editor.
   @override
-  FutureOr<EditorState> build(GlobalKey textKey, FocusNode inputFocusNode,
+  FutureOr<EditorState> build(GlobalKey textKey, FocusNode keyboardFocusNode,
+      TextEditingController textEditingController,
       [Id? blockId]) async {
     // Populate fields
     _textKey = textKey;
-    _inputFocusNode = inputFocusNode;
+    _keyboardFocusNode = keyboardFocusNode;
 
     // Generate default state if not loading previous
     if (blockId == null) {
@@ -61,7 +62,7 @@ class EditorViewModel extends _$EditorViewModel {
   /// Tap location given in [pointerDownEvent].
   void handleTap(PointerDownEvent pointerDownEvent) {
     // Get input focus
-    _inputFocusNode.requestFocus();
+    _keyboardFocusNode.requestFocus();
 
     // RenderParagraph may not have been found yet
     if (_renderParagraph == null) {
