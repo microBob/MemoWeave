@@ -3,13 +3,13 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:memoweave/models/block_collection.dart';
-import 'package:memoweave/models/editor_props.dart';
-import 'package:memoweave/models/text_node.dart';
-import 'package:memoweave/utils/database_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../models/block_collection.dart';
+import '../models/editor_props.dart';
 import '../models/editor_state.dart';
+import '../models/text_node.dart';
+import '../utils/database_handler.dart';
 
 part 'editor_viewmodel.g.dart';
 
@@ -29,7 +29,7 @@ class EditorViewModel extends _$EditorViewModel {
   FutureOr<EditorState> build(EditorProps props) async {
     // Populate fields
     _props = props;
-    var blockId = props.blockId;
+    final blockId = props.blockId;
 
     // Generate default state if not loading previous
     if (blockId == null) {
@@ -39,8 +39,7 @@ class EditorViewModel extends _$EditorViewModel {
           TextNode.plain(text: ' this is a test.'),
           TextNode.plain(text: '\nWith a new paragraph'),
         ];
-
-      return EditorState.rootBlock(rootBlock: blockCollection);
+      return (cursorInsets: EdgeInsets.zero, rootBlock: blockCollection);
     }
 
     // Load block from database
@@ -49,9 +48,9 @@ class EditorViewModel extends _$EditorViewModel {
 
     // Return it, otherwise return a blank state
     if (blockCollection != null) {
-      return EditorState.rootBlock(rootBlock: blockCollection);
+      return (cursorInsets: EdgeInsets.zero, rootBlock: blockCollection);
     }
-    return EditorState();
+    return (cursorInsets: EdgeInsets.zero, rootBlock: BlockCollection());
   }
 
   /// Move cursor to where user tapped.
@@ -87,7 +86,7 @@ class EditorViewModel extends _$EditorViewModel {
 
     // Update the cursor location in state
     state = AsyncValue.data(
-      EditorState.copy(
+      (
         cursorInsets: EdgeInsets.only(
           left: max(0, caretOffset.dx),
           top: max(0, caretOffset.dy),

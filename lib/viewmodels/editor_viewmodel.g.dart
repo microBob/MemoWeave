@@ -6,7 +6,7 @@ part of 'editor_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editorViewModelHash() => r'12cd293e66d1e63fbce8976a1cc698726c589d93';
+String _$editorViewModelHash() => r'8b4ead135a9179cf29cd3e44e1222ab2672ba2e7';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,8 +29,8 @@ class _SystemHash {
   }
 }
 
-abstract class _$EditorViewModel
-    extends BuildlessAutoDisposeAsyncNotifier<EditorState> {
+abstract class _$EditorViewModel extends BuildlessAutoDisposeAsyncNotifier<
+    ({EdgeInsets cursorInsets, BlockCollection rootBlock})> {
   late final ({
     int? blockId,
     FocusNode keyboardFocusNode,
@@ -38,7 +38,7 @@ abstract class _$EditorViewModel
     GlobalKey<State<StatefulWidget>> textKey
   }) props;
 
-  FutureOr<EditorState> build(
+  FutureOr<({EdgeInsets cursorInsets, BlockCollection rootBlock})> build(
     ({
       int? blockId,
       FocusNode keyboardFocusNode,
@@ -61,7 +61,8 @@ const editorViewModelProvider = EditorViewModelFamily();
 /// Utilized by [EditorWidget]
 ///
 /// Copied from [EditorViewModel].
-class EditorViewModelFamily extends Family<AsyncValue<EditorState>> {
+class EditorViewModelFamily extends Family<
+    AsyncValue<({EdgeInsets cursorInsets, BlockCollection rootBlock})>> {
   /// Text editor logic
   ///
   /// Utilized by [EditorWidget]
@@ -116,8 +117,8 @@ class EditorViewModelFamily extends Family<AsyncValue<EditorState>> {
 /// Utilized by [EditorWidget]
 ///
 /// Copied from [EditorViewModel].
-class EditorViewModelProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<EditorViewModel, EditorState> {
+class EditorViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
+    EditorViewModel, ({EdgeInsets cursorInsets, BlockCollection rootBlock})> {
   /// Text editor logic
   ///
   /// Utilized by [EditorWidget]
@@ -159,7 +160,8 @@ class EditorViewModelProvider
   }
 
   @override
-  FutureOr<EditorState> runNotifierBuild(
+  FutureOr<({EdgeInsets cursorInsets, BlockCollection rootBlock})>
+      runNotifierBuild(
     covariant EditorViewModel notifier,
   ) {
     return notifier.build(
