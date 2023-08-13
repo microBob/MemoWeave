@@ -6,7 +6,7 @@ part of 'editor_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editorViewModelHash() => r'b5e4aa303eb49a930b8a5c5fa08937de6a442055';
+String _$editorViewModelHash() => r'12cd293e66d1e63fbce8976a1cc698726c589d93';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,17 +31,21 @@ class _SystemHash {
 
 abstract class _$EditorViewModel
     extends BuildlessAutoDisposeAsyncNotifier<EditorState> {
-  late final GlobalKey<State<StatefulWidget>> textKey;
-  late final FocusNode keyboardFocusNode;
-  late final TextEditingController textEditingController;
-  late final int? blockId;
+  late final ({
+    int? blockId,
+    FocusNode keyboardFocusNode,
+    TextEditingController textEditingController,
+    GlobalKey<State<StatefulWidget>> textKey
+  }) props;
 
   FutureOr<EditorState> build(
-    GlobalKey<State<StatefulWidget>> textKey,
-    FocusNode keyboardFocusNode,
-    TextEditingController textEditingController, [
-    int? blockId,
-  ]);
+    ({
+      int? blockId,
+      FocusNode keyboardFocusNode,
+      TextEditingController textEditingController,
+      GlobalKey<State<StatefulWidget>> textKey
+    }) props,
+  );
 }
 
 /// Text editor logic
@@ -71,16 +75,15 @@ class EditorViewModelFamily extends Family<AsyncValue<EditorState>> {
   ///
   /// Copied from [EditorViewModel].
   EditorViewModelProvider call(
-    GlobalKey<State<StatefulWidget>> textKey,
-    FocusNode keyboardFocusNode,
-    TextEditingController textEditingController, [
-    int? blockId,
-  ]) {
+    ({
+      int? blockId,
+      FocusNode keyboardFocusNode,
+      TextEditingController textEditingController,
+      GlobalKey<State<StatefulWidget>> textKey
+    }) props,
+  ) {
     return EditorViewModelProvider(
-      textKey,
-      keyboardFocusNode,
-      textEditingController,
-      blockId,
+      props,
     );
   }
 
@@ -89,10 +92,7 @@ class EditorViewModelFamily extends Family<AsyncValue<EditorState>> {
     covariant EditorViewModelProvider provider,
   ) {
     return call(
-      provider.textKey,
-      provider.keyboardFocusNode,
-      provider.textEditingController,
-      provider.blockId,
+      provider.props,
     );
   }
 
@@ -124,16 +124,9 @@ class EditorViewModelProvider
   ///
   /// Copied from [EditorViewModel].
   EditorViewModelProvider(
-    this.textKey,
-    this.keyboardFocusNode,
-    this.textEditingController, [
-    this.blockId,
-  ]) : super.internal(
-          () => EditorViewModel()
-            ..textKey = textKey
-            ..keyboardFocusNode = keyboardFocusNode
-            ..textEditingController = textEditingController
-            ..blockId = blockId,
+    this.props,
+  ) : super.internal(
+          () => EditorViewModel()..props = props,
           from: editorViewModelProvider,
           name: r'editorViewModelProvider',
           debugGetCreateSourceHash:
@@ -145,27 +138,22 @@ class EditorViewModelProvider
               EditorViewModelFamily._allTransitiveDependencies,
         );
 
-  final GlobalKey<State<StatefulWidget>> textKey;
-  final FocusNode keyboardFocusNode;
-  final TextEditingController textEditingController;
-  final int? blockId;
+  final ({
+    int? blockId,
+    FocusNode keyboardFocusNode,
+    TextEditingController textEditingController,
+    GlobalKey<State<StatefulWidget>> textKey
+  }) props;
 
   @override
   bool operator ==(Object other) {
-    return other is EditorViewModelProvider &&
-        other.textKey == textKey &&
-        other.keyboardFocusNode == keyboardFocusNode &&
-        other.textEditingController == textEditingController &&
-        other.blockId == blockId;
+    return other is EditorViewModelProvider && other.props == props;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, textKey.hashCode);
-    hash = _SystemHash.combine(hash, keyboardFocusNode.hashCode);
-    hash = _SystemHash.combine(hash, textEditingController.hashCode);
-    hash = _SystemHash.combine(hash, blockId.hashCode);
+    hash = _SystemHash.combine(hash, props.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -175,10 +163,7 @@ class EditorViewModelProvider
     covariant EditorViewModel notifier,
   ) {
     return notifier.build(
-      textKey,
-      keyboardFocusNode,
-      textEditingController,
-      blockId,
+      props,
     );
   }
 }

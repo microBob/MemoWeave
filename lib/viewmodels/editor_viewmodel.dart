@@ -1,9 +1,10 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:isar/isar.dart';
 import 'package:memoweave/models/block_collection.dart';
+import 'package:memoweave/models/editor_props.dart';
 import 'package:memoweave/models/text_node.dart';
 import 'package:memoweave/utils/database_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -17,23 +18,18 @@ part 'editor_viewmodel.g.dart';
 /// Utilized by [EditorWidget]
 @riverpod
 class EditorViewModel extends _$EditorViewModel {
-  /// Key used to access the [RenderParagraph].
-  late GlobalKey _textKey;
-
-  /// [FocusNode] used to control and handle input.
-  late FocusNode _keyboardFocusNode;
+  /// Props from the widget
+  late EditorProps _props;
 
   /// Reference to the text's [RenderParagraph].
   RenderParagraph? _renderParagraph;
 
   /// Get props and initialize a default editor.
   @override
-  FutureOr<EditorState> build(GlobalKey textKey, FocusNode keyboardFocusNode,
-      TextEditingController textEditingController,
-      [Id? blockId]) async {
+  FutureOr<EditorState> build(EditorProps props) async {
     // Populate fields
-    _textKey = textKey;
-    _keyboardFocusNode = keyboardFocusNode;
+    _props = props;
+    var blockId = props.blockId;
 
     // Generate default state if not loading previous
     if (blockId == null) {
@@ -63,13 +59,13 @@ class EditorViewModel extends _$EditorViewModel {
   /// Tap location given in [pointerDownEvent].
   void handleTap(PointerDownEvent pointerDownEvent) {
     // Get input focus
-    _keyboardFocusNode.requestFocus();
+    _props.keyboardFocusNode.requestFocus();
 
     // RenderParagraph may not have been found yet
     if (_renderParagraph == null) {
       // Extract RenderParagraph from key
       // Widget tree should be Text -> MouseRegion -> RichText (RenderParagraph)
-      _textKey.currentContext?.visitChildElements((element) {
+      _props.textKey.currentContext?.visitChildElements((element) {
         // This should be the MouseRegion
         element.visitChildElements((element) {
           // This should be the RichText
@@ -99,6 +95,11 @@ class EditorViewModel extends _$EditorViewModel {
         rootBlock: state.value!.rootBlock,
       ),
     );
+  }
+
+  bool isOnMobilePlatform() {
+    return defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.android;
   }
 
   /// Render the text into a [TextSpan].
