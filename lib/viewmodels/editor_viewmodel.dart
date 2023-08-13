@@ -40,7 +40,8 @@ class EditorViewModel extends _$EditorViewModel {
       final blockCollection = BlockCollection()
         ..text = [
           TextNode.plain(text: 'Hello World'),
-          TextNode.plain(text: ' this is a test.')
+          TextNode.plain(text: ' this is a test.'),
+          TextNode.plain(text: '\nWith a new paragraph'),
         ];
 
       return EditorState.rootBlock(rootBlock: blockCollection);

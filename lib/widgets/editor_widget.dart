@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memoweave/viewmodels/editor_viewmodel.dart';
@@ -31,34 +32,41 @@ class EditorWidget extends ConsumerWidget {
     return editorViewModelWatch.when(
       data: (editorState) => Listener(
         onPointerDown: ref.read(provider.notifier).handleTap,
-        child: Stack(
-          children: [
-            SelectionArea(
-              child: Text.rich(
+        child: SelectionArea(
+          child: Stack(
+            children: [
+              Text.rich(
                 key: _textKey,
                 ref.read(provider.notifier).rootToTextSpan(),
               ),
-            ),
-            AnimatedContainer(
-              width: 2,
-              height: 18,
-              alignment: Alignment.topLeft,
-              margin: editorState.cursorInsets,
-              duration: const Duration(milliseconds: 100),
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-            EditableText(
-              controller: TextEditingController(),
-              focusNode: _keyboardFocusNode,
-              style: const TextStyle(color: Colors.transparent),
-              cursorColor: Colors.transparent,
-              backgroundCursorColor: Colors.transparent,
-              showCursor: false,
-              keyboardType: TextInputType.multiline,
-              textInputAction: TextInputAction.newline,
-              onChanged: (newText) => print('${_keyboardFocusNode}: $newText'),
-            ),
-          ],
+              AnimatedContainer(
+                width: 2,
+                height: 18,
+                alignment: Alignment.topLeft,
+                margin: editorState.cursorInsets,
+                duration: const Duration(milliseconds: 100),
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              IgnorePointer(
+                ignoring: defaultTargetPlatform == TargetPlatform.iOS ||
+                    defaultTargetPlatform == TargetPlatform.android,
+                child: EditableText(
+                  controller: TextEditingController(),
+                  focusNode: _keyboardFocusNode,
+                  style: const TextStyle(color: Colors.transparent),
+                  cursorColor: Colors.transparent,
+                  backgroundCursorColor: Colors.transparent,
+                  showCursor: false,
+                  keyboardType: TextInputType.multiline,
+                  textInputAction: TextInputAction.newline,
+                  maxLines: 3,
+                  onChanged: (newText) =>
+                      print('${_keyboardFocusNode}: $newText'),
+                  enableInteractiveSelection: false,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       error: (error, stack) => Text('ERROR: $error'),
