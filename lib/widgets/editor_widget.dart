@@ -33,17 +33,10 @@ class EditorWidget extends ConsumerWidget {
         onPointerDown: ref.read(provider.notifier).handleTap,
         child: Stack(
           children: [
-            Focus(
-              focusNode: _keyboardFocusNode,
-              onKeyEvent: (focusNode, event) {
-                print('${_textKey.toString()}: ${event.character}');
-                return KeyEventResult.handled;
-              },
-              child: SelectionArea(
-                child: Text.rich(
-                  key: _textKey,
-                  ref.read(provider.notifier).rootToTextSpan(),
-                ),
+            SelectionArea(
+              child: Text.rich(
+                key: _textKey,
+                ref.read(provider.notifier).rootToTextSpan(),
               ),
             ),
             AnimatedContainer(
@@ -53,6 +46,17 @@ class EditorWidget extends ConsumerWidget {
               margin: editorState.cursorInsets,
               duration: const Duration(milliseconds: 100),
               color: Theme.of(context).colorScheme.onSurface,
+            ),
+            EditableText(
+              controller: TextEditingController(),
+              focusNode: _keyboardFocusNode,
+              style: const TextStyle(color: Colors.transparent),
+              cursorColor: Colors.transparent,
+              backgroundCursorColor: Colors.transparent,
+              showCursor: false,
+              keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.newline,
+              onChanged: (newText) => print('${_keyboardFocusNode}: $newText'),
             ),
           ],
         ),
