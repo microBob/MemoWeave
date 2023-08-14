@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memoweave/models/editor_props.dart';
+import 'package:memoweave/viewmodels/editor_texteditingcontroller.dart';
 import 'package:memoweave/viewmodels/editor_viewmodel.dart';
 
 /// Text editor interface
@@ -13,7 +14,6 @@ class EditorWidget extends ConsumerWidget {
   final EditorProps _props = (
     textFieldKey: GlobalKey(),
     textFieldFocusNode: FocusNode(),
-    textFieldTextEditingController: TextEditingController(),
     blockId: null,
   );
 
@@ -24,7 +24,7 @@ class EditorWidget extends ConsumerWidget {
     final provider = editorViewModelProvider(_props);
 
     // Find TextField's RenderEditable
-    Future(() => ref.read(provider.notifier).findRenderEditable());
+    Future(() => ref.watch(provider.notifier).findRenderEditable());
 
     // Split behavior based on data state
     return Stack(
@@ -32,7 +32,8 @@ class EditorWidget extends ConsumerWidget {
         TextField(
           key: _props.textFieldKey,
           focusNode: _props.textFieldFocusNode,
-          controller: _props.textFieldTextEditingController,
+          controller: EditorTextEditingController(
+              editorViewModelProvider: provider, widgetRef: ref),
         ),
         AnimatedContainer(
           width: 2,

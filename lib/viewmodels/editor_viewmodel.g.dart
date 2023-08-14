@@ -6,7 +6,7 @@ part of 'editor_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editorViewModelHash() => r'0f138901098f2838523fde0168f939bf2428ad34';
+String _$editorViewModelHash() => r'a06b9a6881b8329e316d89df88251859697bf1b0';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -34,16 +34,14 @@ abstract class _$EditorViewModel extends BuildlessAutoDisposeNotifier<
   late final ({
     int? blockId,
     FocusNode textFieldFocusNode,
-    GlobalKey<State<StatefulWidget>> textFieldKey,
-    TextEditingController textFieldTextEditingController
+  GlobalKey<State<StatefulWidget>> textFieldKey
   }) props;
 
   ({EdgeInsets cursorInsets, BlockCollection rootBlock}) build(
     ({
       int? blockId,
       FocusNode textFieldFocusNode,
-      GlobalKey<State<StatefulWidget>> textFieldKey,
-      TextEditingController textFieldTextEditingController
+    GlobalKey<State<StatefulWidget>> textFieldKey
     }) props,
   );
 }
@@ -79,8 +77,7 @@ class EditorViewModelFamily
     ({
       int? blockId,
       FocusNode textFieldFocusNode,
-      GlobalKey<State<StatefulWidget>> textFieldKey,
-      TextEditingController textFieldTextEditingController
+    GlobalKey<State<StatefulWidget>> textFieldKey
     }) props,
   ) {
     return EditorViewModelProvider(
@@ -142,8 +139,7 @@ class EditorViewModelProvider extends AutoDisposeNotifierProviderImpl<
   final ({
     int? blockId,
     FocusNode textFieldFocusNode,
-    GlobalKey<State<StatefulWidget>> textFieldKey,
-    TextEditingController textFieldTextEditingController
+  GlobalKey<State<StatefulWidget>> textFieldKey
   }) props;
 
   @override

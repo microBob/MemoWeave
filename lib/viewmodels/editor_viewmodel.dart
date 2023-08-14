@@ -72,6 +72,9 @@ class EditorViewModel extends _$EditorViewModel {
     var renderObject = root.renderObject;
     if (renderObject is RenderEditable) {
       _renderEditable = renderObject;
+      _renderEditable?.onCaretChanged = (rect) {
+        print(rect);
+      };
     } else {
       root.visitChildElements((childElement) {
         findRenderEditable(childElement);
@@ -79,18 +82,8 @@ class EditorViewModel extends _$EditorViewModel {
     }
   }
 
-  /// Move cursor to where user tapped.
-  ///
-  /// Tap location given in [pointerDownEvent].
-  void handleTap(PointerDownEvent pointerDownEvent) {
-    // Update text and selection in text field
-    // var node = state.when(
-    //   data: (data) =>
-    //       data.rootBlock.textNodeWithTextPosition(tapAsTextPosition) ??
-    //       TextNode(),
-    //   error: (error, stack) => TextNode(),
-    //   loading: () => TextNode(),
-    // );
+  void test() {
+    print('Hello World!');
   }
 
   /// Render the text into a [TextSpan].

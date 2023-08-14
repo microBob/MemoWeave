@@ -10,6 +10,5 @@ import 'package:isar/isar.dart';
 typedef EditorProps = ({
   GlobalKey textFieldKey,
   FocusNode textFieldFocusNode,
-  TextEditingController textFieldTextEditingController,
   Id? blockId,
 });
