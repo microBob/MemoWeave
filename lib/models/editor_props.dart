@@ -8,8 +8,8 @@ import 'package:isar/isar.dart';
 /// [TextEditingController] to handle input,
 /// and [Id] to identify the text document in the database.
 typedef EditorProps = ({
-  GlobalKey textKey,
-  FocusNode keyboardFocusNode,
-  TextEditingController textEditingController,
+  GlobalKey textFieldKey,
+  FocusNode textFieldFocusNode,
+  TextEditingController textFieldTextEditingController,
   Id? blockId,
 });

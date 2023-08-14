@@ -6,7 +6,7 @@ part of 'editor_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editorViewModelHash() => r'69b3ca0b9382651e109d93ff82878e121dc93699';
+String _$editorViewModelHash() => r'78c977e7a288db58cfd1452bb7628521e1c980f0';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -33,17 +33,17 @@ abstract class _$EditorViewModel extends BuildlessAutoDisposeAsyncNotifier<
     ({EdgeInsets cursorInsets, BlockCollection rootBlock})> {
   late final ({
     int? blockId,
-    FocusNode keyboardFocusNode,
-    TextEditingController textEditingController,
-    GlobalKey<State<StatefulWidget>> textKey
+    FocusNode textFieldFocusNode,
+    GlobalKey<State<StatefulWidget>> textFieldKey,
+    TextEditingController textFieldTextEditingController
   }) props;
 
   FutureOr<({EdgeInsets cursorInsets, BlockCollection rootBlock})> build(
     ({
       int? blockId,
-      FocusNode keyboardFocusNode,
-      TextEditingController textEditingController,
-      GlobalKey<State<StatefulWidget>> textKey
+      FocusNode textFieldFocusNode,
+      GlobalKey<State<StatefulWidget>> textFieldKey,
+      TextEditingController textFieldTextEditingController
     }) props,
   );
 }
@@ -78,9 +78,9 @@ class EditorViewModelFamily extends Family<
   EditorViewModelProvider call(
     ({
       int? blockId,
-      FocusNode keyboardFocusNode,
-      TextEditingController textEditingController,
-      GlobalKey<State<StatefulWidget>> textKey
+      FocusNode textFieldFocusNode,
+      GlobalKey<State<StatefulWidget>> textFieldKey,
+      TextEditingController textFieldTextEditingController
     }) props,
   ) {
     return EditorViewModelProvider(
@@ -141,9 +141,9 @@ class EditorViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
 
   final ({
     int? blockId,
-    FocusNode keyboardFocusNode,
-    TextEditingController textEditingController,
-    GlobalKey<State<StatefulWidget>> textKey
+    FocusNode textFieldFocusNode,
+    GlobalKey<State<StatefulWidget>> textFieldKey,
+    TextEditingController textFieldTextEditingController
   }) props;
 
   @override

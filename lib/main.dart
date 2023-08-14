@@ -10,10 +10,18 @@ void main() {
 class MemoWeave extends ConsumerWidget {
   const MemoWeave({super.key});
 
+  void test(Element element) {
+    print(element.renderObject);
+    element.visitChildElements((childElement) {
+      test(childElement);
+    });
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final database = ref.watch(databaseHandlerProvider);
+    final GlobalKey key = GlobalKey();
 
     return MaterialApp(
       title: 'MemoWeave',
@@ -38,9 +46,18 @@ class MemoWeave extends ConsumerWidget {
                 error: (error, stat) => Text(error.toString()),
                 loading: () => const CircularProgressIndicator(),
               ),
+              TextField(
+                key: key,
+              ),
             ],
           ),
         ),
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          print(key.currentContext?.findRenderObject().toString());
+          key.currentContext?.visitChildElements((element) {
+            test(element);
+          });
+        }),
       ),
     );
   }

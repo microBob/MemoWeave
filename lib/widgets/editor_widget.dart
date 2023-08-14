@@ -11,9 +11,9 @@ class EditorWidget extends ConsumerWidget {
 
   // Props to pass to the viewmodel
   final EditorProps _props = (
-    textKey: GlobalKey(),
-    keyboardFocusNode: FocusNode(),
-    textEditingController: TextEditingController(),
+    textFieldKey: GlobalKey(),
+    textFieldFocusNode: FocusNode(),
+    textFieldTextEditingController: TextEditingController(),
     blockId: null,
   );
 
@@ -26,46 +26,27 @@ class EditorWidget extends ConsumerWidget {
     // Update against provider
     final editorViewModelWatch = ref.watch(provider);
 
+    // Find TextField's RenderEditable
+    Future(() => ref.read(provider.notifier).findRenderEditable());
+
     // Split behavior based on data state
     return editorViewModelWatch.when(
-      data: (editorState) => Listener(
-        onPointerDown: ref.read(provider.notifier).handleTap,
-        child: SelectionArea(
-          onSelectionChanged: (newSelection) => print(newSelection?.plainText),
-          child: Stack(
-            children: [
-              Text.rich(
-                key: _props.textKey,
-                ref.read(provider.notifier).rootToTextSpan(),
-              ),
-              AnimatedContainer(
-                width: 2,
-                height: 18,
-                alignment: Alignment.topLeft,
-                margin: editorState.cursorInsets,
-                duration: const Duration(milliseconds: 100),
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-              IgnorePointer(
-                ignoring: ref.read(provider.notifier).isOnMobilePlatform(),
-                child: EditableText(
-                  controller: _props.textEditingController,
-                  focusNode: _props.keyboardFocusNode,
-                  style: const TextStyle(color: Colors.transparent),
-                  cursorColor: Colors.transparent,
-                  backgroundCursorColor: Colors.transparent,
-                  showCursor: false,
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.newline,
-                  maxLines: 3,
-                  onChanged: (newText) =>
-                      print('${_props.keyboardFocusNode}: $newText'),
-                  enableInteractiveSelection: false,
-                ),
-              ),
-            ],
+      data: (editorState) => Stack(
+        children: [
+          TextField(
+            key: _props.textFieldKey,
+            focusNode: _props.textFieldFocusNode,
+            controller: _props.textFieldTextEditingController,
           ),
-        ),
+          AnimatedContainer(
+            width: 2,
+            height: 18,
+            alignment: Alignment.topLeft,
+            margin: editorState.cursorInsets,
+            duration: const Duration(milliseconds: 100),
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ],
       ),
       error: (error, stack) => Text('ERROR: $error'),
       loading: () => const LinearProgressIndicator(),
