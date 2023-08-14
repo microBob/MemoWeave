@@ -10,6 +10,8 @@ class DatabaseHandler extends _$DatabaseHandler {
   late Isar _isar;
 
   /// Open Isar database.
+  ///
+  /// Sets [_isar] to the open instance
   @override
   FutureOr<Isar> build() async {
     final dir = await getApplicationDocumentsDirectory();
@@ -21,8 +23,11 @@ class DatabaseHandler extends _$DatabaseHandler {
 @riverpod
 Future<BlockCollection?> blockCollectionById(BlockCollectionByIdRef ref,
     {required Id id}) {
-  return ref.read(databaseHandlerProvider).when(
-      data: (isar) => isar.blockCollections.get(id),
+  return ref.watch(databaseHandlerProvider).when(
+      data: (isar) {
+        print("Searching isar");
+        return isar.blockCollections.get(id);
+      },
       error: (error, frame) => Future(() => null),
       loading: () => Future(() => null));
 }

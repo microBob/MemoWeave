@@ -7,7 +7,5 @@ class EditorTextEditingController extends TextEditingController {
   final WidgetRef widgetRef;
 
   EditorTextEditingController(
-      {required this.editorViewModelProvider, required this.widgetRef}) {
-    widgetRef.watch(editorViewModelProvider.notifier).test();
-  }
+      {required this.editorViewModelProvider, required this.widgetRef});
 }

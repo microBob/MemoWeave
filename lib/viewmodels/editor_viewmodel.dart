@@ -39,10 +39,13 @@ class EditorViewModel extends _$EditorViewModel {
     }
 
     // Load block from database
-    final blankState =
-        (cursorInsets: EdgeInsets.zero, rootBlock: BlockCollection());
+    final blankState = (
+      cursorInsets: EdgeInsets.zero,
+      rootBlock: BlockCollection()
+        ..text = [TextNode.plain(text: 'Blank state text')]
+    );
 
-    return ref.read(blockCollectionByIdProvider(id: blockId)).when(
+    return ref.watch(blockCollectionByIdProvider(id: blockId)).when(
         data: (blockCollection) {
           if (blockCollection == null) {
             return blankState;
@@ -54,6 +57,8 @@ class EditorViewModel extends _$EditorViewModel {
   }
 
   /// Search through widget tree to find [RenderEditable]
+  ///
+  /// Sets [_renderEditable] to the found [RenderEditable]
   Future<void> findRenderEditable([Element? root]) async {
     // Shortcut exit if it has already been found
     if (_renderEditable != null) {
@@ -80,10 +85,6 @@ class EditorViewModel extends _$EditorViewModel {
         findRenderEditable(childElement);
       });
     }
-  }
-
-  void test() {
-    print('Hello World!');
   }
 
   /// Render the text into a [TextSpan].

@@ -14,7 +14,7 @@ class EditorWidget extends ConsumerWidget {
   final EditorProps _props = (
     textFieldKey: GlobalKey(),
     textFieldFocusNode: FocusNode(),
-    blockId: null,
+    blockId: 61254764,
   );
 
   /// Attach to [EditorViewModel] and build UI
@@ -43,6 +43,7 @@ class EditorWidget extends ConsumerWidget {
           duration: const Duration(milliseconds: 100),
           color: Theme.of(context).colorScheme.onSurface,
         ),
+        Text.rich(ref.watch(provider.notifier).rootToTextSpan()),
       ],
     );
   }

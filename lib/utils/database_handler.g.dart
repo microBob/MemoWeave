@@ -7,7 +7,7 @@ part of 'database_handler.dart';
 // **************************************************************************
 
 String _$blockCollectionByIdHash() =>
-    r'628c2abfa730cb83419c67c3f102e8090fb708f7';
+    r'7f396d47d79b4551cf07c7ac9b449f415a5868a8';
 
 /// Copied from Dart SDK
 class _SystemHash {
