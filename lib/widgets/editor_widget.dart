@@ -23,33 +23,26 @@ class EditorWidget extends ConsumerWidget {
     // Define provider with text key and focus node
     final provider = editorViewModelProvider(_props);
 
-    // Update against provider
-    final editorViewModelWatch = ref.watch(provider);
-
     // Find TextField's RenderEditable
     Future(() => ref.read(provider.notifier).findRenderEditable());
 
     // Split behavior based on data state
-    return editorViewModelWatch.when(
-      data: (editorState) => Stack(
-        children: [
-          TextField(
-            key: _props.textFieldKey,
-            focusNode: _props.textFieldFocusNode,
-            controller: _props.textFieldTextEditingController,
-          ),
-          AnimatedContainer(
-            width: 2,
-            height: 18,
-            alignment: Alignment.topLeft,
-            margin: editorState.cursorInsets,
-            duration: const Duration(milliseconds: 100),
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-        ],
-      ),
-      error: (error, stack) => Text('ERROR: $error'),
-      loading: () => const LinearProgressIndicator(),
+    return Stack(
+      children: [
+        TextField(
+          key: _props.textFieldKey,
+          focusNode: _props.textFieldFocusNode,
+          controller: _props.textFieldTextEditingController,
+        ),
+        AnimatedContainer(
+          width: 2,
+          height: 18,
+          alignment: Alignment.topLeft,
+          margin: ref.watch(provider).cursorInsets,
+          duration: const Duration(milliseconds: 100),
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
+      ],
     );
   }
 }

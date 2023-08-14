@@ -16,9 +16,13 @@ class DatabaseHandler extends _$DatabaseHandler {
     _isar = await Isar.open([BlockCollectionSchema], directory: dir.path);
     return _isar;
   }
+}
 
-  /// Returns the block record with a given [Id]
-  Future<BlockCollection?> getBlockById(Id id) {
-    return _isar.blockCollections.get(id);
-  }
+@riverpod
+Future<BlockCollection?> blockCollectionById(BlockCollectionByIdRef ref,
+    {required Id id}) {
+  return ref.read(databaseHandlerProvider).when(
+      data: (isar) => isar.blockCollections.get(id),
+      error: (error, frame) => Future(() => null),
+      loading: () => Future(() => null));
 }

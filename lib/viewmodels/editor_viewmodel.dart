@@ -22,7 +22,7 @@ class EditorViewModel extends _$EditorViewModel {
 
   /// Get props and initialize a default editor.
   @override
-  FutureOr<EditorState> build(EditorProps props) async {
+  EditorState build(EditorProps props) {
     // Populate fields
     _props = props;
     final blockId = props.blockId;
@@ -39,14 +39,18 @@ class EditorViewModel extends _$EditorViewModel {
     }
 
     // Load block from database
-    final blockCollection =
-        await ref.watch(databaseHandlerProvider.notifier).getBlockById(blockId);
+    final blankState =
+        (cursorInsets: EdgeInsets.zero, rootBlock: BlockCollection());
 
-    // Return it, otherwise return a blank state
-    if (blockCollection != null) {
-      return (cursorInsets: EdgeInsets.zero, rootBlock: blockCollection);
-    }
-    return (cursorInsets: EdgeInsets.zero, rootBlock: BlockCollection());
+    return ref.read(blockCollectionByIdProvider(id: blockId)).when(
+        data: (blockCollection) {
+          if (blockCollection == null) {
+            return blankState;
+          }
+          return (cursorInsets: EdgeInsets.zero, rootBlock: blockCollection);
+        },
+        error: (_, __) => blankState,
+        loading: () => blankState);
   }
 
   /// Search through widget tree to find [RenderEditable]
@@ -87,12 +91,11 @@ class EditorViewModel extends _$EditorViewModel {
     //   error: (error, stack) => TextNode(),
     //   loading: () => TextNode(),
     // );
-
   }
 
   /// Render the text into a [TextSpan].
   TextSpan rootToTextSpan() {
-    return _blockModelToTextSpan(state.value!.rootBlock);
+    return _blockModelToTextSpan(state.rootBlock);
   }
 
   /// Conversion method to build a [TextSpan] from [BlockModel]s.
