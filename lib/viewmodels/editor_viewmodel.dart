@@ -3,13 +3,12 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:memoweave/models/block_collection.dart';
+import 'package:memoweave/models/editor_props.dart';
+import 'package:memoweave/models/editor_state.dart';
+import 'package:memoweave/models/text_node.dart';
+import 'package:memoweave/utils/database_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../models/block_collection.dart';
-import '../models/editor_props.dart';
-import '../models/editor_state.dart';
-import '../models/text_node.dart';
-import '../utils/database_handler.dart';
 
 part 'editor_viewmodel.g.dart';
 
@@ -83,6 +82,15 @@ class EditorViewModel extends _$EditorViewModel {
         _renderParagraph!.getPositionForOffset(pointerDownEvent.localPosition);
     final caretOffset =
         _renderParagraph!.getOffsetForCaret(tapAsTextPosition, Rect.zero);
+
+    // Update text and selection in text field
+    // var node = state.when(
+    //   data: (data) =>
+    //       data.rootBlock.textNodeWithTextPosition(tapAsTextPosition) ??
+    //       TextNode(),
+    //   error: (error, stack) => TextNode(),
+    //   loading: () => TextNode(),
+    // );
 
     // Update the cursor location in state
     state = AsyncValue.data(

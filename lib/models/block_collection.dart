@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/text_node.dart';
 
@@ -16,4 +18,25 @@ class BlockCollection {
   final children = IsarLinks<BlockCollection>();
 
   BlockCollection();
+
+  TextNode? textNodeWithTextPosition(TextPosition textPosition) {
+    var offsetRemaining = textPosition.offset;
+    for (var node in text) {
+      if (offsetRemaining - node.text.length > 0) {
+        offsetRemaining -= node.text.length;
+      } else {
+        return node;
+      }
+    }
+
+    for (var child in children) {
+      var childSearch =
+          child.textNodeWithTextPosition(TextPosition(offset: offsetRemaining));
+      if (childSearch != null) {
+        return childSearch;
+      }
+    }
+
+    return null;
+  }
 }

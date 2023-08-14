@@ -43,11 +43,11 @@ class EditorWidget extends ConsumerWidget {
                 height: 18,
                 alignment: Alignment.topLeft,
                 margin: editorState.cursorInsets,
-                    duration: const Duration(milliseconds: 100),
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                  IgnorePointer(
-                    ignoring: ref.read(provider.notifier).isOnMobilePlatform(),
+                duration: const Duration(milliseconds: 100),
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+              IgnorePointer(
+                ignoring: ref.read(provider.notifier).isOnMobilePlatform(),
                 child: EditableText(
                   controller: _props.textEditingController,
                   focusNode: _props.keyboardFocusNode,
@@ -62,9 +62,9 @@ class EditorWidget extends ConsumerWidget {
                       print('${_props.keyboardFocusNode}: $newText'),
                   enableInteractiveSelection: false,
                 ),
-                  ),
-                ],
               ),
+            ],
+          ),
         ),
       ),
       error: (error, stack) => Text('ERROR: $error'),
