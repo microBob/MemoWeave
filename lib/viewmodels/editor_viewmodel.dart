@@ -3,7 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/editor_props.dart';
 import 'package:memoweave/models/editor_state.dart';
-import 'package:memoweave/models/text_node.dart';
 import 'package:memoweave/utils/database_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -30,19 +29,14 @@ class EditorViewModel extends _$EditorViewModel {
     // Generate default state if not loading previous
     if (blockId == null) {
       final blockCollection = BlockCollection()
-        ..text = [
-          TextNode.plain(text: 'Hello World'),
-          TextNode.plain(text: ' this is a test.'),
-          TextNode.plain(text: '\nWith a new paragraph'),
-        ];
+        ..text = 'Hello World\nThis is a new line';
       return (cursorInsets: EdgeInsets.zero, rootBlock: blockCollection);
     }
 
     // Load block from database
     final blankState = (
       cursorInsets: EdgeInsets.zero,
-      rootBlock: BlockCollection()
-        ..text = [TextNode.plain(text: 'Blank state text')]
+    rootBlock: BlockCollection()..text = 'Blank state text'
     );
 
     return ref.watch(blockCollectionByIdProvider(id: blockId)).when(
@@ -77,27 +71,11 @@ class EditorViewModel extends _$EditorViewModel {
     var renderObject = root.renderObject;
     if (renderObject is RenderEditable) {
       _renderEditable = renderObject;
-      _renderEditable?.onCaretChanged = (rect) {
-        print(rect);
-      };
+      _renderEditable?.onCaretChanged = (r) => print(r);
     } else {
       root.visitChildElements((childElement) {
         findRenderEditable(childElement);
       });
     }
-  }
-
-  /// Render the text into a [TextSpan].
-  TextSpan rootToTextSpan() {
-    return _blockModelToTextSpan(state.rootBlock);
-  }
-
-  /// Conversion method to build a [TextSpan] from [BlockModel]s.
-  TextSpan _blockModelToTextSpan(BlockCollection root) {
-    return TextSpan(
-      text: root.text.map((textNode) => textNode.text).join(),
-      children:
-          root.children.map((child) => _blockModelToTextSpan(child)).toList(),
-    );
   }
 }

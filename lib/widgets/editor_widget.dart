@@ -34,6 +34,8 @@ class EditorWidget extends ConsumerWidget {
           focusNode: _props.textFieldFocusNode,
           controller: EditorTextEditingController(
               editorViewModelProvider: provider, widgetRef: ref),
+          onChanged: (text) => print(text),
+          maxLines: null,
         ),
         AnimatedContainer(
           width: 2,
@@ -43,7 +45,6 @@ class EditorWidget extends ConsumerWidget {
           duration: const Duration(milliseconds: 100),
           color: Theme.of(context).colorScheme.onSurface,
         ),
-        Text.rich(ref.watch(provider.notifier).rootToTextSpan()),
       ],
     );
   }

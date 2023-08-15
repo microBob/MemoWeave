@@ -1,7 +1,5 @@
-import 'dart:ui';
-
 import 'package:isar/isar.dart';
-import 'package:memoweave/models/text_node.dart';
+import 'package:memoweave/models/style_node.dart';
 
 part 'block_collection.g.dart';
 
@@ -11,32 +9,17 @@ class BlockCollection {
   /// Unique identifier for this block.
   final Id id = Isar.autoIncrement;
 
-  /// Text that comprise the contents of this block.
-  List<TextNode> text = [];
+  /// Block content as plain text.
+  String text = '';
+
+  /// Set if styles to apply onto the text.
+  List<StyleNode> styles = [];
 
   /// Ordered set of hierarchical children to this block.
   final children = IsarLinks<BlockCollection>();
 
+  @Backlink(to: 'children')
+  final parents = IsarLinks<BlockCollection>();
+
   BlockCollection();
-
-  TextNode? textNodeWithTextPosition(TextPosition textPosition) {
-    var offsetRemaining = textPosition.offset;
-    for (var node in text) {
-      if (offsetRemaining - node.text.length > 0) {
-        offsetRemaining -= node.text.length;
-      } else {
-        return node;
-      }
-    }
-
-    for (var child in children) {
-      var childSearch =
-          child.textNodeWithTextPosition(TextPosition(offset: offsetRemaining));
-      if (childSearch != null) {
-        return childSearch;
-      }
-    }
-
-    return null;
-  }
 }

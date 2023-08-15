@@ -25,7 +25,6 @@ Future<BlockCollection?> blockCollectionById(BlockCollectionByIdRef ref,
     {required Id id}) {
   return ref.watch(databaseHandlerProvider).when(
       data: (isar) {
-        print("Searching isar");
         return isar.blockCollections.get(id);
       },
       error: (error, frame) => Future(() => null),

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'text_node.dart';
+part of 'style_node.dart';
 
 // **************************************************************************
 // IsarEmbeddedGenerator
@@ -9,61 +9,67 @@ part of 'text_node.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-const TextNodeSchema = Schema(
-  name: r'TextNode',
-  id: 8369885296102548357,
+const StyleNodeSchema = Schema(
+  name: r'StyleNode',
+  id: 1342748013343944162,
   properties: {
-    r'format': PropertySchema(
+    r'endIndex': PropertySchema(
       id: 0,
+      name: r'endIndex',
+      type: IsarType.long,
+    ),
+    r'format': PropertySchema(
+      id: 1,
       name: r'format',
       type: IsarType.string,
     ),
-    r'text': PropertySchema(
-      id: 1,
-      name: r'text',
-      type: IsarType.string,
+    r'startIndex': PropertySchema(
+      id: 2,
+      name: r'startIndex',
+      type: IsarType.long,
     )
   },
-  estimateSize: _textNodeEstimateSize,
-  serialize: _textNodeSerialize,
-  deserialize: _textNodeDeserialize,
-  deserializeProp: _textNodeDeserializeProp,
+  estimateSize: _styleNodeEstimateSize,
+  serialize: _styleNodeSerialize,
+  deserialize: _styleNodeDeserialize,
+  deserializeProp: _styleNodeDeserializeProp,
 );
 
-int _textNodeEstimateSize(
-  TextNode object,
+int _styleNodeEstimateSize(
+  StyleNode object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.format.length * 3;
-  bytesCount += 3 + object.text.length * 3;
   return bytesCount;
 }
 
-void _textNodeSerialize(
-  TextNode object,
+void _styleNodeSerialize(
+  StyleNode object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.format);
-  writer.writeString(offsets[1], object.text);
+  writer.writeLong(offsets[0], object.endIndex);
+  writer.writeString(offsets[1], object.format);
+  writer.writeLong(offsets[2], object.startIndex);
 }
 
-TextNode _textNodeDeserialize(
+StyleNode _styleNodeDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = TextNode();
-  object.format = reader.readString(offsets[0]);
-  object.text = reader.readString(offsets[1]);
+  final object = StyleNode();
+  object.endIndex = reader.readLong(offsets[0]);
+  object.format = reader.readString(offsets[1]);
+  object.startIndex = reader.readLong(offsets[2]);
   return object;
 }
 
-P _textNodeDeserializeProp<P>(
+P _styleNodeDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -71,17 +77,72 @@ P _textNodeDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 1:
       return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
-extension TextNodeQueryFilter
-    on QueryBuilder<TextNode, TextNode, QFilterCondition> {
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatEqualTo(
+extension StyleNodeQueryFilter
+    on QueryBuilder<StyleNode, StyleNode, QFilterCondition> {
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> endIndexEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'endIndex',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> endIndexGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'endIndex',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> endIndexLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'endIndex',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> endIndexBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'endIndex',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -94,7 +155,7 @@ extension TextNodeQueryFilter
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatGreaterThan(
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -109,7 +170,7 @@ extension TextNodeQueryFilter
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatLessThan(
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -124,7 +185,7 @@ extension TextNodeQueryFilter
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatBetween(
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -143,7 +204,7 @@ extension TextNodeQueryFilter
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatStartsWith(
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -156,7 +217,7 @@ extension TextNodeQueryFilter
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatEndsWith(
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -169,7 +230,7 @@ extension TextNodeQueryFilter
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatContains(
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -181,7 +242,7 @@ extension TextNodeQueryFilter
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatMatches(
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -193,7 +254,7 @@ extension TextNodeQueryFilter
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatIsEmpty() {
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'format',
@@ -202,7 +263,7 @@ extension TextNodeQueryFilter
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> formatIsNotEmpty() {
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'format',
@@ -211,136 +272,60 @@ extension TextNodeQueryFilter
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> startIndexEqualTo(
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'text',
+        property: r'startIndex',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textGreaterThan(
-    String value, {
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
+      startIndexGreaterThan(
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'text',
+        property: r'startIndex',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textLessThan(
-    String value, {
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> startIndexLessThan(
+    int value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'text',
+        property: r'startIndex',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textBetween(
-    String lower,
-    String upper, {
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> startIndexBetween(
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'text',
+        property: r'startIndex',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'text',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'text',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'text',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'text',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'text',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<TextNode, TextNode, QAfterFilterCondition> textIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'text',
-        value: '',
       ));
     });
   }
 }
 
-extension TextNodeQueryObject
-    on QueryBuilder<TextNode, TextNode, QFilterCondition> {}
+extension StyleNodeQueryObject
+    on QueryBuilder<StyleNode, StyleNode, QFilterCondition> {}

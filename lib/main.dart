@@ -52,12 +52,6 @@ class MemoWeave extends ConsumerWidget {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(onPressed: () {
-          print(key.currentContext?.findRenderObject().toString());
-          key.currentContext?.visitChildElements((element) {
-            test(element);
-          });
-        }),
       ),
     );
   }

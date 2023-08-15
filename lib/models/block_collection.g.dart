@@ -17,11 +17,16 @@ const BlockCollectionSchema = CollectionSchema(
   name: r'BlockCollection',
   id: 5417308939645646360,
   properties: {
-    r'text': PropertySchema(
+    r'styles': PropertySchema(
       id: 0,
-      name: r'text',
+      name: r'styles',
       type: IsarType.objectList,
-      target: r'TextNode',
+      target: r'StyleNode',
+    ),
+    r'text': PropertySchema(
+      id: 1,
+      name: r'text',
+      type: IsarType.string,
     )
   },
   estimateSize: _blockCollectionEstimateSize,
@@ -36,9 +41,16 @@ const BlockCollectionSchema = CollectionSchema(
       name: r'children',
       target: r'BlockCollection',
       single: false,
+    ),
+    r'parents': LinkSchema(
+      id: 3619379095208634017,
+      name: r'parents',
+      target: r'BlockCollection',
+      single: false,
+      linkName: r'children',
     )
   },
-  embeddedSchemas: {r'TextNode': TextNodeSchema},
+  embeddedSchemas: {r'StyleNode': StyleNodeSchema},
   getId: _blockCollectionGetId,
   getLinks: _blockCollectionGetLinks,
   attach: _blockCollectionAttach,
@@ -51,14 +63,15 @@ int _blockCollectionEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.text.length * 3;
+  bytesCount += 3 + object.styles.length * 3;
   {
-    final offsets = allOffsets[TextNode]!;
-    for (var i = 0; i < object.text.length; i++) {
-      final value = object.text[i];
-      bytesCount += TextNodeSchema.estimateSize(value, offsets, allOffsets);
+    final offsets = allOffsets[StyleNode]!;
+    for (var i = 0; i < object.styles.length; i++) {
+      final value = object.styles[i];
+      bytesCount += StyleNodeSchema.estimateSize(value, offsets, allOffsets);
     }
   }
+  bytesCount += 3 + object.text.length * 3;
   return bytesCount;
 }
 
@@ -68,12 +81,13 @@ void _blockCollectionSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeObjectList<TextNode>(
+  writer.writeObjectList<StyleNode>(
     offsets[0],
     allOffsets,
-    TextNodeSchema.serialize,
-    object.text,
+    StyleNodeSchema.serialize,
+    object.styles,
   );
+  writer.writeString(offsets[1], object.text);
 }
 
 BlockCollection _blockCollectionDeserialize(
@@ -83,13 +97,14 @@ BlockCollection _blockCollectionDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = BlockCollection();
-  object.text = reader.readObjectList<TextNode>(
+  object.styles = reader.readObjectList<StyleNode>(
         offsets[0],
-        TextNodeSchema.deserialize,
+        StyleNodeSchema.deserialize,
         allOffsets,
-        TextNode(),
+        StyleNode(),
       ) ??
       [];
+  object.text = reader.readString(offsets[1]);
   return object;
 }
 
@@ -101,13 +116,15 @@ P _blockCollectionDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readObjectList<TextNode>(
+      return (reader.readObjectList<StyleNode>(
             offset,
-            TextNodeSchema.deserialize,
+            StyleNodeSchema.deserialize,
             allOffsets,
-            TextNode(),
+            StyleNode(),
           ) ??
           []) as P;
+    case 1:
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -118,13 +135,15 @@ Id _blockCollectionGetId(BlockCollection object) {
 }
 
 List<IsarLinkBase<dynamic>> _blockCollectionGetLinks(BlockCollection object) {
-  return [object.children];
+  return [object.children, object.parents];
 }
 
 void _blockCollectionAttach(
     IsarCollection<dynamic> col, Id id, BlockCollection object) {
   object.children
       .attach(col, col.isar.collection<BlockCollection>(), r'children', id);
+  object.parents
+      .attach(col, col.isar.collection<BlockCollection>(), r'parents', id);
 }
 
 extension BlockCollectionQueryWhereSort
@@ -266,10 +285,10 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      textLengthEqualTo(int length) {
+      stylesLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'text',
+        r'styles',
         length,
         true,
         length,
@@ -279,10 +298,10 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      textIsEmpty() {
+      stylesIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'text',
+        r'styles',
         0,
         true,
         0,
@@ -292,10 +311,10 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      textIsNotEmpty() {
+      stylesIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'text',
+        r'styles',
         0,
         false,
         999999,
@@ -305,13 +324,13 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      textLengthLessThan(
+      stylesLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'text',
+        r'styles',
         0,
         true,
         length,
@@ -321,13 +340,13 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      textLengthGreaterThan(
+      stylesLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'text',
+        r'styles',
         length,
         include,
         999999,
@@ -337,7 +356,7 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      textLengthBetween(
+      stylesLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -345,7 +364,7 @@ extension BlockCollectionQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'text',
+        r'styles',
         lower,
         includeLower,
         upper,
@@ -353,14 +372,150 @@ extension BlockCollectionQueryFilter
       );
     });
   }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      textEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'text',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      textGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'text',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      textLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'text',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      textBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'text',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      textStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'text',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      textEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'text',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      textContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'text',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      textMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'text',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      textIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'text',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      textIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'text',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension BlockCollectionQueryObject
     on QueryBuilder<BlockCollection, BlockCollection, QFilterCondition> {
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      textElement(FilterQuery<TextNode> q) {
+      stylesElement(FilterQuery<StyleNode> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'text');
+      return query.object(q, r'styles');
     });
   }
 }
@@ -427,10 +582,84 @@ extension BlockCollectionQueryLinks
           r'children', lower, includeLower, upper, includeUpper);
     });
   }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition> parents(
+      FilterQuery<BlockCollection> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'parents');
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      parentsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'parents', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      parentsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'parents', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      parentsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'parents', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      parentsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'parents', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      parentsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'parents', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      parentsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'parents', lower, includeLower, upper, includeUpper);
+    });
+  }
 }
 
 extension BlockCollectionQuerySortBy
-    on QueryBuilder<BlockCollection, BlockCollection, QSortBy> {}
+    on QueryBuilder<BlockCollection, BlockCollection, QSortBy> {
+  QueryBuilder<BlockCollection, BlockCollection, QAfterSortBy> sortByText() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'text', Sort.asc);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterSortBy>
+      sortByTextDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'text', Sort.desc);
+    });
+  }
+}
 
 extension BlockCollectionQuerySortThenBy
     on QueryBuilder<BlockCollection, BlockCollection, QSortThenBy> {
@@ -445,10 +674,30 @@ extension BlockCollectionQuerySortThenBy
       return query.addSortBy(r'id', Sort.desc);
     });
   }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterSortBy> thenByText() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'text', Sort.asc);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterSortBy>
+      thenByTextDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'text', Sort.desc);
+    });
+  }
 }
 
 extension BlockCollectionQueryWhereDistinct
-    on QueryBuilder<BlockCollection, BlockCollection, QDistinct> {}
+    on QueryBuilder<BlockCollection, BlockCollection, QDistinct> {
+  QueryBuilder<BlockCollection, BlockCollection, QDistinct> distinctByText(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'text', caseSensitive: caseSensitive);
+    });
+  }
+}
 
 extension BlockCollectionQueryProperty
     on QueryBuilder<BlockCollection, BlockCollection, QQueryProperty> {
@@ -458,8 +707,14 @@ extension BlockCollectionQueryProperty
     });
   }
 
-  QueryBuilder<BlockCollection, List<TextNode>, QQueryOperations>
-      textProperty() {
+  QueryBuilder<BlockCollection, List<StyleNode>, QQueryOperations>
+      stylesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'styles');
+    });
+  }
+
+  QueryBuilder<BlockCollection, String, QQueryOperations> textProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'text');
     });
