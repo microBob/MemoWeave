@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memoweave/models/editor_props.dart';
-import 'package:memoweave/viewmodels/editor_texteditingcontroller.dart';
 import 'package:memoweave/viewmodels/editor_viewmodel.dart';
 
 /// Text editor interface
@@ -32,8 +31,7 @@ class EditorWidget extends ConsumerWidget {
         TextField(
           key: _props.textFieldKey,
           focusNode: _props.textFieldFocusNode,
-          controller: EditorTextEditingController(
-              editorViewModelProvider: provider, widgetRef: ref),
+          controller: ref.watch(provider.notifier).getTextEditingController(),
           onChanged: (text) => print(text),
           maxLines: null,
         ),

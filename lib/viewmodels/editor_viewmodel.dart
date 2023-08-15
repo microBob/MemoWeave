@@ -3,7 +3,9 @@ import 'package:flutter/rendering.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/editor_props.dart';
 import 'package:memoweave/models/editor_state.dart';
+import 'package:memoweave/models/style_node.dart';
 import 'package:memoweave/utils/database_handler.dart';
+import 'package:memoweave/viewmodels/editor_texteditingcontroller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'editor_viewmodel.g.dart';
@@ -19,6 +21,8 @@ class EditorViewModel extends _$EditorViewModel {
   /// Reference to the [TextField]'s [RenderEditable]
   RenderEditable? _renderEditable;
 
+  late TextEditingController _textEditingController;
+
   /// Get props and initialize a default editor.
   @override
   EditorState build(EditorProps props) {
@@ -26,28 +30,47 @@ class EditorViewModel extends _$EditorViewModel {
     _props = props;
     final blockId = props.blockId;
 
+    // Create TextEditingController
+    _textEditingController = EditorTextEditingController(
+        editorViewModelProvider: editorViewModelProvider(props),
+        widgetRef: ref);
+
+    // Create a default state to use
+    final defaultState = (
+      cursorInsets: EdgeInsets.zero,
+      rootBlock: BlockCollection()
+        ..text = 'Blank state text'
+        ..styles = [
+          StyleNode(startIndex: 6, endIndex: 10, styles: [Styles.bold])
+        ]
+    );
+
     // Generate default state if not loading previous
     if (blockId == null) {
-      final blockCollection = BlockCollection()
-        ..text = 'Hello World\nThis is a new line';
-      return (cursorInsets: EdgeInsets.zero, rootBlock: blockCollection);
+      return defaultState;
     }
 
     // Load block from database
-    final blankState = (
-      cursorInsets: EdgeInsets.zero,
-    rootBlock: BlockCollection()..text = 'Blank state text'
-    );
-
     return ref.watch(blockCollectionByIdProvider(id: blockId)).when(
-        data: (blockCollection) {
-          if (blockCollection == null) {
-            return blankState;
-          }
-          return (cursorInsets: EdgeInsets.zero, rootBlock: blockCollection);
-        },
-        error: (_, __) => blankState,
-        loading: () => blankState);
+          data: (blockCollection) {
+            // Return default state if no block is found
+            if (blockCollection == null) {
+              return defaultState;
+            }
+
+            // Update text in text field
+            _textEditingController.text = blockCollection.text;
+
+            // Return the block
+            return (cursorInsets: EdgeInsets.zero, rootBlock: blockCollection);
+          },
+          error: (_, __) => defaultState,
+          loading: () => defaultState,
+        );
+  }
+
+  TextEditingController getTextEditingController() {
+    return _textEditingController;
   }
 
   /// Search through widget tree to find [RenderEditable]

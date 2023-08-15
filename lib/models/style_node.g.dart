@@ -18,15 +18,16 @@ const StyleNodeSchema = Schema(
       name: r'endIndex',
       type: IsarType.long,
     ),
-    r'format': PropertySchema(
-      id: 1,
-      name: r'format',
-      type: IsarType.string,
-    ),
     r'startIndex': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'startIndex',
       type: IsarType.long,
+    ),
+    r'styles': PropertySchema(
+      id: 2,
+      name: r'styles',
+      type: IsarType.byteList,
+      enumMap: _StyleNodestylesEnumValueMap,
     )
   },
   estimateSize: _styleNodeEstimateSize,
@@ -41,7 +42,7 @@ int _styleNodeEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.format.length * 3;
+  bytesCount += 3 + object.styles.length;
   return bytesCount;
 }
 
@@ -52,8 +53,8 @@ void _styleNodeSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.endIndex);
-  writer.writeString(offsets[1], object.format);
-  writer.writeLong(offsets[2], object.startIndex);
+  writer.writeLong(offsets[1], object.startIndex);
+  writer.writeByteList(offsets[2], object.styles.map((e) => e.index).toList());
 }
 
 StyleNode _styleNodeDeserialize(
@@ -62,10 +63,15 @@ StyleNode _styleNodeDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = StyleNode();
-  object.endIndex = reader.readLong(offsets[0]);
-  object.format = reader.readString(offsets[1]);
-  object.startIndex = reader.readLong(offsets[2]);
+  final object = StyleNode(
+    endIndex: reader.readLongOrNull(offsets[0]) ?? 0,
+    startIndex: reader.readLongOrNull(offsets[1]) ?? 0,
+    styles: reader
+            .readByteList(offsets[2])
+            ?.map((e) => _StyleNodestylesValueEnumMap[e] ?? Styles.heading1)
+            .toList() ??
+        const [],
+  );
   return object;
 }
 
@@ -77,15 +83,40 @@ P _styleNodeDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLong(offset)) as P;
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readLongOrNull(offset) ?? 0) as P;
     case 2:
-      return (reader.readLong(offset)) as P;
+      return (reader
+              .readByteList(offset)
+              ?.map((e) => _StyleNodestylesValueEnumMap[e] ?? Styles.heading1)
+              .toList() ??
+          const []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
+
+const _StyleNodestylesEnumValueMap = {
+  'heading1': 0,
+  'heading2': 1,
+  'heading3': 2,
+  'heading4': 3,
+  'heading5': 4,
+  'heading6': 5,
+  'bold': 6,
+  'italic': 7,
+};
+const _StyleNodestylesValueEnumMap = {
+  0: Styles.heading1,
+  1: Styles.heading2,
+  2: Styles.heading3,
+  3: Styles.heading4,
+  4: Styles.heading5,
+  5: Styles.heading6,
+  6: Styles.bold,
+  7: Styles.italic,
+};
 
 extension StyleNodeQueryFilter
     on QueryBuilder<StyleNode, StyleNode, QFilterCondition> {
@@ -142,136 +173,6 @@ extension StyleNodeQueryFilter
     });
   }
 
-  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'format',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'format',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'format',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'format',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'format',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'format',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'format',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'format',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'format',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> formatIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'format',
-        value: '',
-      ));
-    });
-  }
-
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> startIndexEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
@@ -323,6 +224,148 @@ extension StyleNodeQueryFilter
         upper: upper,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
+      stylesElementEqualTo(Styles value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'styles',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
+      stylesElementGreaterThan(
+    Styles value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'styles',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
+      stylesElementLessThan(
+    Styles value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'styles',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
+      stylesElementBetween(
+    Styles lower,
+    Styles upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'styles',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> stylesLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'styles',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> stylesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'styles',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> stylesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'styles',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
+      stylesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'styles',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
+      stylesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'styles',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> stylesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'styles',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 }
