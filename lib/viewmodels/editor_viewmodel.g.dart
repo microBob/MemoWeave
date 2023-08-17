@@ -6,7 +6,7 @@ part of 'editor_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editorViewModelHash() => r'a71395153b26ec5a9ce3d1c0be8c6ab518d911b5';
+String _$editorViewModelHash() => r'02402e635cfe0cf08b8e4d8b2429608577a81d7f';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -46,31 +46,31 @@ abstract class _$EditorViewModel extends BuildlessAutoDisposeNotifier<
   );
 }
 
-/// Text editor logic
+/// Text editor logic.
 ///
-/// Utilized by [EditorWidget]
+/// Utilized by [EditorWidget].
 ///
 /// Copied from [EditorViewModel].
 @ProviderFor(EditorViewModel)
 const editorViewModelProvider = EditorViewModelFamily();
 
-/// Text editor logic
+/// Text editor logic.
 ///
-/// Utilized by [EditorWidget]
+/// Utilized by [EditorWidget].
 ///
 /// Copied from [EditorViewModel].
 class EditorViewModelFamily
     extends Family<({EdgeInsets cursorInsets, BlockCollection rootBlock})> {
-  /// Text editor logic
+  /// Text editor logic.
   ///
-  /// Utilized by [EditorWidget]
+  /// Utilized by [EditorWidget].
   ///
   /// Copied from [EditorViewModel].
   const EditorViewModelFamily();
 
-  /// Text editor logic
+  /// Text editor logic.
   ///
-  /// Utilized by [EditorWidget]
+  /// Utilized by [EditorWidget].
   ///
   /// Copied from [EditorViewModel].
   EditorViewModelProvider call(
@@ -109,16 +109,16 @@ class EditorViewModelFamily
   String? get name => r'editorViewModelProvider';
 }
 
-/// Text editor logic
+/// Text editor logic.
 ///
-/// Utilized by [EditorWidget]
+/// Utilized by [EditorWidget].
 ///
 /// Copied from [EditorViewModel].
 class EditorViewModelProvider extends AutoDisposeNotifierProviderImpl<
     EditorViewModel, ({EdgeInsets cursorInsets, BlockCollection rootBlock})> {
-  /// Text editor logic
+  /// Text editor logic.
   ///
-  /// Utilized by [EditorWidget]
+  /// Utilized by [EditorWidget].
   ///
   /// Copied from [EditorViewModel].
   EditorViewModelProvider(

@@ -10,65 +10,69 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'editor_viewmodel.g.dart';
 
-/// Text editor logic
+/// Text editor logic.
 ///
-/// Utilized by [EditorWidget]
+/// Utilized by [EditorWidget].
 @riverpod
 class EditorViewModel extends _$EditorViewModel {
-  /// Props from the widget
-  late EditorProps _props;
+  /// Props from the widget.
+  late final EditorProps _props;
 
-  /// Reference to the [TextField]'s [RenderEditable]
-  RenderEditable? _renderEditable;
+  /// Reference to the [TextField]'s [RenderEditable].
+  late final RenderEditable? _renderEditable;
 
-  late TextEditingController _textEditingController;
+  late final TextEditingController _textEditingController;
 
   /// Get props and initialize a default editor.
   @override
   EditorState build(EditorProps props) {
-    // Populate fields
+    // Populate fields.
     _props = props;
     final blockId = props.blockId;
 
-    // Create TextEditingController
-    _textEditingController = EditorTextEditingController(
-        editorViewModelProvider: editorViewModelProvider(props),
-        widgetRef: ref);
-
-    // Create a default state to use
+    // Create a default state to use.
     final defaultState = (
       cursorInsets: EdgeInsets.zero,
       rootBlock: BlockCollection()
         ..text = 'Blank state text'
-        ..styles = [
-          StyleNode(startIndex: 6, endIndex: 10, styles: [Styles.bold])
+        ..inlineStyles = [
+          StyleNode(startIndex: 6, endIndex: 11, styles: [InlineStyle.bold])
         ]
     );
 
-    // Generate default state if not loading previous
+    // Create default TextEditingController.
+    _textEditingController =
+        EditorTextEditingController(defaultState.rootBlock);
+
+    // Generate default state if not loading previous.
     if (blockId == null) {
       return defaultState;
     }
 
-    // Load block from database
+    // Load block from database.
     return ref.watch(blockCollectionByIdProvider(id: blockId)).when(
           data: (blockCollection) {
-            // Return default state if no block is found
+            // Return default state if no block are found.
             if (blockCollection == null) {
               return defaultState;
             }
 
-            // Update text in text field
-            _textEditingController.text = blockCollection.text;
+            // Create TextEditingController based on retrieved controller.
+            _textEditingController =
+                EditorTextEditingController(blockCollection);
 
-            // Return the block
+            // Return the block.
             return (cursorInsets: EdgeInsets.zero, rootBlock: blockCollection);
           },
+          // Return the default state when one from the database is unavailable.
           error: (_, __) => defaultState,
           loading: () => defaultState,
         );
   }
 
+  /// Return the created [TextEditingController]
+  ///
+  /// Is of type [EditorTextEditingController]
   TextEditingController getTextEditingController() {
     return _textEditingController;
   }

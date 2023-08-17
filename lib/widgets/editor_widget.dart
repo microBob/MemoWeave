@@ -13,7 +13,7 @@ class EditorWidget extends ConsumerWidget {
   final EditorProps _props = (
     textFieldKey: GlobalKey(),
     textFieldFocusNode: FocusNode(),
-    blockId: 61254764,
+    blockId: null,
   );
 
   /// Attach to [EditorViewModel] and build UI

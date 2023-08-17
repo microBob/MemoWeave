@@ -1,30 +1,75 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:memoweave/models/editor_state.dart';
-import 'package:memoweave/viewmodels/editor_viewmodel.dart';
+import 'package:memoweave/models/block_collection.dart';
+import 'package:memoweave/models/style_node.dart';
 
+/// [TextEditingController] managing an editor [TextField].
+///
+/// Responsible for applying styling to the text.
 class EditorTextEditingController extends TextEditingController {
-  final EditorViewModelProvider editorViewModelProvider;
-  final AutoDisposeNotifierProviderRef<EditorState> widgetRef;
+  late final BlockCollection _rootBlock;
 
-  EditorTextEditingController(
-      {required this.editorViewModelProvider, required this.widgetRef});
+  EditorTextEditingController(BlockCollection rootBlock) {
+    _rootBlock = rootBlock;
+    text = rootBlock.text;
+  }
 
   @override
   TextSpan buildTextSpan(
       {required BuildContext context,
       TextStyle? style,
       required bool withComposing}) {
-    var styles = widgetRef.watch(editorViewModelProvider).rootBlock.styles;
-    for (var style in styles) {
-      print(style.styles);
+    // Get styles and prepare to build
+    final children = <TextSpan>[];
+    var currentIndex = 0;
+
+    // Assess each inlineStyle and build TextSpans
+    for (var inlineStyle in _rootBlock.inlineStyles) {
+      // Build plain text before inlineStyle
+      if (currentIndex < inlineStyle.startIndex) {
+        children.add(
+          TextSpan(
+            text:
+                _rootBlock.text.substring(currentIndex, inlineStyle.startIndex),
+          ),
+        );
+
+        // Update current index
+        currentIndex = inlineStyle.startIndex;
+      }
+
+      // Build individual style
+      final textStyle = TextStyle(
+        fontStyle: inlineStyle.styles.contains(InlineStyle.italic)
+            ? FontStyle.italic
+            : null,
+        fontWeight: inlineStyle.styles.contains(InlineStyle.bold)
+            ? FontWeight.bold
+            : null,
+      );
+
+      // Add text span
+      children.add(
+        TextSpan(
+          text: _rootBlock.text.substring(currentIndex, inlineStyle.endIndex),
+          style: textStyle,
+        ),
+      );
+
+      // Update index
+      currentIndex = inlineStyle.endIndex;
     }
-    return TextSpan(style: DefaultTextStyle.of(context).style, children: [
-      TextSpan(text: 'Hello'),
+
+    // Fill in remaining characters as plain text
+    children.add(
       TextSpan(
-          text: ' Emphasis text in red ',
-          style: TextStyle(fontStyle: FontStyle.italic)),
-      TextSpan(text: 'post test.'),
-    ]);
+        text: text.substring(currentIndex, text.length),
+      ),
+    );
+
+    // Return built span
+    return TextSpan(
+      style: DefaultTextStyle.of(context).style,
+      children: children,
+    );
   }
 }

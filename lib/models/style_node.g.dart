@@ -68,7 +68,7 @@ StyleNode _styleNodeDeserialize(
     startIndex: reader.readLongOrNull(offsets[1]) ?? 0,
     styles: reader
             .readByteList(offsets[2])
-            ?.map((e) => _StyleNodestylesValueEnumMap[e] ?? Styles.heading1)
+            ?.map((e) => _StyleNodestylesValueEnumMap[e] ?? InlineStyle.bold)
             .toList() ??
         const [],
   );
@@ -89,7 +89,7 @@ P _styleNodeDeserializeProp<P>(
     case 2:
       return (reader
               .readByteList(offset)
-              ?.map((e) => _StyleNodestylesValueEnumMap[e] ?? Styles.heading1)
+              ?.map((e) => _StyleNodestylesValueEnumMap[e] ?? InlineStyle.bold)
               .toList() ??
           const []) as P;
     default:
@@ -98,24 +98,12 @@ P _styleNodeDeserializeProp<P>(
 }
 
 const _StyleNodestylesEnumValueMap = {
-  'heading1': 0,
-  'heading2': 1,
-  'heading3': 2,
-  'heading4': 3,
-  'heading5': 4,
-  'heading6': 5,
-  'bold': 6,
-  'italic': 7,
+  'bold': 0,
+  'italic': 1,
 };
 const _StyleNodestylesValueEnumMap = {
-  0: Styles.heading1,
-  1: Styles.heading2,
-  2: Styles.heading3,
-  3: Styles.heading4,
-  4: Styles.heading5,
-  5: Styles.heading6,
-  6: Styles.bold,
-  7: Styles.italic,
+  0: InlineStyle.bold,
+  1: InlineStyle.italic,
 };
 
 extension StyleNodeQueryFilter
@@ -228,7 +216,7 @@ extension StyleNodeQueryFilter
   }
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
-      stylesElementEqualTo(Styles value) {
+      stylesElementEqualTo(InlineStyle value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'styles',
@@ -239,7 +227,7 @@ extension StyleNodeQueryFilter
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
       stylesElementGreaterThan(
-    Styles value, {
+    InlineStyle value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -253,7 +241,7 @@ extension StyleNodeQueryFilter
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
       stylesElementLessThan(
-    Styles value, {
+    InlineStyle value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -267,8 +255,8 @@ extension StyleNodeQueryFilter
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
       stylesElementBetween(
-    Styles lower,
-    Styles upper, {
+    InlineStyle lower,
+    InlineStyle upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
