@@ -67,7 +67,7 @@ class BlockCollection {
     // Verify last inline style is within text's bounds.
     // Unnecessary to test for < 0 index since this is already
     // tested in the style node.
-    if (inlineStyles.last.endIndex > text.length) {
+    if (inlineStyles.isNotEmpty && inlineStyles.last.endIndex > text.length) {
       throw const FormatException('Invalid BlockCollection inlineStyles: '
           'must not define style out of text bounds.');
     }

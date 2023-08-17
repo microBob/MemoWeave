@@ -9,7 +9,9 @@ class EditorState {
 
   /// [TextEditingController] responsible for handling
   /// input on the editor [TextField].
-  final TextEditingController textEditingController;
+  ///
+  /// Requirement: [textEditingController.rootBlock] == [rootBlock]
+  final EditorTextEditingController textEditingController;
 
   /// Root text information for this editor.
   final BlockCollection rootBlock;
@@ -17,29 +19,35 @@ class EditorState {
   /// Default constructor
   ///
   /// Defines [cursorInset], [textEditingController], and  [rootBlock].
-  /// Will supply default values if none are given.
+  /// Will supply default values if none are given for [cursorInsets]
+  /// and [textEditingController].
   EditorState({
     this.cursorInsets = EdgeInsets.zero,
-    TextEditingController? textEditingController,
+    EditorTextEditingController? textEditingController,
     required this.rootBlock,
-  }) : textEditingController = textEditingController ??
-            EditorTextEditingController(rootBlock: rootBlock);
+  }) : textEditingController =
+            EditorTextEditingController(rootBlock: rootBlock) {
+    // Verify rootBlock got copied into textEditingController
+    if (this.textEditingController.rootBlock != rootBlock) {
+      throw const FormatException(
+          'Invalid EditorState: textEditingController.rootBlock != rootBlock.');
+    }
+  }
 
   /// Copy builder.
   ///
-  /// Creates a copy of the current state and updates
-  /// [cursorInsets] to [newCursorInsets],
-  /// [textEditingController] to [newTextEditingController],
-  /// and [rootBlock] to [newRootBlock] when provided.
+  /// Creates a copy of the current state and updates fields with
+  /// [cursorInsets], [textEditingController], and [rootBlock] when provided.
   EditorState copyWith({
-    EdgeInsets? newCursorInsets,
-    TextEditingController? newTextEditingController,
-    BlockCollection? newRootBlock,
+    EdgeInsets? cursorInsets,
+    EditorTextEditingController? textEditingController,
+    BlockCollection? rootBlock,
   }) {
     return EditorState(
-      cursorInsets: newCursorInsets ?? cursorInsets,
-      textEditingController: newTextEditingController ?? textEditingController,
-      rootBlock: newRootBlock ?? rootBlock,
+      cursorInsets: cursorInsets ?? this.cursorInsets,
+      textEditingController:
+          textEditingController ?? this.textEditingController,
+      rootBlock: rootBlock ?? this.rootBlock,
     );
   }
 }

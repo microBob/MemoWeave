@@ -6,13 +6,17 @@ import 'package:memoweave/models/style_node.dart';
 ///
 /// Responsible for applying styling to the text.
 class EditorTextEditingController extends TextEditingController {
-  final BlockCollection _rootBlock;
+  /// Root block that the governed [TextField] is representing.
+  final BlockCollection rootBlock;
 
-  EditorTextEditingController({BlockCollection? rootBlock})
-      : _rootBlock = rootBlock ?? BlockCollection() {
-    value = value.copyWith(text: _rootBlock.text);
+  /// Default constructor.
+  ///
+  /// Defines [rootBlock] and updates the [text].
+  EditorTextEditingController({required this.rootBlock}) {
+    value = value.copyWith(text: rootBlock.text);
   }
 
+  /// Apply styling to [TextField]'s text.
   @override
   TextSpan buildTextSpan(
       {required BuildContext context,
@@ -23,13 +27,13 @@ class EditorTextEditingController extends TextEditingController {
     var currentIndex = 0;
 
     // Assess each inlineStyle and build TextSpans
-    for (var inlineStyle in _rootBlock.inlineStyles) {
+    for (var inlineStyle in rootBlock.inlineStyles) {
       // Build plain text before inlineStyle
       if (currentIndex < inlineStyle.startIndex) {
         children.add(
           TextSpan(
             text:
-                _rootBlock.text.substring(currentIndex, inlineStyle.startIndex),
+                rootBlock.text.substring(currentIndex, inlineStyle.startIndex),
           ),
         );
 
@@ -50,7 +54,7 @@ class EditorTextEditingController extends TextEditingController {
       // Add text span
       children.add(
         TextSpan(
-          text: _rootBlock.text.substring(currentIndex, inlineStyle.endIndex),
+          text: rootBlock.text.substring(currentIndex, inlineStyle.endIndex),
           style: textStyle,
         ),
       );

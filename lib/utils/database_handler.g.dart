@@ -32,16 +32,24 @@ class _SystemHash {
 
 typedef BlockCollectionByIdRef = AutoDisposeFutureProviderRef<BlockCollection?>;
 
-/// See also [blockCollectionById].
+/// Returns a [BlockCollection] with the given [id]
+///
+/// Copied from [blockCollectionById].
 @ProviderFor(blockCollectionById)
 const blockCollectionByIdProvider = BlockCollectionByIdFamily();
 
-/// See also [blockCollectionById].
+/// Returns a [BlockCollection] with the given [id]
+///
+/// Copied from [blockCollectionById].
 class BlockCollectionByIdFamily extends Family<AsyncValue<BlockCollection?>> {
-  /// See also [blockCollectionById].
+  /// Returns a [BlockCollection] with the given [id]
+  ///
+  /// Copied from [blockCollectionById].
   const BlockCollectionByIdFamily();
 
-  /// See also [blockCollectionById].
+  /// Returns a [BlockCollection] with the given [id]
+  ///
+  /// Copied from [blockCollectionById].
   BlockCollectionByIdProvider call({
     required int id,
   }) {
@@ -74,10 +82,14 @@ class BlockCollectionByIdFamily extends Family<AsyncValue<BlockCollection?>> {
   String? get name => r'blockCollectionByIdProvider';
 }
 
-/// See also [blockCollectionById].
+/// Returns a [BlockCollection] with the given [id]
+///
+/// Copied from [blockCollectionById].
 class BlockCollectionByIdProvider
     extends AutoDisposeFutureProvider<BlockCollection?> {
-  /// See also [blockCollectionById].
+  /// Returns a [BlockCollection] with the given [id]
+  ///
+  /// Copied from [blockCollectionById].
   BlockCollectionByIdProvider({
     required this.id,
   }) : super.internal(
@@ -114,7 +126,9 @@ class BlockCollectionByIdProvider
 
 String _$databaseHandlerHash() => r'bdc914dcb3d1e89f10672d0c3120cbe35bb97ba8';
 
-/// See also [DatabaseHandler].
+/// Opens and handles writing to database.
+///
+/// Copied from [DatabaseHandler].
 @ProviderFor(DatabaseHandler)
 final databaseHandlerProvider =
     AutoDisposeAsyncNotifierProvider<DatabaseHandler, Isar>.internal(

@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'database_handler.g.dart';
 
+/// Opens and handles writing to database.
 @riverpod
 class DatabaseHandler extends _$DatabaseHandler {
   late Isar _isar;
@@ -20,6 +21,7 @@ class DatabaseHandler extends _$DatabaseHandler {
   }
 }
 
+/// Returns a [BlockCollection] with the given [id]
 @riverpod
 Future<BlockCollection?> blockCollectionById(BlockCollectionByIdRef ref,
     {required Id id}) {
