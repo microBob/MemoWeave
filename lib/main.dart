@@ -10,18 +10,10 @@ void main() {
 class MemoWeave extends ConsumerWidget {
   const MemoWeave({super.key});
 
-  void test(Element element) {
-    print(element.renderObject);
-    element.visitChildElements((childElement) {
-      test(childElement);
-    });
-  }
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final database = ref.watch(databaseHandlerProvider);
-    final GlobalKey key = GlobalKey();
 
     return MaterialApp(
       title: 'MemoWeave',
@@ -40,14 +32,10 @@ class MemoWeave extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               EditorWidget(),
-              EditorWidget(),
               database.when(
                 data: (data) => Text('Database opened: ${data.path}'),
                 error: (error, stat) => Text(error.toString()),
                 loading: () => const CircularProgressIndicator(),
-              ),
-              TextField(
-                key: key,
               ),
             ],
           ),
