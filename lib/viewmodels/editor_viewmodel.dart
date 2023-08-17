@@ -19,7 +19,7 @@ class EditorViewModel extends _$EditorViewModel {
   late final EditorProps _props;
 
   /// Reference to the [TextField]'s [RenderEditable].
-  late final RenderEditable? _renderEditable;
+  RenderEditable? _renderEditable;
 
   late final TextEditingController _textEditingController;
 
@@ -75,6 +75,13 @@ class EditorViewModel extends _$EditorViewModel {
   /// Is of type [EditorTextEditingController]
   TextEditingController getTextEditingController() {
     return _textEditingController;
+  }
+
+  /// Handle new input
+  ///
+  /// Contents of the [TextField] is accessed via [newText]
+  void handleTextChange(String newText) {
+    print(newText);
   }
 
   /// Search through widget tree to find [RenderEditable]
