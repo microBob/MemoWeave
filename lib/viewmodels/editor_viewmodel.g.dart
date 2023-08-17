@@ -6,7 +6,7 @@ part of 'editor_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editorViewModelHash() => r'1e51c4ce7286f1617dc47f8ded237db9aba103ae';
+String _$editorViewModelHash() => r'8037934d31feade534e99ae6bd8520efddc39ef7';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,15 +29,15 @@ class _SystemHash {
   }
 }
 
-abstract class _$EditorViewModel extends BuildlessAutoDisposeNotifier<
-    ({EdgeInsets cursorInsets, BlockCollection rootBlock})> {
+abstract class _$EditorViewModel
+    extends BuildlessAutoDisposeNotifier<EditorState> {
   late final ({
     int? blockId,
     FocusNode textFieldFocusNode,
     GlobalKey<State<StatefulWidget>> textFieldKey
   }) props;
 
-  ({EdgeInsets cursorInsets, BlockCollection rootBlock}) build(
+  EditorState build(
     ({
       int? blockId,
       FocusNode textFieldFocusNode,
@@ -59,8 +59,7 @@ const editorViewModelProvider = EditorViewModelFamily();
 /// Utilized by [EditorWidget].
 ///
 /// Copied from [EditorViewModel].
-class EditorViewModelFamily
-    extends Family<({EdgeInsets cursorInsets, BlockCollection rootBlock})> {
+class EditorViewModelFamily extends Family<EditorState> {
   /// Text editor logic.
   ///
   /// Utilized by [EditorWidget].
@@ -114,8 +113,8 @@ class EditorViewModelFamily
 /// Utilized by [EditorWidget].
 ///
 /// Copied from [EditorViewModel].
-class EditorViewModelProvider extends AutoDisposeNotifierProviderImpl<
-    EditorViewModel, ({EdgeInsets cursorInsets, BlockCollection rootBlock})> {
+class EditorViewModelProvider
+    extends AutoDisposeNotifierProviderImpl<EditorViewModel, EditorState> {
   /// Text editor logic.
   ///
   /// Utilized by [EditorWidget].
@@ -156,7 +155,7 @@ class EditorViewModelProvider extends AutoDisposeNotifierProviderImpl<
   }
 
   @override
-  ({EdgeInsets cursorInsets, BlockCollection rootBlock}) runNotifierBuild(
+  EditorState runNotifierBuild(
     covariant EditorViewModel notifier,
   ) {
     return notifier.build(

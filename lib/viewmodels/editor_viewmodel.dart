@@ -3,9 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/editor_props.dart';
 import 'package:memoweave/models/editor_state.dart';
-import 'package:memoweave/models/style_node.dart';
 import 'package:memoweave/utils/database_handler.dart';
-import 'package:memoweave/viewmodels/editor_texteditingcontroller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'editor_viewmodel.g.dart';
@@ -21,8 +19,6 @@ class EditorViewModel extends _$EditorViewModel {
   /// Reference to the [TextField]'s [RenderEditable].
   RenderEditable? _renderEditable;
 
-  late final TextEditingController _textEditingController;
-
   /// Get props and initialize a default editor.
   @override
   EditorState build(EditorProps props) {
@@ -31,18 +27,7 @@ class EditorViewModel extends _$EditorViewModel {
     final blockId = props.blockId;
 
     // Create a default state to use.
-    final defaultState = (
-      cursorInsets: EdgeInsets.zero,
-      rootBlock: BlockCollection()
-        ..text = 'Blank state text'
-        ..inlineStyles = [
-          StyleNode(startIndex: 6, endIndex: 11, styles: [InlineStyle.bold])
-        ]
-    );
-
-    // Create default TextEditingController.
-    _textEditingController =
-        EditorTextEditingController(defaultState.rootBlock);
+    final defaultState = EditorState(rootBlock: BlockCollection());
 
     // Generate default state if not loading previous.
     if (blockId == null) {
@@ -57,24 +42,13 @@ class EditorViewModel extends _$EditorViewModel {
               return defaultState;
             }
 
-            // Create TextEditingController based on retrieved controller.
-            _textEditingController =
-                EditorTextEditingController(blockCollection);
-
-            // Return the block.
-            return (cursorInsets: EdgeInsets.zero, rootBlock: blockCollection);
+            // Create state with block.
+            return EditorState(rootBlock: blockCollection);
           },
           // Return the default state when one from the database is unavailable.
           error: (_, __) => defaultState,
           loading: () => defaultState,
         );
-  }
-
-  /// Return the created [TextEditingController]
-  ///
-  /// Is of type [EditorTextEditingController]
-  TextEditingController getTextEditingController() {
-    return _textEditingController;
   }
 
   /// Handle new input

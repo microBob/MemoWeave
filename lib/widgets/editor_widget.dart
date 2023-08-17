@@ -31,7 +31,7 @@ class EditorWidget extends ConsumerWidget {
         TextField(
           key: _props.textFieldKey,
           focusNode: _props.textFieldFocusNode,
-          controller: ref.watch(provider.notifier).getTextEditingController(),
+          controller: ref.watch(provider).textEditingController,
           onChanged: ref.watch(provider.notifier).handleTextChange,
           maxLines: null,
         ),

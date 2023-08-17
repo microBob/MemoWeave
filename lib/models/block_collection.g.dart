@@ -103,18 +103,19 @@ BlockCollection _blockCollectionDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = BlockCollection();
-  object.blockStyle = _BlockCollectionblockStyleValueEnumMap[
-          reader.readByteOrNull(offsets[0])] ??
-      BlockStyle.normal;
-  object.inlineStyles = reader.readObjectList<StyleNode>(
-        offsets[1],
-        StyleNodeSchema.deserialize,
-        allOffsets,
-        StyleNode(),
-      ) ??
-      [];
-  object.text = reader.readString(offsets[2]);
+  final object = BlockCollection(
+    blockStyle: _BlockCollectionblockStyleValueEnumMap[
+            reader.readByteOrNull(offsets[0])] ??
+        BlockStyle.none,
+    inlineStyles: reader.readObjectList<StyleNode>(
+          offsets[1],
+          StyleNodeSchema.deserialize,
+          allOffsets,
+          StyleNode(),
+        ) ??
+        const [],
+    text: reader.readStringOrNull(offsets[2]) ?? 'Blank state text',
+  );
   return object;
 }
 
@@ -128,7 +129,7 @@ P _blockCollectionDeserializeProp<P>(
     case 0:
       return (_BlockCollectionblockStyleValueEnumMap[
               reader.readByteOrNull(offset)] ??
-          BlockStyle.normal) as P;
+          BlockStyle.none) as P;
     case 1:
       return (reader.readObjectList<StyleNode>(
             offset,
@@ -136,16 +137,16 @@ P _blockCollectionDeserializeProp<P>(
             allOffsets,
             StyleNode(),
           ) ??
-          []) as P;
+          const []) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset) ?? 'Blank state text') as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
 const _BlockCollectionblockStyleEnumValueMap = {
-  'normal': 0,
+  'none': 0,
   'heading1': 1,
   'heading2': 2,
   'heading3': 3,
@@ -154,7 +155,7 @@ const _BlockCollectionblockStyleEnumValueMap = {
   'heading6': 6,
 };
 const _BlockCollectionblockStyleValueEnumMap = {
-  0: BlockStyle.normal,
+  0: BlockStyle.none,
   1: BlockStyle.heading1,
   2: BlockStyle.heading2,
   3: BlockStyle.heading3,
@@ -328,7 +329,8 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-  idGreaterThan(Id value, {
+      idGreaterThan(
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -341,7 +343,8 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-  idLessThan(Id value, {
+      idLessThan(
+    Id value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -354,11 +357,12 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-  idBetween(Id lower,
-      Id upper, {
-        bool includeLower = true,
-        bool includeUpper = true,
-      }) {
+      idBetween(
+    Id lower,
+    Id upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'id',
@@ -460,7 +464,8 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-  textEqualTo(String value, {
+      textEqualTo(
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -473,7 +478,8 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-  textGreaterThan(String value, {
+      textGreaterThan(
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -488,7 +494,8 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-  textLessThan(String value, {
+      textLessThan(
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -503,12 +510,13 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-  textBetween(String lower,
-      String upper, {
-        bool includeLower = true,
-        bool includeUpper = true,
-        bool caseSensitive = true,
-      }) {
+      textBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'text',
@@ -522,7 +530,8 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-  textStartsWith(String value, {
+      textStartsWith(
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -535,7 +544,8 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-  textEndsWith(String value, {
+      textEndsWith(
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -548,7 +558,7 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-  textContains(String value, {bool caseSensitive = true}) {
+      textContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'text',
@@ -559,7 +569,7 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-  textMatches(String pattern, {bool caseSensitive = true}) {
+      textMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'text',
@@ -570,7 +580,7 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-  textIsEmpty() {
+      textIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'text',
@@ -580,7 +590,7 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-  textIsNotEmpty() {
+      textIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'text',
@@ -790,7 +800,7 @@ extension BlockCollectionQuerySortThenBy
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterSortBy>
-  thenByTextDesc() {
+      thenByTextDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'text', Sort.desc);
     });

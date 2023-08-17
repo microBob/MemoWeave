@@ -6,11 +6,11 @@ import 'package:memoweave/models/style_node.dart';
 ///
 /// Responsible for applying styling to the text.
 class EditorTextEditingController extends TextEditingController {
-  late final BlockCollection _rootBlock;
+  final BlockCollection _rootBlock;
 
-  EditorTextEditingController(BlockCollection rootBlock) {
-    _rootBlock = rootBlock;
-    text = rootBlock.text;
+  EditorTextEditingController({BlockCollection? rootBlock})
+      : _rootBlock = rootBlock ?? BlockCollection() {
+    value = value.copyWith(text: _rootBlock.text);
   }
 
   @override
