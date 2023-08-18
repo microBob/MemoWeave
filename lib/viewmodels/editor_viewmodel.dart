@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/editor_props.dart';
 import 'package:memoweave/models/editor_state.dart';
-import 'package:memoweave/utils/database_handler.dart';
+import 'package:memoweave/utils/database.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'editor_viewmodel.g.dart';

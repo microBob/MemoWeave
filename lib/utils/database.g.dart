@@ -1,13 +1,32 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'database_handler.dart';
+part of 'database.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
+String _$databaseHash() => r'0f1b0cc6897d0e8d8445f0b5c65411e783dac852';
+
+/// Returns access to the [Isar] database.
+///
+/// Primarily used by other providers that handle interaction.
+///
+/// Copied from [database].
+@ProviderFor(database)
+final databaseProvider = AutoDisposeFutureProvider<Isar>.internal(
+  database,
+  name: r'databaseProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$databaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DatabaseRef = AutoDisposeFutureProviderRef<Isar>;
+
 String _$blockCollectionByIdHash() =>
-    r'f13ae9dba811569a79e0abd26dcd176b8df4b9a0';
+    r'5b20731104d662ea4969eef9fe615598e6f9a404';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,22 +51,30 @@ class _SystemHash {
 
 typedef BlockCollectionByIdRef = AutoDisposeFutureProviderRef<BlockCollection?>;
 
-/// Returns a [BlockCollection] with the given [id]
+/// Returns a [BlockCollection] with the given [id].
+///
+/// Will return null if unable to return.
 ///
 /// Copied from [blockCollectionById].
 @ProviderFor(blockCollectionById)
 const blockCollectionByIdProvider = BlockCollectionByIdFamily();
 
-/// Returns a [BlockCollection] with the given [id]
+/// Returns a [BlockCollection] with the given [id].
+///
+/// Will return null if unable to return.
 ///
 /// Copied from [blockCollectionById].
 class BlockCollectionByIdFamily extends Family<AsyncValue<BlockCollection?>> {
-  /// Returns a [BlockCollection] with the given [id]
+  /// Returns a [BlockCollection] with the given [id].
+  ///
+  /// Will return null if unable to return.
   ///
   /// Copied from [blockCollectionById].
   const BlockCollectionByIdFamily();
 
-  /// Returns a [BlockCollection] with the given [id]
+  /// Returns a [BlockCollection] with the given [id].
+  ///
+  /// Will return null if unable to return.
   ///
   /// Copied from [blockCollectionById].
   BlockCollectionByIdProvider call({
@@ -82,12 +109,16 @@ class BlockCollectionByIdFamily extends Family<AsyncValue<BlockCollection?>> {
   String? get name => r'blockCollectionByIdProvider';
 }
 
-/// Returns a [BlockCollection] with the given [id]
+/// Returns a [BlockCollection] with the given [id].
+///
+/// Will return null if unable to return.
 ///
 /// Copied from [blockCollectionById].
 class BlockCollectionByIdProvider
     extends AutoDisposeFutureProvider<BlockCollection?> {
-  /// Returns a [BlockCollection] with the given [id]
+  /// Returns a [BlockCollection] with the given [id].
+  ///
+  /// Will return null if unable to return.
   ///
   /// Copied from [blockCollectionById].
   BlockCollectionByIdProvider({
@@ -123,24 +154,5 @@ class BlockCollectionByIdProvider
     return _SystemHash.finish(hash);
   }
 }
-
-String _$databaseHandlerHash() => r'bdc914dcb3d1e89f10672d0c3120cbe35bb97ba8';
-
-/// Opens and handles writing to database.
-///
-/// Copied from [DatabaseHandler].
-@ProviderFor(DatabaseHandler)
-final databaseHandlerProvider =
-    AutoDisposeAsyncNotifierProvider<DatabaseHandler, Isar>.internal(
-  DatabaseHandler.new,
-  name: r'databaseHandlerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$databaseHandlerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$DatabaseHandler = AutoDisposeAsyncNotifier<Isar>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

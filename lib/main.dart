@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:memoweave/utils/database_handler.dart';
+import 'package:memoweave/utils/database.dart';
 import 'package:memoweave/widgets/editor_widget.dart';
 
 void main() {
@@ -13,7 +13,7 @@ class MemoWeave extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final database = ref.watch(databaseHandlerProvider);
+    final database = ref.watch(databaseProvider);
 
     return MaterialApp(
       title: 'MemoWeave',
