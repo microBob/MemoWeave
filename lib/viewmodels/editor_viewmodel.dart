@@ -10,7 +10,7 @@ part 'editor_viewmodel.g.dart';
 
 /// Text editor logic.
 ///
-/// Utilized by [EditorWidget].
+/// Viewmodel for [EditorWidget].
 @riverpod
 class EditorViewModel extends _$EditorViewModel {
   /// Props from the widget.
@@ -29,7 +29,10 @@ class EditorViewModel extends _$EditorViewModel {
     // Create a default state to use.
     final defaultState = EditorState(rootBlock: BlockCollection());
 
-    // Generate default state if not loading previous.
+    // Set change handler on TextEditingController.
+    defaultState.textEditingController.addListener(handleInput);
+
+    // Use default state if not loading previous.
     if (blockId == null) {
       return defaultState;
     }
@@ -43,20 +46,19 @@ class EditorViewModel extends _$EditorViewModel {
             }
 
             // Create state with block.
-            return EditorState(rootBlock: blockCollection);
-          },
-          // Return the default state when one from the database is unavailable.
-          error: (_, __) => defaultState,
-          loading: () => defaultState,
+            return defaultState.copyWith(rootBlock: blockCollection);
+          }, // Return the default state when one from the database is unavailable.
+          error: (_, __) => defaultState, loading: () => defaultState,
         );
   }
 
-  /// Handle new input
+  /// Handle new input.
   ///
-  /// Contents of the [TextField] is accessed via [newText]
-  void handleTextChange(String newText) async {
+  /// Update [state.rootBlock] with text/style and set cursor position.
+  void handleInput() async {
     // Create updated rootBlock
-    final newRootBlock = state.rootBlock.copyWith(text: newText);
+    final newRootBlock =
+        state.rootBlock.copyWith(text: state.textEditingController.text);
 
     // Write into database
     final databaseManager =
@@ -88,7 +90,6 @@ class EditorViewModel extends _$EditorViewModel {
     var renderObject = root.renderObject;
     if (renderObject is RenderEditable) {
       _renderEditable = renderObject;
-      _renderEditable?.onCaretChanged = (r) => print(r);
     } else {
       root.visitChildElements((childElement) {
         findRenderEditable(childElement);

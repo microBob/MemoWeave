@@ -18,25 +18,35 @@ class EditorState {
 
   /// Default constructor
   ///
-  /// Defines [cursorInset], [textEditingController], and  [rootBlock].
-  /// Will supply default values if none are given for [cursorInsets].
-  /// [textEditingController] is automatically defined from [rootBlock].
+  /// Defines [cursorInsets], [textEditingController], and  [rootBlock].
+  /// Will supply default values if none are given for [cursorInsets]
+  /// and [textEditingController].
   EditorState({
     this.cursorInsets = EdgeInsets.zero,
+    EditorTextEditingController? textEditingController,
     required this.rootBlock,
-  }) : textEditingController =
-            EditorTextEditingController(rootBlock: rootBlock);
+  }) : textEditingController = textEditingController ??
+            EditorTextEditingController(rootBlock: rootBlock) {
+    // Validate rootBlock was passed to [textEditingController]
+    if (this.textEditingController.rootBlock != rootBlock) {
+      throw const FormatException('Invalid EditorState textEditingController: '
+          'must have same root block as state.');
+    }
+  }
 
   /// Copy builder.
   ///
   /// Creates a copy of the current state and updates fields with
-  /// [cursorInsets] and [rootBlock] when provided.
+  /// [cursorInsets], [textEditingController], and [rootBlock] when provided.
   EditorState copyWith({
     EdgeInsets? cursorInsets,
+    EditorTextEditingController? textEditingController,
     BlockCollection? rootBlock,
   }) {
     return EditorState(
       cursorInsets: cursorInsets ?? this.cursorInsets,
+      textEditingController:
+          textEditingController ?? this.textEditingController,
       rootBlock: rootBlock ?? this.rootBlock,
     );
   }

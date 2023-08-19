@@ -25,7 +25,6 @@ final databaseInstanceProvider = FutureProvider<Isar>.internal(
 );
 
 typedef DatabaseInstanceRef = FutureProviderRef<Isar>;
-
 String _$databaseManagerInstanceHash() =>
     r'c146de48f790217bedaf8add26fbf9cd33840ce8';
 
