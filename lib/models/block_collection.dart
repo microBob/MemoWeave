@@ -18,7 +18,8 @@ enum BlockStyle {
 @collection
 class BlockCollection {
   /// Unique identifier for this block.
-  final Id id = Isar.autoIncrement;
+  /// Will be assigned by the database system if null.
+  Id? id;
 
   /// Block content as plain text.
   final String text;
@@ -45,9 +46,10 @@ class BlockCollection {
 
   /// Default constructor.
   ///
-  /// Defines [text], [blockStyle], and [inlineStyles].
+  /// Defines [id], [text], [blockStyle], and [inlineStyles].
   /// Will also supply default values if none are given.
   BlockCollection({
+    this.id,
     this.text = 'Blank state text',
     this.blockStyle = BlockStyle.none,
     this.inlineStyles = const [],
@@ -75,15 +77,16 @@ class BlockCollection {
 
   /// Copy builder.
   ///
-  /// Creates a copy of the current block and updates
-  /// [text] to [newText], [blockStyle] to [newBlockStyle],
-  /// and [inlineStyles] to [newInlineStyles] when provided.
+  /// Creates a copy of the current block and updates the fields to
+  /// [id], [text], [blockStyle], and [inlineStyles] when provided.
   BlockCollection copyWith({
+    Id? id,
     String? text,
     BlockStyle? blockStyle,
     List<StyleNode>? inlineStyles,
   }) {
     return BlockCollection(
+      id: id ?? this.id,
       text: text ?? this.text,
       blockStyle: blockStyle ?? this.blockStyle,
       inlineStyles: inlineStyles ?? this.inlineStyles,

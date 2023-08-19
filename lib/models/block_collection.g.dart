@@ -107,6 +107,7 @@ BlockCollection _blockCollectionDeserialize(
     blockStyle: _BlockCollectionblockStyleValueEnumMap[
             reader.readByteOrNull(offsets[0])] ??
         BlockStyle.none,
+    id: id,
     inlineStyles: reader.readObjectList<StyleNode>(
           offsets[1],
           StyleNodeSchema.deserialize,
@@ -165,7 +166,7 @@ const _BlockCollectionblockStyleValueEnumMap = {
 };
 
 Id _blockCollectionGetId(BlockCollection object) {
-  return object.id;
+  return object.id ?? Isar.autoIncrement;
 }
 
 List<IsarLinkBase<dynamic>> _blockCollectionGetLinks(BlockCollection object) {
@@ -174,6 +175,7 @@ List<IsarLinkBase<dynamic>> _blockCollectionGetLinks(BlockCollection object) {
 
 void _blockCollectionAttach(
     IsarCollection<dynamic> col, Id id, BlockCollection object) {
+  object.id = id;
   object.children
       .attach(col, col.isar.collection<BlockCollection>(), r'children', id);
   object.parents
@@ -319,7 +321,25 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      idEqualTo(Id value) {
+      idIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+      idEqualTo(Id? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -330,7 +350,7 @@ extension BlockCollectionQueryFilter
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
       idGreaterThan(
-    Id value, {
+    Id? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -344,7 +364,7 @@ extension BlockCollectionQueryFilter
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
       idLessThan(
-    Id value, {
+    Id? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -358,8 +378,8 @@ extension BlockCollectionQueryFilter
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
       idBetween(
-    Id lower,
-    Id upper, {
+    Id? lower,
+    Id? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {

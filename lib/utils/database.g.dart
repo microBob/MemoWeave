@@ -8,7 +8,7 @@ part of 'database.dart';
 
 String _$databaseInstanceHash() => r'a5fbf7f452b1bdf602d449b1e9a1937abf29ef43';
 
-/// Returns access to the [Isar] database.
+/// Provider for the [Isar] database.
 ///
 /// Primarily used by other providers that handle interaction.
 ///
@@ -25,10 +25,15 @@ final databaseInstanceProvider = FutureProvider<Isar>.internal(
 );
 
 typedef DatabaseInstanceRef = FutureProviderRef<Isar>;
+
 String _$databaseManagerInstanceHash() =>
     r'c146de48f790217bedaf8add26fbf9cd33840ce8';
 
-/// See also [databaseManagerInstance].
+/// Provider for the instance of the [DatabaseManager].
+///
+/// Uses the current open [Isar] instance.
+///
+/// Copied from [databaseManagerInstance].
 @ProviderFor(databaseManagerInstance)
 final databaseManagerInstanceProvider =
     AutoDisposeFutureProvider<DatabaseManager>.internal(
@@ -70,17 +75,33 @@ class _SystemHash {
 typedef GetBlockCollectionByIdRef
     = AutoDisposeFutureProviderRef<BlockCollection?>;
 
-/// See also [getBlockCollectionById].
+/// Handles retrieving a [BlockCollection] with the given [id].
+///
+/// Returns null if not found.
+///
+/// Copied from [getBlockCollectionById].
 @ProviderFor(getBlockCollectionById)
 const getBlockCollectionByIdProvider = GetBlockCollectionByIdFamily();
 
-/// See also [getBlockCollectionById].
+/// Handles retrieving a [BlockCollection] with the given [id].
+///
+/// Returns null if not found.
+///
+/// Copied from [getBlockCollectionById].
 class GetBlockCollectionByIdFamily
     extends Family<AsyncValue<BlockCollection?>> {
-  /// See also [getBlockCollectionById].
+  /// Handles retrieving a [BlockCollection] with the given [id].
+  ///
+  /// Returns null if not found.
+  ///
+  /// Copied from [getBlockCollectionById].
   const GetBlockCollectionByIdFamily();
 
-  /// See also [getBlockCollectionById].
+  /// Handles retrieving a [BlockCollection] with the given [id].
+  ///
+  /// Returns null if not found.
+  ///
+  /// Copied from [getBlockCollectionById].
   GetBlockCollectionByIdProvider call({
     required int id,
   }) {
@@ -113,10 +134,18 @@ class GetBlockCollectionByIdFamily
   String? get name => r'getBlockCollectionByIdProvider';
 }
 
-/// See also [getBlockCollectionById].
+/// Handles retrieving a [BlockCollection] with the given [id].
+///
+/// Returns null if not found.
+///
+/// Copied from [getBlockCollectionById].
 class GetBlockCollectionByIdProvider
     extends AutoDisposeFutureProvider<BlockCollection?> {
-  /// See also [getBlockCollectionById].
+  /// Handles retrieving a [BlockCollection] with the given [id].
+  ///
+  /// Returns null if not found.
+  ///
+  /// Copied from [getBlockCollectionById].
   GetBlockCollectionByIdProvider({
     required this.id,
   }) : super.internal(

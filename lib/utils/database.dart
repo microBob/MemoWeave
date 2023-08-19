@@ -5,15 +5,24 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'database.g.dart';
 
+/// Database interaction manager class.
+///
+/// Handles opening and input/output.
 class DatabaseManager {
+  /// Reference to open database.
   final Isar _isar;
 
+  /// Constructor defining the open database.
   DatabaseManager(Isar isar) : _isar = isar;
 
+  /// Getter function for Blocks by [id].
   Future<BlockCollection?> getBlockCollectionById(Id id) async {
     return _isar.blockCollections.get(id);
   }
 
+  /// Setter function for the given [blockCollection].
+  ///
+  /// Will add to the database if it's new or update an existing record.
   Future<void> putBlockCollection(BlockCollection blockCollection) async {
     await _isar.writeTxn(() async {
       await _isar.blockCollections.put(blockCollection);
@@ -21,7 +30,7 @@ class DatabaseManager {
   }
 }
 
-/// Returns access to the [Isar] database.
+/// Provider for the [Isar] database.
 ///
 /// Primarily used by other providers that handle interaction.
 @Riverpod(keepAlive: true)
@@ -30,6 +39,9 @@ Future<Isar> databaseInstance(DatabaseInstanceRef ref) async {
   return Isar.open([BlockCollectionSchema], directory: dir.path);
 }
 
+/// Provider for the instance of the [DatabaseManager].
+///
+/// Uses the current open [Isar] instance.
 @riverpod
 Future<DatabaseManager> databaseManagerInstance(
     DatabaseManagerInstanceRef ref) async {
@@ -37,6 +49,9 @@ Future<DatabaseManager> databaseManagerInstance(
   return DatabaseManager(isar);
 }
 
+/// Handles retrieving a [BlockCollection] with the given [id].
+///
+/// Returns null if not found.
 @riverpod
 Future<BlockCollection?> getBlockCollectionById(GetBlockCollectionByIdRef ref,
     {required Id id}) async {
