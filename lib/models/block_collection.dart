@@ -79,14 +79,14 @@ class BlockCollection {
   /// [text] to [newText], [blockStyle] to [newBlockStyle],
   /// and [inlineStyles] to [newInlineStyles] when provided.
   BlockCollection copyWith({
-    String? newText,
-    BlockStyle? newBlockStyle,
-    List<StyleNode>? newInlineStyles,
+    String? text,
+    BlockStyle? blockStyle,
+    List<StyleNode>? inlineStyles,
   }) {
     return BlockCollection(
-      text: newText ?? text,
-      blockStyle: newBlockStyle ?? blockStyle,
-      inlineStyles: newInlineStyles ?? inlineStyles,
+      text: text ?? this.text,
+      blockStyle: blockStyle ?? this.blockStyle,
+      inlineStyles: inlineStyles ?? this.inlineStyles,
     );
   }
 }

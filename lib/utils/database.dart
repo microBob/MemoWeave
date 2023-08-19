@@ -5,20 +5,42 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'database.g.dart';
 
+class DatabaseManager {
+  final Isar _isar;
+
+  DatabaseManager(Isar isar) : _isar = isar;
+
+  Future<BlockCollection?> getBlockCollectionById(Id id) async {
+    return _isar.blockCollections.get(id);
+  }
+
+  Future<void> putBlockCollection(BlockCollection blockCollection) async {
+    await _isar.writeTxn(() async {
+      await _isar.blockCollections.put(blockCollection);
+    });
+  }
+}
+
 /// Returns access to the [Isar] database.
 ///
 /// Primarily used by other providers that handle interaction.
-@riverpod
-Future<Isar> database(DatabaseRef ref) async {
+@Riverpod(keepAlive: true)
+Future<Isar> databaseInstance(DatabaseInstanceRef ref) async {
   final dir = await getApplicationDocumentsDirectory();
   return Isar.open([BlockCollectionSchema], directory: dir.path);
 }
 
-/// Returns a [BlockCollection] with the given [id].
-///
-/// Will return null if unable to return.
 @riverpod
-Future<BlockCollection?> blockCollectionById(BlockCollectionByIdRef ref,
+Future<DatabaseManager> databaseManagerInstance(
+    DatabaseManagerInstanceRef ref) async {
+  final isar = await ref.watch(databaseInstanceProvider.future);
+  return DatabaseManager(isar);
+}
+
+@riverpod
+Future<BlockCollection?> getBlockCollectionById(GetBlockCollectionByIdRef ref,
     {required Id id}) async {
-  return ref.watch(databaseProvider).value?.blockCollections.get(id);
+  final databaseManager =
+      await ref.watch(databaseManagerInstanceProvider.future);
+  return databaseManager.getBlockCollectionById(id);
 }

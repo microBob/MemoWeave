@@ -6,27 +6,45 @@ part of 'database.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$databaseHash() => r'0f1b0cc6897d0e8d8445f0b5c65411e783dac852';
+String _$databaseInstanceHash() => r'a5fbf7f452b1bdf602d449b1e9a1937abf29ef43';
 
 /// Returns access to the [Isar] database.
 ///
 /// Primarily used by other providers that handle interaction.
 ///
-/// Copied from [database].
-@ProviderFor(database)
-final databaseProvider = AutoDisposeFutureProvider<Isar>.internal(
-  database,
-  name: r'databaseProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$databaseHash,
+/// Copied from [databaseInstance].
+@ProviderFor(databaseInstance)
+final databaseInstanceProvider = FutureProvider<Isar>.internal(
+  databaseInstance,
+  name: r'databaseInstanceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$databaseInstanceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef DatabaseRef = AutoDisposeFutureProviderRef<Isar>;
+typedef DatabaseInstanceRef = FutureProviderRef<Isar>;
+String _$databaseManagerInstanceHash() =>
+    r'c146de48f790217bedaf8add26fbf9cd33840ce8';
 
-String _$blockCollectionByIdHash() =>
-    r'5b20731104d662ea4969eef9fe615598e6f9a404';
+/// See also [databaseManagerInstance].
+@ProviderFor(databaseManagerInstance)
+final databaseManagerInstanceProvider =
+    AutoDisposeFutureProvider<DatabaseManager>.internal(
+  databaseManagerInstance,
+  name: r'databaseManagerInstanceProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$databaseManagerInstanceHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef DatabaseManagerInstanceRef
+    = AutoDisposeFutureProviderRef<DatabaseManager>;
+String _$getBlockCollectionByIdHash() =>
+    r'6868aed7df95afa4c4c9beb04ab360220ce01327';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -49,45 +67,31 @@ class _SystemHash {
   }
 }
 
-typedef BlockCollectionByIdRef = AutoDisposeFutureProviderRef<BlockCollection?>;
+typedef GetBlockCollectionByIdRef
+    = AutoDisposeFutureProviderRef<BlockCollection?>;
 
-/// Returns a [BlockCollection] with the given [id].
-///
-/// Will return null if unable to return.
-///
-/// Copied from [blockCollectionById].
-@ProviderFor(blockCollectionById)
-const blockCollectionByIdProvider = BlockCollectionByIdFamily();
+/// See also [getBlockCollectionById].
+@ProviderFor(getBlockCollectionById)
+const getBlockCollectionByIdProvider = GetBlockCollectionByIdFamily();
 
-/// Returns a [BlockCollection] with the given [id].
-///
-/// Will return null if unable to return.
-///
-/// Copied from [blockCollectionById].
-class BlockCollectionByIdFamily extends Family<AsyncValue<BlockCollection?>> {
-  /// Returns a [BlockCollection] with the given [id].
-  ///
-  /// Will return null if unable to return.
-  ///
-  /// Copied from [blockCollectionById].
-  const BlockCollectionByIdFamily();
+/// See also [getBlockCollectionById].
+class GetBlockCollectionByIdFamily
+    extends Family<AsyncValue<BlockCollection?>> {
+  /// See also [getBlockCollectionById].
+  const GetBlockCollectionByIdFamily();
 
-  /// Returns a [BlockCollection] with the given [id].
-  ///
-  /// Will return null if unable to return.
-  ///
-  /// Copied from [blockCollectionById].
-  BlockCollectionByIdProvider call({
+  /// See also [getBlockCollectionById].
+  GetBlockCollectionByIdProvider call({
     required int id,
   }) {
-    return BlockCollectionByIdProvider(
+    return GetBlockCollectionByIdProvider(
       id: id,
     );
   }
 
   @override
-  BlockCollectionByIdProvider getProviderOverride(
-    covariant BlockCollectionByIdProvider provider,
+  GetBlockCollectionByIdProvider getProviderOverride(
+    covariant GetBlockCollectionByIdProvider provider,
   ) {
     return call(
       id: provider.id,
@@ -106,44 +110,36 @@ class BlockCollectionByIdFamily extends Family<AsyncValue<BlockCollection?>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'blockCollectionByIdProvider';
+  String? get name => r'getBlockCollectionByIdProvider';
 }
 
-/// Returns a [BlockCollection] with the given [id].
-///
-/// Will return null if unable to return.
-///
-/// Copied from [blockCollectionById].
-class BlockCollectionByIdProvider
+/// See also [getBlockCollectionById].
+class GetBlockCollectionByIdProvider
     extends AutoDisposeFutureProvider<BlockCollection?> {
-  /// Returns a [BlockCollection] with the given [id].
-  ///
-  /// Will return null if unable to return.
-  ///
-  /// Copied from [blockCollectionById].
-  BlockCollectionByIdProvider({
+  /// See also [getBlockCollectionById].
+  GetBlockCollectionByIdProvider({
     required this.id,
   }) : super.internal(
-          (ref) => blockCollectionById(
+          (ref) => getBlockCollectionById(
             ref,
             id: id,
           ),
-          from: blockCollectionByIdProvider,
-          name: r'blockCollectionByIdProvider',
+          from: getBlockCollectionByIdProvider,
+          name: r'getBlockCollectionByIdProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$blockCollectionByIdHash,
-          dependencies: BlockCollectionByIdFamily._dependencies,
+                  : _$getBlockCollectionByIdHash,
+          dependencies: GetBlockCollectionByIdFamily._dependencies,
           allTransitiveDependencies:
-              BlockCollectionByIdFamily._allTransitiveDependencies,
+              GetBlockCollectionByIdFamily._allTransitiveDependencies,
         );
 
   final int id;
 
   @override
   bool operator ==(Object other) {
-    return other is BlockCollectionByIdProvider && other.id == id;
+    return other is GetBlockCollectionByIdProvider && other.id == id;
   }
 
   @override

@@ -35,7 +35,7 @@ class EditorViewModel extends _$EditorViewModel {
     }
 
     // Load block from database.
-    return ref.watch(blockCollectionByIdProvider(id: blockId)).when(
+    return ref.watch(getBlockCollectionByIdProvider(id: blockId)).when(
           data: (blockCollection) {
             // Return default state if no block are found.
             if (blockCollection == null) {
@@ -54,8 +54,17 @@ class EditorViewModel extends _$EditorViewModel {
   /// Handle new input
   ///
   /// Contents of the [TextField] is accessed via [newText]
-  void handleTextChange(String newText) {
-    print(newText);
+  void handleTextChange(String newText) async {
+    // Create updated rootBlock
+    final newRootBlock = state.rootBlock.copyWith(text: newText);
+
+    // Write into database
+    final databaseManager =
+        await ref.read(databaseManagerInstanceProvider.future);
+    databaseManager.putBlockCollection(newRootBlock);
+
+    // Update state
+    state = state.copyWith(rootBlock: newRootBlock);
   }
 
   /// Search through widget tree to find [RenderEditable]
