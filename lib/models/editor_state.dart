@@ -3,31 +3,31 @@ import 'package:memoweave/models/block_collection.dart';
 
 /// [EditorWidget] state.
 class EditorState {
-  /// [EdgeInsets] used to define the cursor's location.
-  final EdgeInsets cursorInsets;
+  /// [Rect] used to define the caret's location and dimensions.
+  final Rect caretRect;
 
   /// Root text information for this editor.
   final BlockCollection rootBlock;
 
   /// Default constructor.
   ///
-  /// Defines [cursorInsets] and [rootBlock].
-  /// Will supply default values if none are given for [cursorInsets].
+  /// Defines [caretRect] and [rootBlock].
+  /// Will supply default values if none are given for [caretRect].
   EditorState({
-    this.cursorInsets = EdgeInsets.zero,
+    this.caretRect = Rect.zero,
     required this.rootBlock,
   });
 
   /// Copy builder.
   ///
   /// Creates a copy of the current state and updates fields with
-  /// [cursorInsets] and [rootBlock] when provided.
+  /// [caretRect] and [rootBlock] when provided.
   EditorState copyWith({
-    EdgeInsets? cursorInsets,
+    Rect? caretRect,
     BlockCollection? rootBlock,
   }) {
     return EditorState(
-      cursorInsets: cursorInsets ?? this.cursorInsets,
+      caretRect: caretRect ?? this.caretRect,
       rootBlock: rootBlock ?? this.rootBlock,
     );
   }

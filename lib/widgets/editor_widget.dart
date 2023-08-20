@@ -24,8 +24,7 @@ class EditorWidget extends ConsumerWidget {
     // Define provider with text key and focus node
     final provider = editorViewModelProvider(_props);
 
-    // Find TextField's RenderEditable
-    Future(() => ref.watch(provider.notifier).findRenderEditable());
+    final caretRect = ref.watch(provider).caretRect;
 
     // Split behavior based on data state
     return Stack(
@@ -37,11 +36,12 @@ class EditorWidget extends ConsumerWidget {
           maxLines: null,
         ),
         AnimatedContainer(
-          width: 2,
-          height: 18,
+          width: caretRect.width,
+          height: caretRect.height,
+          margin: EdgeInsets.only(left: caretRect.left, top: caretRect.top),
           alignment: Alignment.topLeft,
-          margin: ref.watch(provider).cursorInsets,
           duration: const Duration(milliseconds: 100),
+          curve: Curves.easeInOut,
           color: Theme.of(context).colorScheme.onSurface,
         ),
       ],

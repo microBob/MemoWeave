@@ -46,14 +46,12 @@ class EditorViewModel extends _$EditorViewModel {
               return defaultState;
             }
 
-            // Load text into text field
+            // Load text into text field.
             _props.textEditingController.rootBlock = blockCollection;
 
             // Update text field text after provider is built.
             Future(() {
-              _props.textEditingController.value = _props
-                  .textEditingController.value
-                  .copyWith(text: blockCollection.text);
+              _props.textEditingController.text = blockCollection.text;
             });
 
             // Create state with block.
@@ -68,7 +66,13 @@ class EditorViewModel extends _$EditorViewModel {
   /// Handle new input.
   ///
   /// Update [state]'s rootBlock with text/style and set cursor position.
+  /// Throws [FormatException] if unable to find render editable.
   void handleInput() async {
+    // Find text field's render editable if not already found.
+    if (_renderEditable == null) {
+      _findRenderEditable();
+    }
+
     // Create updated rootBlock.
     final newRootBlock =
         state.rootBlock.copyWith(text: _props.textEditingController.text);
@@ -80,14 +84,35 @@ class EditorViewModel extends _$EditorViewModel {
     final databaseManager = await ref.read(databaseManagerProvider.future);
     databaseManager.putBlockCollection(newRootBlock);
 
-    // Update state.
-    state = state.copyWith(rootBlock: newRootBlock);
+    // Compute caret rect and update state.
+    if (_renderEditable == null) {
+      _findRenderEditable();
+
+      if (_renderEditable == null) {
+        state = state.copyWith(rootBlock: newRootBlock);
+        return;
+      }
+    }
+
+    // Compute caret rect.
+    final localCaretRect = _renderEditable!
+        .getLocalRectForCaret(_props.textEditingController.selection.extent);
+    final globalOffset = _renderEditable!.localToGlobal(localCaretRect.topLeft);
+    print(
+        'Extent: ${_props.textEditingController.selection.extent}; Local rect: $localCaretRect; Global offset: $globalOffset');
+
+    // Update state
+    state = state.copyWith(
+      caretRect: Rect.fromLTWH(globalOffset.dx, globalOffset.dy,
+          localCaretRect.width, localCaretRect.height),
+      rootBlock: newRootBlock,
+    );
   }
 
   /// Search through widget tree to find [RenderEditable].
   ///
   /// Sets [_renderEditable] to the found [RenderEditable].
-  Future<void> findRenderEditable([Element? root]) async {
+  void _findRenderEditable([Element? root]) {
     // Shortcut exit if it has already been found.
     if (_renderEditable != null) {
       return;
@@ -97,7 +122,7 @@ class EditorViewModel extends _$EditorViewModel {
     // then we start from the TextField's children.
     if (root == null) {
       _props.textFieldKey.currentContext?.visitChildElements((childElement) {
-        findRenderEditable(childElement);
+        _findRenderEditable(childElement);
       });
       return;
     }
@@ -108,7 +133,7 @@ class EditorViewModel extends _$EditorViewModel {
       _renderEditable = renderObject;
     } else {
       root.visitChildElements((childElement) {
-        findRenderEditable(childElement);
+        _findRenderEditable(childElement);
       });
     }
   }
