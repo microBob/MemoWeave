@@ -23,13 +23,13 @@ class EditorTextEditingController extends TextEditingController {
       return TextSpan(text: text);
     }
 
-    // Get styles and prepare to build
+    // Prepare build output and pointer.
     final children = <TextSpan>[];
     var currentIndex = 0;
 
-    // Assess each inlineStyle and build TextSpans
+    // Assess each inlineStyle and build TextSpans.
     for (var inlineStyle in _rootBlock!.inlineStyles) {
-      // Build plain text before inlineStyle
+      // Build plain text before inlineStyle.
       if (currentIndex < inlineStyle.startIndex) {
         children.add(
           TextSpan(
@@ -37,11 +37,11 @@ class EditorTextEditingController extends TextEditingController {
           ),
         );
 
-        // Update current index
+        // Update current index.
         currentIndex = inlineStyle.startIndex;
       }
 
-      // Build individual style
+      // Build style.
       final textStyle = TextStyle(
         fontStyle: inlineStyle.styles.contains(InlineStyle.italic)
             ? FontStyle.italic
@@ -51,7 +51,7 @@ class EditorTextEditingController extends TextEditingController {
             : null,
       );
 
-      // Add text span
+      // Add text span.
       children.add(
         TextSpan(
           text: text.substring(currentIndex, inlineStyle.endIndex),
@@ -63,14 +63,14 @@ class EditorTextEditingController extends TextEditingController {
       currentIndex = inlineStyle.endIndex;
     }
 
-    // Fill in remaining characters as plain text
+    // Fill in remaining characters at the end as plain text.
     children.add(
       TextSpan(
         text: text.substring(currentIndex, text.length),
       ),
     );
 
-    // Return built span
+    // Return built span.
     return TextSpan(
       style: DefaultTextStyle.of(context).style,
       children: children,

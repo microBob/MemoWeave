@@ -18,10 +18,11 @@ enum BlockStyle {
 @collection
 class BlockCollection {
   /// Unique identifier for this block.
+  ///
   /// Will be assigned by the database system if null.
   Id? id;
 
-  /// Block content as plain text.
+  /// Block content.
   final String text;
 
   /// Block base style.
@@ -34,13 +35,13 @@ class BlockCollection {
   ///
   /// Requirement: nodes do not overlap their responsible regions,
   /// nodes are stored in ascending index order,
-  /// and the styles are within the text length.
+  /// and the responsible regions are within the text length.
   final List<StyleNode> inlineStyles;
 
   /// Ordered set of hierarchical children to this block.
   final children = IsarLinks<BlockCollection>();
 
-  /// Links back to parents.
+  /// Links pointing back to parent blocks.
   @Backlink(to: 'children')
   final parents = IsarLinks<BlockCollection>();
 
@@ -48,18 +49,22 @@ class BlockCollection {
   ///
   /// Defines [id], [text], [blockStyle], and [inlineStyles].
   /// Will also supply default values if none are given.
+  /// Throws [FormatException] on invalid input.
   BlockCollection({
     this.id,
     this.text = 'Blank state text',
     this.blockStyle = BlockStyle.none,
     this.inlineStyles = const [],
   }) {
-    // Verify inlineStyles has no overlaps and is in ascending order
+    // Verify inlineStyles.
     for (var i = 0; i < inlineStyles.length - 1; ++i) {
+      // Is not overlapping next style.
       if (inlineStyles[i].isOverlappingWith(inlineStyles[i + 1])) {
         throw const FormatException('Invalid BlockCollection inlineStyle: '
             'styles must not have overlapping bounds.');
       }
+
+      // Style's responsible regions are in non-descending order.
       if (inlineStyles[i] > inlineStyles[i + 1]) {
         throw const FormatException('Invalid BlockCollection inlineStyles: '
             'must be defined in ascending index order.');

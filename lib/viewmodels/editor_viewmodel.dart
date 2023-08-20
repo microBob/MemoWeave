@@ -48,6 +48,8 @@ class EditorViewModel extends _$EditorViewModel {
 
             // Load text into text field
             _props.textEditingController.rootBlock = blockCollection;
+
+            // Update text field text after provider is built.
             Future(() {
               _props.textEditingController.value = _props
                   .textEditingController.value
@@ -65,34 +67,34 @@ class EditorViewModel extends _$EditorViewModel {
 
   /// Handle new input.
   ///
-  /// Update [state.rootBlock] with text/style and set cursor position.
+  /// Update [state]'s rootBlock with text/style and set cursor position.
   void handleInput() async {
-    // Create updated rootBlock
+    // Create updated rootBlock.
     final newRootBlock =
         state.rootBlock.copyWith(text: _props.textEditingController.text);
 
-    // Update rootBlock on Text Editing Controller
+    // Update rootBlock on Text Editing Controller.
     _props.textEditingController.rootBlock = newRootBlock;
 
-    // Write into database
-    final databaseManager =
-        await ref.read(databaseManagerInstanceProvider.future);
+    // Write into database.
+    final databaseManager = await ref.read(databaseManagerProvider.future);
     databaseManager.putBlockCollection(newRootBlock);
 
-    // Update state
+    // Update state.
     state = state.copyWith(rootBlock: newRootBlock);
   }
 
-  /// Search through widget tree to find [RenderEditable]
+  /// Search through widget tree to find [RenderEditable].
   ///
-  /// Sets [_renderEditable] to the found [RenderEditable]
+  /// Sets [_renderEditable] to the found [RenderEditable].
   Future<void> findRenderEditable([Element? root]) async {
-    // Shortcut exit if it has already been found
+    // Shortcut exit if it has already been found.
     if (_renderEditable != null) {
       return;
     }
 
-    // Starter case: No element given, then we start from the TextField's children
+    // Starter case: No element given,
+    // then we start from the TextField's children.
     if (root == null) {
       _props.textFieldKey.currentContext?.visitChildElements((childElement) {
         findRenderEditable(childElement);
@@ -100,7 +102,7 @@ class EditorViewModel extends _$EditorViewModel {
       return;
     }
 
-    // Regular case: Check the current object, then traverse children
+    // Regular case: Check the current object, then traverse children.
     var renderObject = root.renderObject;
     if (renderObject is RenderEditable) {
       _renderEditable = renderObject;

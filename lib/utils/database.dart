@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'database.g.dart';
 
-/// Database interaction manager class.
+/// Database manager class.
 ///
 /// Handles opening and input/output.
 class DatabaseManager {
@@ -43,8 +43,7 @@ Future<Isar> databaseInstance(DatabaseInstanceRef ref) async {
 ///
 /// Uses the current open [Isar] instance.
 @riverpod
-Future<DatabaseManager> databaseManagerInstance(
-    DatabaseManagerInstanceRef ref) async {
+Future<DatabaseManager> databaseManager(DatabaseManagerRef ref) async {
   final isar = await ref.watch(databaseInstanceProvider.future);
   return DatabaseManager(isar);
 }
@@ -55,7 +54,6 @@ Future<DatabaseManager> databaseManagerInstance(
 @riverpod
 Future<BlockCollection?> getBlockCollectionById(GetBlockCollectionByIdRef ref,
     {required Id id}) async {
-  final databaseManager =
-      await ref.watch(databaseManagerInstanceProvider.future);
+  final databaseManager = await ref.watch(databaseManagerProvider.future);
   return databaseManager.getBlockCollectionById(id);
 }

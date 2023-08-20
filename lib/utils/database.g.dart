@@ -25,30 +25,28 @@ final databaseInstanceProvider = FutureProvider<Isar>.internal(
 );
 
 typedef DatabaseInstanceRef = FutureProviderRef<Isar>;
-String _$databaseManagerInstanceHash() =>
-    r'c146de48f790217bedaf8add26fbf9cd33840ce8';
+String _$databaseManagerHash() => r'736ce63f0db2548c2578ad120eddb0c25b97d67d';
 
 /// Provider for the instance of the [DatabaseManager].
 ///
 /// Uses the current open [Isar] instance.
 ///
-/// Copied from [databaseManagerInstance].
-@ProviderFor(databaseManagerInstance)
-final databaseManagerInstanceProvider =
+/// Copied from [databaseManager].
+@ProviderFor(databaseManager)
+final databaseManagerProvider =
     AutoDisposeFutureProvider<DatabaseManager>.internal(
-  databaseManagerInstance,
-  name: r'databaseManagerInstanceProvider',
+  databaseManager,
+  name: r'databaseManagerProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$databaseManagerInstanceHash,
+      : _$databaseManagerHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef DatabaseManagerInstanceRef
-    = AutoDisposeFutureProviderRef<DatabaseManager>;
+typedef DatabaseManagerRef = AutoDisposeFutureProviderRef<DatabaseManager>;
 String _$getBlockCollectionByIdHash() =>
-    r'6868aed7df95afa4c4c9beb04ab360220ce01327';
+    r'503f11f95937a8c46d3ef35f5425a7eb9496c8a3';
 
 /// Copied from Dart SDK
 class _SystemHash {

@@ -8,7 +8,7 @@ enum InlineStyle {
   italic,
 }
 
-/// An Isar embedded object definition for a formatted piece of text.
+/// An [Isar] embedded object definition for a formatted piece of text.
 @embedded
 class StyleNode {
   /// First index in [BlockCollection]'s text that this style applies to.
@@ -32,24 +32,25 @@ class StyleNode {
   ///
   /// Defines [startIndex], [endIndex], and [styles].
   /// Provides defaults if values are not provided.
+  /// Throws [FormatException] on invalid input.
   StyleNode({
     this.startIndex = 0,
     this.endIndex = 0,
     this.styles = const [],
   }) {
-    // Verify startIndex range
+    // Verify startIndex range.
     if (0 <= startIndex && startIndex < endIndex) {
       throw const FormatException(
           'Invalid StyleNode startIndex. Expected range: 0 ≤ startIndex < endIndex.');
     }
 
-    // Verify endIndex range
+    // Verify endIndex range.
     if (startIndex < endIndex) {
       throw const FormatException('Invalid endIndex. '
           'Expected StyleNode range: startIndex < endIndex.');
     }
 
-    // Verify no duplicate styles
+    // Verify no duplicate styles.
     if (styles.length > styles.toSet().length) {
       throw const FormatException(
           'Invalid StyleNode styles list. Must not contain duplicate styles.');
