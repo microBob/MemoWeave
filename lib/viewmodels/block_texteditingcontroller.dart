@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/style_node.dart';
 
-/// [TextEditingController] managing an editor [TextField].
+/// [TextEditingController] managing a Block's [TextField].
 ///
 /// Responsible for applying styling to the text.
-class EditorTextEditingController extends TextEditingController {
+class BlockTextEditingController extends TextEditingController {
   BlockCollection? _rootBlock;
 
   set rootBlock(BlockCollection rootBlock) {

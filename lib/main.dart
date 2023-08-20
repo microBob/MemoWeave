@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memoweave/utils/database.dart';
-import 'package:memoweave/widgets/editor_widget.dart';
+import 'package:memoweave/widgets/block_widget.dart';
 
 void main() {
   runApp(const ProviderScope(child: MemoWeave()));
@@ -29,7 +29,7 @@ class MemoWeave extends ConsumerWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            EditorWidget(),
+            BlockWidget(),
             database.when(
               data: (data) => Text('Database opened: ${data.path}'),
               error: (error, stat) => Text(error.toString()),

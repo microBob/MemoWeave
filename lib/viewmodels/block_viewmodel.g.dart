@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'editor_viewmodel.dart';
+part of 'block_viewmodel.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editorViewModelHash() => r'329bcef56c6678d6e79e33bb9b1a5670e0e5d789';
+String _$blockViewModelHash() => r'21dd5e3e3555c2d4418e4452fe5213f0a4d18803';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,67 +29,67 @@ class _SystemHash {
   }
 }
 
-abstract class _$EditorViewModel
-    extends BuildlessAutoDisposeNotifier<EditorState> {
+abstract class _$BlockViewModel
+    extends BuildlessAutoDisposeNotifier<BlockCollection> {
   late final ({
     int? blockId,
-    EditorTextEditingController textEditingController,
+    BlockTextEditingController textEditingController,
     FocusNode textFieldFocusNode,
     GlobalKey<State<StatefulWidget>> textFieldKey
   }) props;
 
-  EditorState build(
+  BlockCollection build(
     ({
       int? blockId,
-      EditorTextEditingController textEditingController,
+      BlockTextEditingController textEditingController,
       FocusNode textFieldFocusNode,
       GlobalKey<State<StatefulWidget>> textFieldKey
     }) props,
   );
 }
 
-/// Text editor logic.
+/// Block logic.
 ///
-/// ViewModel for [EditorWidget].
+/// ViewModel for [BlockWidget].
 ///
-/// Copied from [EditorViewModel].
-@ProviderFor(EditorViewModel)
-const editorViewModelProvider = EditorViewModelFamily();
+/// Copied from [BlockViewModel].
+@ProviderFor(BlockViewModel)
+const blockViewModelProvider = BlockViewModelFamily();
 
-/// Text editor logic.
+/// Block logic.
 ///
-/// ViewModel for [EditorWidget].
+/// ViewModel for [BlockWidget].
 ///
-/// Copied from [EditorViewModel].
-class EditorViewModelFamily extends Family<EditorState> {
-  /// Text editor logic.
+/// Copied from [BlockViewModel].
+class BlockViewModelFamily extends Family<BlockCollection> {
+  /// Block logic.
   ///
-  /// ViewModel for [EditorWidget].
+  /// ViewModel for [BlockWidget].
   ///
-  /// Copied from [EditorViewModel].
-  const EditorViewModelFamily();
+  /// Copied from [BlockViewModel].
+  const BlockViewModelFamily();
 
-  /// Text editor logic.
+  /// Block logic.
   ///
-  /// ViewModel for [EditorWidget].
+  /// ViewModel for [BlockWidget].
   ///
-  /// Copied from [EditorViewModel].
-  EditorViewModelProvider call(
+  /// Copied from [BlockViewModel].
+  BlockViewModelProvider call(
     ({
       int? blockId,
-      EditorTextEditingController textEditingController,
+      BlockTextEditingController textEditingController,
       FocusNode textFieldFocusNode,
       GlobalKey<State<StatefulWidget>> textFieldKey
     }) props,
   ) {
-    return EditorViewModelProvider(
+    return BlockViewModelProvider(
       props,
     );
   }
 
   @override
-  EditorViewModelProvider getProviderOverride(
-    covariant EditorViewModelProvider provider,
+  BlockViewModelProvider getProviderOverride(
+    covariant BlockViewModelProvider provider,
   ) {
     return call(
       provider.props,
@@ -108,46 +108,46 @@ class EditorViewModelFamily extends Family<EditorState> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'editorViewModelProvider';
+  String? get name => r'blockViewModelProvider';
 }
 
-/// Text editor logic.
+/// Block logic.
 ///
-/// ViewModel for [EditorWidget].
+/// ViewModel for [BlockWidget].
 ///
-/// Copied from [EditorViewModel].
-class EditorViewModelProvider
-    extends AutoDisposeNotifierProviderImpl<EditorViewModel, EditorState> {
-  /// Text editor logic.
+/// Copied from [BlockViewModel].
+class BlockViewModelProvider
+    extends AutoDisposeNotifierProviderImpl<BlockViewModel, BlockCollection> {
+  /// Block logic.
   ///
-  /// ViewModel for [EditorWidget].
+  /// ViewModel for [BlockWidget].
   ///
-  /// Copied from [EditorViewModel].
-  EditorViewModelProvider(
+  /// Copied from [BlockViewModel].
+  BlockViewModelProvider(
     this.props,
   ) : super.internal(
-          () => EditorViewModel()..props = props,
-          from: editorViewModelProvider,
-          name: r'editorViewModelProvider',
+          () => BlockViewModel()..props = props,
+          from: blockViewModelProvider,
+          name: r'blockViewModelProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$editorViewModelHash,
-          dependencies: EditorViewModelFamily._dependencies,
+                  : _$blockViewModelHash,
+          dependencies: BlockViewModelFamily._dependencies,
           allTransitiveDependencies:
-              EditorViewModelFamily._allTransitiveDependencies,
+              BlockViewModelFamily._allTransitiveDependencies,
         );
 
   final ({
     int? blockId,
-    EditorTextEditingController textEditingController,
+    BlockTextEditingController textEditingController,
     FocusNode textFieldFocusNode,
     GlobalKey<State<StatefulWidget>> textFieldKey
   }) props;
 
   @override
   bool operator ==(Object other) {
-    return other is EditorViewModelProvider && other.props == props;
+    return other is BlockViewModelProvider && other.props == props;
   }
 
   @override
@@ -159,8 +159,8 @@ class EditorViewModelProvider
   }
 
   @override
-  EditorState runNotifierBuild(
-    covariant EditorViewModel notifier,
+  BlockCollection runNotifierBuild(
+    covariant BlockViewModel notifier,
   ) {
     return notifier.build(
       props,
