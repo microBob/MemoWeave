@@ -4,17 +4,18 @@ import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/editor_props.dart';
 import 'package:memoweave/models/editor_state.dart';
 import 'package:memoweave/utils/database.dart';
+import 'package:memoweave/viewmodels/editor_texteditingcontroller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'editor_viewmodel.g.dart';
 
 /// Text editor logic.
 ///
-/// Viewmodel for [EditorWidget].
+/// ViewModel for [EditorWidget].
 @riverpod
 class EditorViewModel extends _$EditorViewModel {
   /// Props from the widget.
-  late final EditorProps _props;
+  late EditorProps _props;
 
   /// Reference to the [TextField]'s [RenderEditable].
   RenderEditable? _renderEditable;
@@ -26,11 +27,11 @@ class EditorViewModel extends _$EditorViewModel {
     _props = props;
     final blockId = props.blockId;
 
+    // Set change handler on TextEditingController.
+    _props.textEditingController.addListener(handleInput);
+
     // Create a default state to use.
     final defaultState = EditorState(rootBlock: BlockCollection());
-
-    // Set change handler on TextEditingController.
-    defaultState.textEditingController.addListener(handleInput);
 
     // Use default state if not loading previous.
     if (blockId == null) {
@@ -45,10 +46,20 @@ class EditorViewModel extends _$EditorViewModel {
               return defaultState;
             }
 
+            // Load text into text field
+            _props.textEditingController.rootBlock = blockCollection;
+            Future(() {
+              _props.textEditingController.value = _props
+                  .textEditingController.value
+                  .copyWith(text: blockCollection.text);
+            });
+
             // Create state with block.
-            return defaultState.copyWith(rootBlock: blockCollection);
-          }, // Return the default state when one from the database is unavailable.
-          error: (_, __) => defaultState, loading: () => defaultState,
+            return EditorState(rootBlock: blockCollection);
+          },
+          // Return the default state when one from the database is unavailable.
+          error: (_, __) => defaultState,
+          loading: () => defaultState,
         );
   }
 
@@ -58,7 +69,10 @@ class EditorViewModel extends _$EditorViewModel {
   void handleInput() async {
     // Create updated rootBlock
     final newRootBlock =
-        state.rootBlock.copyWith(text: state.textEditingController.text);
+        state.rootBlock.copyWith(text: _props.textEditingController.text);
+
+    // Update rootBlock on Text Editing Controller
+    _props.textEditingController.rootBlock = newRootBlock;
 
     // Write into database
     final databaseManager =

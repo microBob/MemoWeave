@@ -6,7 +6,7 @@ part of 'editor_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$editorViewModelHash() => r'c12575cfa3a574db2e890a14f1b5140248157096';
+String _$editorViewModelHash() => r'7aeb39f46cc4f6cefe83fc64039bb2eb9a20ce66';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -33,6 +33,7 @@ abstract class _$EditorViewModel
     extends BuildlessAutoDisposeNotifier<EditorState> {
   late final ({
     int? blockId,
+    EditorTextEditingController textEditingController,
     FocusNode textFieldFocusNode,
     GlobalKey<State<StatefulWidget>> textFieldKey
   }) props;
@@ -40,6 +41,7 @@ abstract class _$EditorViewModel
   EditorState build(
     ({
       int? blockId,
+      EditorTextEditingController textEditingController,
       FocusNode textFieldFocusNode,
       GlobalKey<State<StatefulWidget>> textFieldKey
     }) props,
@@ -48,7 +50,7 @@ abstract class _$EditorViewModel
 
 /// Text editor logic.
 ///
-/// Viewmodel for [EditorWidget].
+/// ViewModel for [EditorWidget].
 ///
 /// Copied from [EditorViewModel].
 @ProviderFor(EditorViewModel)
@@ -56,25 +58,26 @@ const editorViewModelProvider = EditorViewModelFamily();
 
 /// Text editor logic.
 ///
-/// Viewmodel for [EditorWidget].
+/// ViewModel for [EditorWidget].
 ///
 /// Copied from [EditorViewModel].
 class EditorViewModelFamily extends Family<EditorState> {
   /// Text editor logic.
   ///
-  /// Viewmodel for [EditorWidget].
+  /// ViewModel for [EditorWidget].
   ///
   /// Copied from [EditorViewModel].
   const EditorViewModelFamily();
 
   /// Text editor logic.
   ///
-  /// Viewmodel for [EditorWidget].
+  /// ViewModel for [EditorWidget].
   ///
   /// Copied from [EditorViewModel].
   EditorViewModelProvider call(
     ({
       int? blockId,
+      EditorTextEditingController textEditingController,
       FocusNode textFieldFocusNode,
       GlobalKey<State<StatefulWidget>> textFieldKey
     }) props,
@@ -110,14 +113,14 @@ class EditorViewModelFamily extends Family<EditorState> {
 
 /// Text editor logic.
 ///
-/// Viewmodel for [EditorWidget].
+/// ViewModel for [EditorWidget].
 ///
 /// Copied from [EditorViewModel].
 class EditorViewModelProvider
     extends AutoDisposeNotifierProviderImpl<EditorViewModel, EditorState> {
   /// Text editor logic.
   ///
-  /// Viewmodel for [EditorWidget].
+  /// ViewModel for [EditorWidget].
   ///
   /// Copied from [EditorViewModel].
   EditorViewModelProvider(
@@ -137,6 +140,7 @@ class EditorViewModelProvider
 
   final ({
     int? blockId,
+    EditorTextEditingController textEditingController,
     FocusNode textFieldFocusNode,
     GlobalKey<State<StatefulWidget>> textFieldKey
   }) props;
