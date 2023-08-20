@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memoweave/utils/database.dart';
+import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
 import 'package:memoweave/widgets/block_widget.dart';
 
 void main() {
@@ -29,7 +30,12 @@ class MemoWeave extends ConsumerWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            BlockWidget(),
+            BlockWidget(props: (
+              textFieldKey: GlobalKey(),
+              textFieldFocusNode: FocusNode(),
+              textEditingController: BlockTextEditingController(),
+              blockId: 3,
+            )),
             database.when(
               data: (data) => Text('Database opened: ${data.path}'),
               error: (error, stat) => Text(error.toString()),
