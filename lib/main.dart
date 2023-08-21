@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:memoweave/utils/database_handler.dart';
-import 'package:memoweave/widgets/editor_widget.dart';
+import 'package:memoweave/utils/database.dart';
+import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
+import 'package:memoweave/widgets/block_widget.dart';
 
 void main() {
   runApp(const ProviderScope(child: MemoWeave()));
@@ -13,8 +14,6 @@ class MemoWeave extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final database = ref.watch(databaseHandlerProvider);
-
     return MaterialApp(
       title: 'MemoWeave',
       theme: ThemeData(
@@ -27,14 +26,19 @@ class MemoWeave extends ConsumerWidget {
           title: const Text('MemoWeave'),
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            EditorWidget(),
-            EditorWidget(),
-            database.when(
-              data: (data) => Text('Database opened: ${data.path}'),
-              error: (error, stat) => Text(error.toString()),
-              loading: () => const CircularProgressIndicator(),
-            ),
+            BlockWidget(props: (
+              textFieldKey: GlobalKey(),
+              textFieldFocusNode: FocusNode(),
+              textEditingController: BlockTextEditingController(),
+              blockId: 3,
+            )),
+            ref.watch(databaseInstanceProvider).when(
+                  data: (data) => Text('Database opened: ${data.path}'),
+                  error: (error, stat) => Text(error.toString()),
+                  loading: () => const CircularProgressIndicator(),
+                ),
           ],
         ),
       ),
