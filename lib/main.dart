@@ -14,8 +14,6 @@ class MemoWeave extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final database = ref.watch(databaseInstanceProvider);
-
     return MaterialApp(
       title: 'MemoWeave',
       theme: ThemeData(
@@ -36,11 +34,11 @@ class MemoWeave extends ConsumerWidget {
               textEditingController: BlockTextEditingController(),
               blockId: 3,
             )),
-            database.when(
-              data: (data) => Text('Database opened: ${data.path}'),
-              error: (error, stat) => Text(error.toString()),
-              loading: () => const CircularProgressIndicator(),
-            ),
+            ref.watch(databaseInstanceProvider).when(
+                  data: (data) => Text('Database opened: ${data.path}'),
+                  error: (error, stat) => Text(error.toString()),
+                  loading: () => const CircularProgressIndicator(),
+                ),
           ],
         ),
       ),
