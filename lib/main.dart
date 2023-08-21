@@ -14,9 +14,9 @@ class MemoWeave extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      title: 'MemoWeave',
+      // title: 'MemoWeave',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorSchemeSeed: Colors.blue,
         useMaterial3: true,
       ),
       home: Scaffold(
@@ -25,7 +25,7 @@ class MemoWeave extends ConsumerWidget {
           title: const Text('MemoWeave'),
         ),
         body: SafeArea(
-          minimum: const EdgeInsets.all(8),
+          minimum: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

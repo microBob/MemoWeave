@@ -12,12 +12,25 @@ class ThreadView extends ConsumerWidget {
       children: [
         const Row(
           children: [
-            Text('Spool'),
-            Expanded(child: TextField()),
+            DropdownMenu(
+              initialSelection: 'Note',
+              dropdownMenuEntries: [
+                DropdownMenuEntry(value: 'Note', label: 'Note')
+              ],
+              label: Text('Spool'),
+            ),
+            Spacer(),
+            IntrinsicWidth(
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Subject',
+                ),
+              ),
+            ),
+            Spacer(),
             Text('Time'),
           ],
         ),
-        const Divider(),
         BlockWidget(
           props: (
             blockId: 3,
