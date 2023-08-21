@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memoweave/utils/database.dart';
-import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
-import 'package:memoweave/widgets/block_widget.dart';
+import 'package:memoweave/views/thread_view.dart';
 
 void main() {
   runApp(const ProviderScope(child: MemoWeave()));
@@ -25,21 +24,19 @@ class MemoWeave extends ConsumerWidget {
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           title: const Text('MemoWeave'),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            BlockWidget(props: (
-              textFieldKey: GlobalKey(),
-              textFieldFocusNode: FocusNode(),
-              textEditingController: BlockTextEditingController(),
-              blockId: 3,
-            )),
-            ref.watch(databaseInstanceProvider).when(
-                  data: (data) => Text('Database opened: ${data.path}'),
-                  error: (error, stat) => Text(error.toString()),
-                  loading: () => const CircularProgressIndicator(),
-                ),
-          ],
+        body: SafeArea(
+          minimum: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const ThreadView(),
+              ref.watch(databaseInstanceProvider).when(
+                    data: (data) => Text('Database opened: ${data.path}'),
+                    error: (error, stat) => Text(error.toString()),
+                    loading: () => const CircularProgressIndicator(),
+                  ),
+            ],
+          ),
         ),
       ),
     );
