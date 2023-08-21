@@ -27,7 +27,7 @@ class BlockCollection {
 
   /// Block base style.
   ///
-  /// Applies to the whole block in addition to any [InlineStyle]s.
+  /// Applies to the whole block in addition to any [InlineStyle] objects.
   @enumerated
   final BlockStyle blockStyle;
 

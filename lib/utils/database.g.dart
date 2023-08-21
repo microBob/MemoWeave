@@ -72,7 +72,7 @@ class _SystemHash {
 typedef GetBlockCollectionByIdRef
     = AutoDisposeFutureProviderRef<BlockCollection?>;
 
-/// Handles retrieving a [BlockCollection] with the given [id].
+/// Handles retrieving a [BlockCollection] with the given [Id].
 ///
 /// Returns null if not found.
 ///
@@ -80,21 +80,21 @@ typedef GetBlockCollectionByIdRef
 @ProviderFor(getBlockCollectionById)
 const getBlockCollectionByIdProvider = GetBlockCollectionByIdFamily();
 
-/// Handles retrieving a [BlockCollection] with the given [id].
+/// Handles retrieving a [BlockCollection] with the given [Id].
 ///
 /// Returns null if not found.
 ///
 /// Copied from [getBlockCollectionById].
 class GetBlockCollectionByIdFamily
     extends Family<AsyncValue<BlockCollection?>> {
-  /// Handles retrieving a [BlockCollection] with the given [id].
+  /// Handles retrieving a [BlockCollection] with the given [Id].
   ///
   /// Returns null if not found.
   ///
   /// Copied from [getBlockCollectionById].
   const GetBlockCollectionByIdFamily();
 
-  /// Handles retrieving a [BlockCollection] with the given [id].
+  /// Handles retrieving a [BlockCollection] with the given [Id].
   ///
   /// Returns null if not found.
   ///
@@ -131,14 +131,14 @@ class GetBlockCollectionByIdFamily
   String? get name => r'getBlockCollectionByIdProvider';
 }
 
-/// Handles retrieving a [BlockCollection] with the given [id].
+/// Handles retrieving a [BlockCollection] with the given [Id].
 ///
 /// Returns null if not found.
 ///
 /// Copied from [getBlockCollectionById].
 class GetBlockCollectionByIdProvider
     extends AutoDisposeFutureProvider<BlockCollection?> {
-  /// Handles retrieving a [BlockCollection] with the given [id].
+  /// Handles retrieving a [BlockCollection] with the given [Id].
   ///
   /// Returns null if not found.
   ///

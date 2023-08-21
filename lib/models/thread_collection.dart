@@ -25,7 +25,8 @@ class ThreadCollection {
   /// Will default to the [DateTime] at creation.
   final DateTime dateTime;
 
-  /// Ordered set of [BlockCollection]s that make up the content of this thread.
+  /// Ordered set of [BlockCollection] objects that make up the content of this
+  /// thread.
   final IsarLinks<BlockCollection> blocks;
 
   /// Default constructor.

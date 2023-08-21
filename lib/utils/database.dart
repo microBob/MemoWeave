@@ -48,7 +48,7 @@ Future<DatabaseManager> databaseManager(DatabaseManagerRef ref) async {
   return DatabaseManager(isar);
 }
 
-/// Handles retrieving a [BlockCollection] with the given [id].
+/// Handles retrieving a [BlockCollection] with the given [Id].
 ///
 /// Returns null if not found.
 @riverpod
