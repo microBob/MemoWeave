@@ -84,7 +84,8 @@ ThreadCollection _threadCollectionDeserialize(
 ) {
   final object = ThreadCollection(
     id: id,
-    spool: reader.readStringOrNull(offsets[1]) ?? 'Notes',
+    spool: reader.readStringOrNull(offsets[1]) ?? defaultSpoolName,
+    subject: reader.readStringOrNull(offsets[2]) ?? '',
   );
   return object;
 }
@@ -99,9 +100,9 @@ P _threadCollectionDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset) ?? 'Notes') as P;
+      return (reader.readStringOrNull(offset) ?? defaultSpoolName) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset) ?? '') as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }

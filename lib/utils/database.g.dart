@@ -6,7 +6,7 @@ part of 'database.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$databaseInstanceHash() => r'a5fbf7f452b1bdf602d449b1e9a1937abf29ef43';
+String _$databaseInstanceHash() => r'47f576185ab91fb73f510282c93b0e5c98ca8e8e';
 
 /// Provider for the [Isar] database.
 ///
@@ -176,5 +176,22 @@ class GetBlockCollectionByIdProvider
     return _SystemHash.finish(hash);
   }
 }
+
+String _$spoolsHash() => r'b82f8139e589e5792e04e3894d02bc312631336c';
+
+/// Handles retrieving all spool names.
+///
+/// Copied from [spools].
+@ProviderFor(spools)
+final spoolsProvider = AutoDisposeFutureProvider<List<String>>.internal(
+  spools,
+  name: r'spoolsProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$spoolsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef SpoolsRef = AutoDisposeFutureProviderRef<List<String>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

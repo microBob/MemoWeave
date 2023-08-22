@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:memoweave/utils/constants.dart';
 import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
+import 'package:memoweave/viewmodels/thread_viewmodel.dart';
 import 'package:memoweave/widgets/block_widget.dart';
 
 class ThreadView extends ConsumerWidget {
@@ -10,25 +12,29 @@ class ThreadView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        const Row(
+        // Thread header.
+        Row(
           children: [
+            // Spool picker.
             DropdownMenu(
-              initialSelection: 'Note',
-              dropdownMenuEntries: [
-                DropdownMenuEntry(value: 'Note', label: 'Note')
-              ],
-              label: Text('Spool'),
+              initialSelection: defaultSpoolName,
+              dropdownMenuEntries: ref
+                  .watch(threadViewModelProvider.notifier)
+                  .spoolsMenuEntries(),
+              label: const Text('Spool'),
             ),
-            Spacer(),
-            IntrinsicWidth(
+            const Spacer(),
+            // Thread subject line.
+            const IntrinsicWidth(
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Subject',
                 ),
               ),
             ),
-            Spacer(),
-            Text('Time'),
+            const Spacer(),
+            // Time stamp.
+            const Text('Time'),
           ],
         ),
         BlockWidget(

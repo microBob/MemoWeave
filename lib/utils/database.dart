@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/block_collection.dart';
+import 'package:memoweave/models/thread_collection.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -28,6 +29,11 @@ class DatabaseManager {
       await _isar.blockCollections.put(blockCollection);
     });
   }
+
+  /// Get all spool names.
+  Future<List<String>> get spools async {
+    return await _isar.threadCollections.where().spoolProperty().findAll();
+  }
 }
 
 /// Provider for the [Isar] database.
@@ -36,7 +42,13 @@ class DatabaseManager {
 @Riverpod(keepAlive: true)
 Future<Isar> databaseInstance(DatabaseInstanceRef ref) async {
   final dir = await getApplicationDocumentsDirectory();
-  return Isar.open([BlockCollectionSchema], directory: dir.path);
+  return Isar.open(
+    [
+      BlockCollectionSchema,
+      ThreadCollectionSchema,
+    ],
+    directory: dir.path,
+  );
 }
 
 /// Provider for the instance of the [DatabaseManager].
@@ -56,4 +68,11 @@ Future<BlockCollection?> getBlockCollectionById(GetBlockCollectionByIdRef ref,
     {required Id id}) async {
   final databaseManager = await ref.watch(databaseManagerProvider.future);
   return databaseManager.getBlockCollectionById(id);
+}
+
+/// Handles retrieving all spool names.
+@riverpod
+Future<List<String>> spools(SpoolsRef ref) async {
+  final databaseManager = await ref.watch(databaseManagerProvider.future);
+  return databaseManager.spools;
 }

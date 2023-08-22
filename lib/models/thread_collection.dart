@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/block_collection.dart';
+import 'package:memoweave/utils/constants.dart';
 
 part 'thread_collection.g.dart';
 
@@ -35,13 +36,17 @@ class ThreadCollection {
   /// Will supply default values if none are given.
   ThreadCollection({
     this.id,
-    this.spool = 'Notes',
-    String? inSubject = '',
+    this.spool = defaultSpoolName,
+    this.subject = '',
     DateTime? inDateTime,
     IsarLinks<BlockCollection>? inBlocks,
-  })  : subject = inSubject ?? DateTime.now().toString(),
-        dateTime = inDateTime ?? DateTime.now(),
-        blocks = inBlocks ?? IsarLinks<BlockCollection>();
+  })  : dateTime = inDateTime ?? DateTime.now(),
+        blocks = inBlocks ?? IsarLinks<BlockCollection>() {
+    // Create a starting block if there are none.
+    if (blocks.isEmpty) {
+      blocks.add(BlockCollection());
+    }
+  }
 
   /// Copy builder.
   ///
@@ -57,7 +62,7 @@ class ThreadCollection {
     return ThreadCollection(
       id: id ?? this.id,
       spool: spool ?? this.spool,
-      inSubject: subject ?? this.subject,
+      subject: subject ?? this.subject,
       inDateTime: dateTime ?? this.dateTime,
       inBlocks: blocks ?? this.blocks,
     );
