@@ -29,17 +29,16 @@ class ThreadViewModel extends _$ThreadViewModel {
 
   /// Get all spools and make [DropdownMenuEntries] from them.
   List<DropdownMenuEntry> spoolsMenuEntries() {
-    final spools = ref.watch(spoolsProvider).valueOrNull;
-    if (spools != null) {
-      return spools
-          .map((spool) => DropdownMenuEntry(value: spool, label: spool))
-          .toList();
-    }
-    return [
-      const DropdownMenuEntry(
-        value: defaultSpoolName,
-        label: defaultSpoolName,
-      )
-    ];
+    return ref
+            .watch(spoolsProvider)
+            .valueOrNull
+            ?.map((spool) => DropdownMenuEntry(value: spool, label: spool))
+            .toList() ??
+        [
+          const DropdownMenuEntry(
+            value: defaultSpoolName,
+            label: defaultSpoolName,
+          ),
+        ];
   }
 }

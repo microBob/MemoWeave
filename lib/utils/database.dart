@@ -13,6 +13,8 @@ class DatabaseManager {
   /// Reference to open database.
   final Isar _isar;
 
+  List<String> cache = [];
+
   /// Constructor defining the open database.
   DatabaseManager(Isar isar) : _isar = isar;
 
@@ -75,8 +77,7 @@ Future<BlockCollection?> getBlockCollectionById(GetBlockCollectionByIdRef ref,
 }
 
 @riverpod
-Future<ThreadCollection?> getThreadCollectionById(
-    GetThreadCollectionByIdRef ref,
+Future<ThreadCollection?> getThreadCollectionById(GetThreadCollectionByIdRef ref,
     {required Id id}) async {
   final databaseManager = await ref.watch(databaseManagerProvider.future);
   return databaseManager.getThreadCollectionById(id);

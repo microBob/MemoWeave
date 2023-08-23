@@ -179,7 +179,6 @@ class GetBlockCollectionByIdProvider
 
 String _$getThreadCollectionByIdHash() =>
     r'12a92e5d3b8cc7708ce903b299b122de9a9a687a';
-
 typedef GetThreadCollectionByIdRef
     = AutoDisposeFutureProviderRef<ThreadCollection?>;
 
