@@ -36,9 +36,17 @@ class DatabaseManager {
     return _isar.threadCollections.get(id);
   }
 
+  Future<void> putThreadCollection(ThreadCollection threadCollection) async {
+    await _isar.writeTxn(() async {
+      await _isar.threadCollections.put(threadCollection);
+    });
+  }
+
   /// Get all spool names.
-  Future<List<String>> get spools async {
-    return await _isar.threadCollections.where().spoolProperty().findAll();
+  Future<Set<String>> get spools async {
+    final spools =
+        await _isar.threadCollections.where().spoolProperty().findAll();
+    return spools.toSet();
   }
 }
 
@@ -77,7 +85,8 @@ Future<BlockCollection?> getBlockCollectionById(GetBlockCollectionByIdRef ref,
 }
 
 @riverpod
-Future<ThreadCollection?> getThreadCollectionById(GetThreadCollectionByIdRef ref,
+Future<ThreadCollection?> getThreadCollectionById(
+    GetThreadCollectionByIdRef ref,
     {required Id id}) async {
   final databaseManager = await ref.watch(databaseManagerProvider.future);
   return databaseManager.getThreadCollectionById(id);
@@ -85,7 +94,7 @@ Future<ThreadCollection?> getThreadCollectionById(GetThreadCollectionByIdRef ref
 
 /// Handles retrieving all spool names.
 @riverpod
-Future<List<String>> spools(SpoolsRef ref) async {
+Future<Set<String>> spools(SpoolsRef ref) async {
   final databaseManager = await ref.watch(databaseManagerProvider.future);
   return databaseManager.spools;
 }

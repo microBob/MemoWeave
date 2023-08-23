@@ -263,13 +263,13 @@ class GetThreadCollectionByIdProvider
   }
 }
 
-String _$spoolsHash() => r'b82f8139e589e5792e04e3894d02bc312631336c';
+String _$spoolsHash() => r'7b939f4f0785a0dc9a66da3f2d0c4ce8f1bd3e46';
 
 /// Handles retrieving all spool names.
 ///
 /// Copied from [spools].
 @ProviderFor(spools)
-final spoolsProvider = AutoDisposeFutureProvider<List<String>>.internal(
+final spoolsProvider = AutoDisposeFutureProvider<Set<String>>.internal(
   spools,
   name: r'spoolsProvider',
   debugGetCreateSourceHash:
@@ -278,6 +278,6 @@ final spoolsProvider = AutoDisposeFutureProvider<List<String>>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef SpoolsRef = AutoDisposeFutureProviderRef<List<String>>;
+typedef SpoolsRef = AutoDisposeFutureProviderRef<Set<String>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
