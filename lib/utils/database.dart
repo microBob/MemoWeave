@@ -30,6 +30,10 @@ class DatabaseManager {
     });
   }
 
+  Future<ThreadCollection?> getThreadCollectionById(Id id) async {
+    return _isar.threadCollections.get(id);
+  }
+
   /// Get all spool names.
   Future<List<String>> get spools async {
     return await _isar.threadCollections.where().spoolProperty().findAll();
@@ -68,6 +72,14 @@ Future<BlockCollection?> getBlockCollectionById(GetBlockCollectionByIdRef ref,
     {required Id id}) async {
   final databaseManager = await ref.watch(databaseManagerProvider.future);
   return databaseManager.getBlockCollectionById(id);
+}
+
+@riverpod
+Future<ThreadCollection?> getThreadCollectionById(
+    GetThreadCollectionByIdRef ref,
+    {required Id id}) async {
+  final databaseManager = await ref.watch(databaseManagerProvider.future);
+  return databaseManager.getThreadCollectionById(id);
 }
 
 /// Handles retrieving all spool names.

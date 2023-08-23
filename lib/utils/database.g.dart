@@ -177,6 +177,93 @@ class GetBlockCollectionByIdProvider
   }
 }
 
+String _$getThreadCollectionByIdHash() =>
+    r'12a92e5d3b8cc7708ce903b299b122de9a9a687a';
+
+typedef GetThreadCollectionByIdRef
+    = AutoDisposeFutureProviderRef<ThreadCollection?>;
+
+/// See also [getThreadCollectionById].
+@ProviderFor(getThreadCollectionById)
+const getThreadCollectionByIdProvider = GetThreadCollectionByIdFamily();
+
+/// See also [getThreadCollectionById].
+class GetThreadCollectionByIdFamily
+    extends Family<AsyncValue<ThreadCollection?>> {
+  /// See also [getThreadCollectionById].
+  const GetThreadCollectionByIdFamily();
+
+  /// See also [getThreadCollectionById].
+  GetThreadCollectionByIdProvider call({
+    required int id,
+  }) {
+    return GetThreadCollectionByIdProvider(
+      id: id,
+    );
+  }
+
+  @override
+  GetThreadCollectionByIdProvider getProviderOverride(
+    covariant GetThreadCollectionByIdProvider provider,
+  ) {
+    return call(
+      id: provider.id,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'getThreadCollectionByIdProvider';
+}
+
+/// See also [getThreadCollectionById].
+class GetThreadCollectionByIdProvider
+    extends AutoDisposeFutureProvider<ThreadCollection?> {
+  /// See also [getThreadCollectionById].
+  GetThreadCollectionByIdProvider({
+    required this.id,
+  }) : super.internal(
+          (ref) => getThreadCollectionById(
+            ref,
+            id: id,
+          ),
+          from: getThreadCollectionByIdProvider,
+          name: r'getThreadCollectionByIdProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$getThreadCollectionByIdHash,
+          dependencies: GetThreadCollectionByIdFamily._dependencies,
+          allTransitiveDependencies:
+              GetThreadCollectionByIdFamily._allTransitiveDependencies,
+        );
+
+  final int id;
+
+  @override
+  bool operator ==(Object other) {
+    return other is GetThreadCollectionByIdProvider && other.id == id;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, id.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
 String _$spoolsHash() => r'b82f8139e589e5792e04e3894d02bc312631336c';
 
 /// Handles retrieving all spool names.
