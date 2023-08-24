@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
-import 'package:memoweave/utils/constants.dart';
+import 'package:memoweave/utils/database.dart';
 import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
 import 'package:memoweave/viewmodels/thread_viewmodel.dart';
 import 'package:memoweave/widgets/block_widget.dart';
@@ -22,9 +22,14 @@ class ThreadView extends ConsumerWidget {
           children: [
             // Spool picker.
             DropdownMenu(
-              initialSelection: defaultSpoolName,
-              dropdownMenuEntries:
-                  ref.watch(provider.notifier).spoolsMenuEntries(),
+              initialSelection: ref.watch(provider).spool,
+              dropdownMenuEntries: ref.watch(spoolsProvider).when(
+                  data: (spools) =>
+                      ref.watch(provider.notifier).setToMenuEntries(spools),
+                  error: (_, __) =>
+                      ref.watch(provider.notifier).defaultSpoolManuEntries(),
+                  loading: () =>
+                      ref.watch(provider.notifier).defaultSpoolManuEntries()),
               label: const Text('Spool'),
             ),
             const Spacer(),
