@@ -38,13 +38,13 @@ class ThreadView extends ConsumerWidget {
               child: TextFormField(
                 initialValue: ref.watch(provider).subject,
                 decoration: InputDecoration(
-                  hintText: ref.watch(provider).dateTime.toString(),
+                  hintText: ref.watch(provider.notifier).dateFromDateTime(),
                 ),
               ),
             ),
             const Spacer(),
             // Time stamp.
-            Text(ref.watch(provider).dateTime.toString()),
+            Text(ref.watch(provider.notifier).timeFromDateTime(context)),
           ],
         ),
         BlockWidget(

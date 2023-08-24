@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/thread_collection.dart';
 import 'package:memoweave/utils/constants.dart';
@@ -40,4 +41,11 @@ class ThreadViewModel extends _$ThreadViewModel {
         const DropdownMenuEntry(
             value: defaultSpoolName, label: defaultSpoolName)
       ];
+
+  String dateFromDateTime() => DateFormat.yMMMMEEEEd().format(state.dateTime);
+
+  String timeFromDateTime(BuildContext context) =>
+      MediaQuery.of(context).alwaysUse24HourFormat
+          ? DateFormat.Hm().format(state.dateTime)
+          : DateFormat.jm().format(state.dateTime);
 }
