@@ -6,7 +6,7 @@ part of 'thread_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$threadViewModelHash() => r'53c3f3b457af35bccbc2328b2819807bd0e65bc9';
+String _$threadViewModelHash() => r'eef1dd7ef6ee48763fd0c4027f35751c3e332a5c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,10 +31,10 @@ class _SystemHash {
 
 abstract class _$ThreadViewModel
     extends BuildlessAutoDisposeNotifier<ThreadCollection> {
-  late final int? threadId;
+  late final int threadId;
 
   ThreadCollection build(
-    int? threadId,
+    int threadId,
   );
 }
 
@@ -65,7 +65,7 @@ class ThreadViewModelFamily extends Family<ThreadCollection> {
   ///
   /// Copied from [ThreadViewModel].
   ThreadViewModelProvider call(
-    int? threadId,
+    int threadId,
   ) {
     return ThreadViewModelProvider(
       threadId,
@@ -123,7 +123,7 @@ class ThreadViewModelProvider
               ThreadViewModelFamily._allTransitiveDependencies,
         );
 
-  final int? threadId;
+  final int threadId;
 
   @override
   bool operator ==(Object other) {

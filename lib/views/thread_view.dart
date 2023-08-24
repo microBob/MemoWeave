@@ -7,9 +7,9 @@ import 'package:memoweave/viewmodels/thread_viewmodel.dart';
 import 'package:memoweave/widgets/block_widget.dart';
 
 class ThreadView extends ConsumerWidget {
-  final Id? threadId;
+  final Id threadId;
 
-  const ThreadView({super.key, this.threadId});
+  const ThreadView({super.key, required this.threadId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:memoweave/models/thread_collection.dart';
 import 'package:memoweave/utils/database.dart';
 import 'package:memoweave/views/thread_view.dart';
 
@@ -13,6 +14,11 @@ class MemoWeave extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    Future(() async {
+      final databaseManager = await ref.watch(databaseManagerProvider.future);
+      databaseManager.putThreadCollection(ThreadCollection(id: 3));
+    });
+
     return MaterialApp(
       // title: 'MemoWeave',
       theme: ThemeData(
@@ -29,7 +35,9 @@ class MemoWeave extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const ThreadView(),
+              const ThreadView(
+                threadId: 3,
+              ),
               ref.watch(databaseInstanceProvider).when(
                     data: (data) => Text('Database opened: ${data.path}'),
                     error: (error, stat) => Text(error.toString()),

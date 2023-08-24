@@ -14,17 +14,11 @@ part 'thread_viewmodel.g.dart';
 class ThreadViewModel extends _$ThreadViewModel {
   /// Construct or retrieve the data for a Thread.
   @override
-  ThreadCollection build(Id? threadId) {
-    final defaultThreadCollection = ThreadCollection();
-
-    if (threadId == null) {
-      return defaultThreadCollection;
-    }
-
+  ThreadCollection build(Id threadId) {
     return ref
             .watch(getThreadCollectionByIdProvider(id: threadId))
             .valueOrNull ??
-        defaultThreadCollection;
+        ThreadCollection(id: threadId);
   }
 
   /// Get all spools and make [DropdownMenuEntries] from them.
