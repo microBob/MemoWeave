@@ -44,10 +44,10 @@ class ThreadView extends ConsumerWidget {
         ),
         BlockWidget(
           props: (
-          blockId: 3,
-          textEditingController: BlockTextEditingController(),
-          textFieldFocusNode: FocusNode(),
-          textFieldKey: GlobalKey(),
+            blockId: 3,
+            textEditingController: BlockTextEditingController(),
+            textFieldFocusNode: FocusNode(),
+            textFieldKey: GlobalKey(),
           ),
         ),
       ],
