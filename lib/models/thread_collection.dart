@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/utils/constants.dart';
@@ -29,6 +31,10 @@ class ThreadCollection {
   /// Ordered set of [BlockCollection] objects that make up the content of this
   /// thread.
   final IsarLinks<BlockCollection> blocks;
+
+  static const defaultSpoolMenuEntries = [
+    DropdownMenuEntry(value: defaultSpoolName, label: defaultSpoolName)
+  ];
 
   /// Default constructor.
   ///
@@ -67,4 +73,11 @@ class ThreadCollection {
       inBlocks: blocks ?? this.blocks,
     );
   }
+
+  String get dateTimeAsDate => DateFormat.yMMMMEEEEd().format(dateTime);
+
+  String dateTimeAsTime(BuildContext context) =>
+      MediaQuery.of(context).alwaysUse24HourFormat
+          ? DateFormat.Hm().format(dateTime)
+          : DateFormat.jm().format(dateTime);
 }

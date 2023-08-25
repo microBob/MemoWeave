@@ -22,13 +22,18 @@ const ThreadCollectionSchema = CollectionSchema(
       name: r'dateTime',
       type: IsarType.dateTime,
     ),
-    r'spool': PropertySchema(
+    r'dateTimeAsDate': PropertySchema(
       id: 1,
+      name: r'dateTimeAsDate',
+      type: IsarType.string,
+    ),
+    r'spool': PropertySchema(
+      id: 2,
       name: r'spool',
       type: IsarType.string,
     ),
     r'subject': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'subject',
       type: IsarType.string,
     )
@@ -60,6 +65,7 @@ int _threadCollectionEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.dateTimeAsDate.length * 3;
   bytesCount += 3 + object.spool.length * 3;
   bytesCount += 3 + object.subject.length * 3;
   return bytesCount;
@@ -72,8 +78,9 @@ void _threadCollectionSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.dateTime);
-  writer.writeString(offsets[1], object.spool);
-  writer.writeString(offsets[2], object.subject);
+  writer.writeString(offsets[1], object.dateTimeAsDate);
+  writer.writeString(offsets[2], object.spool);
+  writer.writeString(offsets[3], object.subject);
 }
 
 ThreadCollection _threadCollectionDeserialize(
@@ -84,8 +91,8 @@ ThreadCollection _threadCollectionDeserialize(
 ) {
   final object = ThreadCollection(
     id: id,
-    spool: reader.readStringOrNull(offsets[1]) ?? defaultSpoolName,
-    subject: reader.readStringOrNull(offsets[2]) ?? '',
+    spool: reader.readStringOrNull(offsets[2]) ?? defaultSpoolName,
+    subject: reader.readStringOrNull(offsets[3]) ?? '',
   );
   return object;
 }
@@ -100,8 +107,10 @@ P _threadCollectionDeserializeProp<P>(
     case 0:
       return (reader.readDateTime(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset) ?? defaultSpoolName) as P;
+      return (reader.readString(offset)) as P;
     case 2:
+      return (reader.readStringOrNull(offset) ?? defaultSpoolName) as P;
+    case 3:
       return (reader.readStringOrNull(offset) ?? '') as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -256,6 +265,142 @@ extension ThreadCollectionQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
+      dateTimeAsDateEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'dateTimeAsDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
+      dateTimeAsDateGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'dateTimeAsDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
+      dateTimeAsDateLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'dateTimeAsDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
+      dateTimeAsDateBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'dateTimeAsDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
+      dateTimeAsDateStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'dateTimeAsDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
+      dateTimeAsDateEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'dateTimeAsDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
+      dateTimeAsDateContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'dateTimeAsDate',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
+      dateTimeAsDateMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'dateTimeAsDate',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
+      dateTimeAsDateIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'dateTimeAsDate',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
+      dateTimeAsDateIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'dateTimeAsDate',
+        value: '',
       ));
     });
   }
@@ -690,6 +835,20 @@ extension ThreadCollectionQuerySortBy
     });
   }
 
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
+      sortByDateTimeAsDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateTimeAsDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
+      sortByDateTimeAsDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateTimeAsDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy> sortBySpool() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'spool', Sort.asc);
@@ -731,6 +890,20 @@ extension ThreadCollectionQuerySortThenBy
       thenByDateTimeDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'dateTime', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
+      thenByDateTimeAsDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateTimeAsDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
+      thenByDateTimeAsDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'dateTimeAsDate', Sort.desc);
     });
   }
 
@@ -784,6 +957,14 @@ extension ThreadCollectionQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ThreadCollection, ThreadCollection, QDistinct>
+      distinctByDateTimeAsDate({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'dateTimeAsDate',
+          caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<ThreadCollection, ThreadCollection, QDistinct> distinctBySpool(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -811,6 +992,13 @@ extension ThreadCollectionQueryProperty
       dateTimeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'dateTime');
+    });
+  }
+
+  QueryBuilder<ThreadCollection, String, QQueryOperations>
+      dateTimeAsDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'dateTimeAsDate');
     });
   }
 

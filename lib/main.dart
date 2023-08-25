@@ -30,20 +30,10 @@ class MemoWeave extends ConsumerWidget {
           backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           title: const Text('MemoWeave'),
         ),
-        body: SafeArea(
-          minimum: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const ThreadView(
-                threadId: 3,
-              ),
-              ref.watch(databaseInstanceProvider).when(
-                    data: (data) => Text('Database opened: ${data.path}'),
-                    error: (error, stat) => Text(error.toString()),
-                    loading: () => const CircularProgressIndicator(),
-                  ),
-            ],
+        body: const SafeArea(
+          minimum: EdgeInsets.all(24),
+          child: ThreadView(
+            threadId: 3,
           ),
         ),
       ),
