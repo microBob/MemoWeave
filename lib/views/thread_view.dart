@@ -15,10 +15,16 @@ class ThreadView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Header TextEditingControllers.
     final spoolTextEditingController = useTextEditingController();
+    final subjectTextEditingController =
+        useTextEditingController(text: 'starting subject');
+
+    // Provider with props.
     final provider = threadViewModelProvider((
       threadId: threadId,
-      spoolTextEditingController: spoolTextEditingController
+      spoolTextEditingController: spoolTextEditingController,
+      subjectTextEditingController: subjectTextEditingController,
     ));
 
     return Column(
@@ -46,7 +52,7 @@ class ThreadView extends HookConsumerWidget {
                 decoration: InputDecoration(
                   hintText: ref.watch(provider).threadCollection.dateTimeAsDate,
                 ),
-                onChanged: ref.watch(provider.notifier).subjectChanged,
+                // controller: subjectTextEditingController,
               ),
             ),
             const Spacer(),

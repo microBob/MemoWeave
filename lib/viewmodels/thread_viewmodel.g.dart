@@ -6,7 +6,7 @@ part of 'thread_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$threadViewModelHash() => r'e01e6bf07b42c327e52c456be96df218b703515f';
+String _$threadViewModelHash() => r'afd4c137c121d223190fe63c3f4636629e0cfa6c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -33,11 +33,16 @@ abstract class _$ThreadViewModel
     extends BuildlessAutoDisposeNotifier<ThreadState> {
   late final ({
     TextEditingController spoolTextEditingController,
+    TextEditingController subjectTextEditingController,
     int threadId
   }) props;
 
   ThreadState build(
-    ({TextEditingController spoolTextEditingController, int threadId}) props,
+    ({
+      TextEditingController spoolTextEditingController,
+      TextEditingController subjectTextEditingController,
+      int threadId
+    }) props,
   );
 }
 
@@ -68,7 +73,11 @@ class ThreadViewModelFamily extends Family<ThreadState> {
   ///
   /// Copied from [ThreadViewModel].
   ThreadViewModelProvider call(
-    ({TextEditingController spoolTextEditingController, int threadId}) props,
+    ({
+      TextEditingController spoolTextEditingController,
+      TextEditingController subjectTextEditingController,
+      int threadId
+    }) props,
   ) {
     return ThreadViewModelProvider(
       props,
@@ -114,7 +123,7 @@ class ThreadViewModelProvider
   ThreadViewModelProvider(
     this.props,
   ) : super.internal(
-        () => ThreadViewModel()..props = props,
+          () => ThreadViewModel()..props = props,
           from: threadViewModelProvider,
           name: r'threadViewModelProvider',
           debugGetCreateSourceHash:
@@ -128,6 +137,7 @@ class ThreadViewModelProvider
 
   final ({
     TextEditingController spoolTextEditingController,
+    TextEditingController subjectTextEditingController,
     int threadId
   }) props;
 

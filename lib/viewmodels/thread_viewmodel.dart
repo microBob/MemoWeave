@@ -16,6 +16,9 @@ class ThreadViewModel extends _$ThreadViewModel {
   @override
   ThreadState build(ThreadProps props) {
     props.spoolTextEditingController.addListener(spoolSelectionChanged);
+    props.subjectTextEditingController.addListener(subjectChanged);
+
+    print("Build");
 
     return ref.watch(getThreadCollectionByIdProvider(id: props.threadId)).when(
           data: (threadCollection) {
@@ -23,6 +26,7 @@ class ThreadViewModel extends _$ThreadViewModel {
               throw FormatException(
                   "Thread with ID ${props.threadId} doesn't exist");
             }
+
             return ThreadState(threadCollection: threadCollection);
           },
           error: (error, stackFrame) {
@@ -53,10 +57,10 @@ class ThreadViewModel extends _$ThreadViewModel {
     state = state.copyWith(threadCollection: newThreadCollection);
   }
 
-  void subjectChanged(String newSubject) async {
+  void subjectChanged() async {
     // Create new Thread
-    final newThreadCollection =
-        state.threadCollection.copyWith(subject: newSubject);
+    final newThreadCollection = state.threadCollection
+        .copyWith(subject: props.subjectTextEditingController.text);
 
     // Write to database
     final databaseManager = await ref.read(databaseManagerProvider.future);
