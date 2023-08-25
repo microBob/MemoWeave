@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
 import 'package:memoweave/models/thread_collection.dart';
+import 'package:memoweave/models/thread_props.dart';
 import 'package:memoweave/models/thread_state.dart';
 import 'package:memoweave/utils/database.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -14,20 +14,23 @@ part 'thread_viewmodel.g.dart';
 class ThreadViewModel extends _$ThreadViewModel {
   /// Construct or retrieve the data for a Thread.
   @override
-  ThreadState build(Id threadId) {
-    return ref.watch(getThreadCollectionByIdProvider(id: threadId)).when(
+  ThreadState build(ThreadProps props) {
+    props.spoolTextEditingController.addListener(spoolSelectionChanged);
+
+    return ref.watch(getThreadCollectionByIdProvider(id: props.threadId)).when(
           data: (threadCollection) {
             if (threadCollection == null) {
-              throw FormatException("Thread with ID $threadId doesn't exist");
+              throw FormatException(
+                  "Thread with ID ${props.threadId} doesn't exist");
             }
             return ThreadState(threadCollection: threadCollection);
           },
           error: (error, stackFrame) {
             throw FormatException(
-                'Unable to load Thread with ID $threadId: $error, $stackFrame');
+                'Unable to load Thread with ID ${props.threadId}: $error, $stackFrame');
           },
-          loading: () =>
-              ThreadState(threadCollection: ThreadCollection(id: threadId)),
+          loading: () => ThreadState(
+              threadCollection: ThreadCollection(id: props.threadId)),
         );
   }
 
@@ -35,5 +38,18 @@ class ThreadViewModel extends _$ThreadViewModel {
     return set
         .map((element) => DropdownMenuEntry(value: element, label: element))
         .toList();
+  }
+
+  void spoolSelectionChanged() async {
+    // Create new Thread
+    final newThreadCollection = state.threadCollection
+        .copyWith(spool: props.spoolTextEditingController.text);
+
+    // Write to database
+    final databaseManager = await ref.read(databaseManagerProvider.future);
+    databaseManager.putThreadCollection(state.threadCollection);
+
+    // Update state
+    state = state.copyWith(threadCollection: newThreadCollection);
   }
 }

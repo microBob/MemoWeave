@@ -6,7 +6,7 @@ part of 'thread_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$threadViewModelHash() => r'e80641c5725a69812c37d9c6847dec5849f4c31f';
+String _$threadViewModelHash() => r'6177786b8e2dd171a776ee678c618130239ff44a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,10 +31,13 @@ class _SystemHash {
 
 abstract class _$ThreadViewModel
     extends BuildlessAutoDisposeNotifier<ThreadState> {
-  late final int threadId;
+  late final ({
+    TextEditingController spoolTextEditingController,
+    int threadId
+  }) props;
 
   ThreadState build(
-    int threadId,
+    ({TextEditingController spoolTextEditingController, int threadId}) props,
   );
 }
 
@@ -65,10 +68,10 @@ class ThreadViewModelFamily extends Family<ThreadState> {
   ///
   /// Copied from [ThreadViewModel].
   ThreadViewModelProvider call(
-    int threadId,
+    ({TextEditingController spoolTextEditingController, int threadId}) props,
   ) {
     return ThreadViewModelProvider(
-      threadId,
+      props,
     );
   }
 
@@ -77,7 +80,7 @@ class ThreadViewModelFamily extends Family<ThreadState> {
     covariant ThreadViewModelProvider provider,
   ) {
     return call(
-      provider.threadId,
+      provider.props,
     );
   }
 
@@ -109,9 +112,9 @@ class ThreadViewModelProvider
   ///
   /// Copied from [ThreadViewModel].
   ThreadViewModelProvider(
-    this.threadId,
+    this.props,
   ) : super.internal(
-          () => ThreadViewModel()..threadId = threadId,
+        () => ThreadViewModel()..props = props,
           from: threadViewModelProvider,
           name: r'threadViewModelProvider',
           debugGetCreateSourceHash:
@@ -123,17 +126,20 @@ class ThreadViewModelProvider
               ThreadViewModelFamily._allTransitiveDependencies,
         );
 
-  final int threadId;
+  final ({
+    TextEditingController spoolTextEditingController,
+    int threadId
+  }) props;
 
   @override
   bool operator ==(Object other) {
-    return other is ThreadViewModelProvider && other.threadId == threadId;
+    return other is ThreadViewModelProvider && other.props == props;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, threadId.hashCode);
+    hash = _SystemHash.combine(hash, props.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -143,7 +149,7 @@ class ThreadViewModelProvider
     covariant ThreadViewModel notifier,
   ) {
     return notifier.build(
-      threadId,
+      props,
     );
   }
 }
