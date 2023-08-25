@@ -47,7 +47,20 @@ class ThreadViewModel extends _$ThreadViewModel {
 
     // Write to database
     final databaseManager = await ref.read(databaseManagerProvider.future);
-    databaseManager.putThreadCollection(state.threadCollection);
+    databaseManager.putThreadCollection(newThreadCollection);
+
+    // Update state
+    state = state.copyWith(threadCollection: newThreadCollection);
+  }
+
+  void subjectChanged(String newSubject) async {
+    // Create new Thread
+    final newThreadCollection =
+        state.threadCollection.copyWith(subject: newSubject);
+
+    // Write to database
+    final databaseManager = await ref.read(databaseManagerProvider.future);
+    databaseManager.putThreadCollection(newThreadCollection);
 
     // Update state
     state = state.copyWith(threadCollection: newThreadCollection);

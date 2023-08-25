@@ -46,6 +46,7 @@ class ThreadView extends HookConsumerWidget {
                 decoration: InputDecoration(
                   hintText: ref.watch(provider).threadCollection.dateTimeAsDate,
                 ),
+                onChanged: ref.watch(provider.notifier).subjectChanged,
               ),
             ),
             const Spacer(),
