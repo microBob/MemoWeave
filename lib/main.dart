@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:memoweave/models/thread_collection.dart';
+import 'package:memoweave/utils/database.dart';
 import 'package:memoweave/views/thread_view.dart';
 
 void main() {
@@ -20,7 +22,6 @@ class MemoWeave extends ConsumerWidget {
       ),
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           title: const Text('MemoWeave'),
         ),
         body: const SafeArea(
@@ -28,6 +29,15 @@ class MemoWeave extends ConsumerWidget {
           child: ThreadView(
             threadId: 3,
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final databaseManager =
+                await ref.read(databaseManagerProvider.future);
+            final newThread = ThreadCollection(id: 3);
+            databaseManager.putThreadCollection(newThread);
+          },
+          child: const Icon(Icons.create),
         ),
       ),
     );

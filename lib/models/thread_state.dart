@@ -6,14 +6,4 @@ class ThreadState {
   final Rect cursorRect;
 
   ThreadState({required this.threadCollection, required this.cursorRect});
-
-  ThreadState copyWith({
-    ThreadCollection? threadCollection,
-    Rect? cursorRect,
-  }) {
-    return ThreadState(
-      threadCollection: threadCollection ?? this.threadCollection.copyWith(),
-      cursorRect: cursorRect ?? this.cursorRect,
-    );
-  }
 }

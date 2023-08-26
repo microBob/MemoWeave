@@ -51,7 +51,7 @@ class ThreadView extends HookConsumerWidget {
               child: TextFormField(
                 initialValue: threadState.threadCollection.subject,
                 decoration: InputDecoration(
-                  hintText: threadState.threadCollection.dateTimeAsDate,
+                  hintText: threadState.threadCollection.dateTimeAsDate(),
                 ),
                 onChanged: ref.watch(provider.notifier).subjectChanged,
               ),

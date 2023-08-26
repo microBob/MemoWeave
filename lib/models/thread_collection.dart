@@ -24,7 +24,7 @@ class ThreadCollection {
 
   /// [DateTime] for this thread.
   ///
-  /// Will default to the [DateTime] at creation.
+  /// Will default to the current [DateTime] at creation.
   final DateTime dateTime;
 
   /// Ordered set of [BlockCollection] objects that make up the content of this
@@ -69,7 +69,7 @@ class ThreadCollection {
     );
   }
 
-  String get dateTimeAsDate => DateFormat.yMMMMEEEEd().format(dateTime);
+  String dateTimeAsDate() => DateFormat.yMMMMEEEEd().format(dateTime);
 
   String dateTimeAsTime(BuildContext context) =>
       MediaQuery.of(context).alwaysUse24HourFormat
