@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:memoweave/models/thread_collection.dart';
 import 'package:memoweave/models/thread_props.dart';
 import 'package:memoweave/models/thread_state.dart';
 import 'package:memoweave/utils/database.dart';
@@ -12,31 +11,30 @@ part 'thread_viewmodel.g.dart';
 /// Used by [ThreadView].
 @riverpod
 class ThreadViewModel extends _$ThreadViewModel {
-  /// Construct or retrieve the data for a Thread.
   @override
-  ThreadState build(ThreadProps props) {
+  FutureOr<ThreadState> build(ThreadProps props) async {
+    // Get latest state.
+    final state = await _getState();
+
+    // Set initial spool.
+    props.spoolTextEditingController.text = state.threadCollection.spool;
+
+    // Add listener to spool changes.
     props.spoolTextEditingController.addListener(spoolSelectionChanged);
-    props.subjectTextEditingController.addListener(subjectChanged);
 
-    print("Build");
-
-    return ref.watch(getThreadCollectionByIdProvider(id: props.threadId)).when(
-          data: (threadCollection) {
-            if (threadCollection == null) {
-              throw FormatException(
-                  "Thread with ID ${props.threadId} doesn't exist");
-            }
-
-            return ThreadState(threadCollection: threadCollection);
-          },
-          error: (error, stackFrame) {
-            throw FormatException(
-                'Unable to load Thread with ID ${props.threadId}: $error, $stackFrame');
-          },
-          loading: () => ThreadState(
-              threadCollection: ThreadCollection(id: props.threadId)),
-        );
+    // Return state.
+    return state;
   }
+
+  Future<ThreadState> _getState() async {
+    final databaseManager = await ref.read(databaseManagerProvider.future);
+    final threadCollection =
+        await databaseManager.getThreadCollectionById(props.threadId);
+    return ThreadState(
+        threadCollection: threadCollection!, cursorRect: Rect.zero);
+  }
+
+  /// Construct or retrieve the data for a Thread.
 
   List<DropdownMenuEntry> setToMenuEntries(Set set) {
     return set
@@ -44,29 +42,40 @@ class ThreadViewModel extends _$ThreadViewModel {
         .toList();
   }
 
-  void spoolSelectionChanged() async {
-    // Create new Thread
-    final newThreadCollection = state.threadCollection
-        .copyWith(spool: props.spoolTextEditingController.text);
+  Future<void> spoolSelectionChanged() async {
+    state = const AsyncValue.loading();
 
-    // Write to database
-    final databaseManager = await ref.read(databaseManagerProvider.future);
-    databaseManager.putThreadCollection(newThreadCollection);
+    state = await AsyncValue.guard(() async {
+      final currentState = await _getState();
 
-    // Update state
-    state = state.copyWith(threadCollection: newThreadCollection);
+      // Create new Thread
+      final newThreadCollection = currentState.threadCollection
+          .copyWith(spool: props.spoolTextEditingController.text);
+
+      // Write to database
+      final databaseManager = await ref.read(databaseManagerProvider.future);
+      databaseManager.putThreadCollection(newThreadCollection);
+
+      // Return state on completion
+      return _getState();
+    });
   }
 
-  void subjectChanged() async {
-    // Create new Thread
-    final newThreadCollection = state.threadCollection
-        .copyWith(subject: props.subjectTextEditingController.text);
+  Future<void> subjectChanged(String newSubject) async {
+    state = const AsyncValue.loading();
 
-    // Write to database
-    final databaseManager = await ref.read(databaseManagerProvider.future);
-    databaseManager.putThreadCollection(newThreadCollection);
+    state = await AsyncValue.guard(() async {
+      final currentState = await _getState();
 
-    // Update state
-    state = state.copyWith(threadCollection: newThreadCollection);
+      // Create new Thread
+      final newThreadCollection =
+          currentState.threadCollection.copyWith(subject: newSubject);
+
+      // Write to database
+      final databaseManager = await ref.read(databaseManagerProvider.future);
+      databaseManager.putThreadCollection(newThreadCollection);
+
+      return _getState();
+    });
   }
 }

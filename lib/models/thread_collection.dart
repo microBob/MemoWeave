@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/block_collection.dart';
-import 'package:memoweave/utils/constants.dart';
 
 part 'thread_collection.g.dart';
 
@@ -32,17 +31,13 @@ class ThreadCollection {
   /// thread.
   final IsarLinks<BlockCollection> blocks;
 
-  static const defaultSpoolMenuEntries = [
-    DropdownMenuEntry(value: defaultSpoolName, label: defaultSpoolName)
-  ];
-
   /// Default constructor.
   ///
   /// Defines [id], [spool], [subject], [dateTime], and [blocks].
   /// Will supply default values if none are given.
   ThreadCollection({
     this.id,
-    this.spool = defaultSpoolName,
+    this.spool = '',
     this.subject = '',
     DateTime? inDateTime,
     IsarLinks<BlockCollection>? inBlocks,

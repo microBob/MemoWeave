@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
-import 'package:memoweave/models/thread_collection.dart';
 import 'package:memoweave/utils/database.dart';
 import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
 import 'package:memoweave/viewmodels/thread_viewmodel.dart';
@@ -17,15 +16,18 @@ class ThreadView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Header TextEditingControllers.
     final spoolTextEditingController = useTextEditingController();
-    final subjectTextEditingController =
-        useTextEditingController(text: 'starting subject');
 
     // Provider with props.
     final provider = threadViewModelProvider((
       threadId: threadId,
       spoolTextEditingController: spoolTextEditingController,
-      subjectTextEditingController: subjectTextEditingController,
     ));
+
+    final threadState = ref.watch(provider).value;
+
+    if (threadState == null) {
+      return const CircularProgressIndicator();
+    }
 
     return Column(
       children: [
@@ -34,12 +36,11 @@ class ThreadView extends HookConsumerWidget {
           children: [
             // Spool picker.
             DropdownMenu(
-              initialSelection: ref.watch(provider).threadCollection.spool,
               dropdownMenuEntries: ref.watch(spoolsProvider).when(
                     data: (spools) =>
                         ref.watch(provider.notifier).setToMenuEntries(spools),
-                    error: (_, __) => ThreadCollection.defaultSpoolMenuEntries,
-                    loading: () => ThreadCollection.defaultSpoolMenuEntries,
+                    error: (_, __) => [],
+                    loading: () => [],
                   ),
               label: const Text('Spool'),
               controller: spoolTextEditingController,
@@ -48,16 +49,16 @@ class ThreadView extends HookConsumerWidget {
             // Thread subject line.
             IntrinsicWidth(
               child: TextFormField(
-                initialValue: ref.watch(provider).threadCollection.subject,
+                initialValue: threadState.threadCollection.subject,
                 decoration: InputDecoration(
-                  hintText: ref.watch(provider).threadCollection.dateTimeAsDate,
+                  hintText: threadState.threadCollection.dateTimeAsDate,
                 ),
-                // controller: subjectTextEditingController,
+                onChanged: ref.watch(provider.notifier).subjectChanged,
               ),
             ),
             const Spacer(),
             // Time stamp.
-            Text(ref.watch(provider).threadCollection.dateTimeAsTime(context)),
+            Text(threadState.threadCollection.dateTimeAsTime(context)),
           ],
         ),
         BlockWidget(

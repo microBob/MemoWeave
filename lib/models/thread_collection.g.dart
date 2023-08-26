@@ -91,7 +91,7 @@ ThreadCollection _threadCollectionDeserialize(
 ) {
   final object = ThreadCollection(
     id: id,
-    spool: reader.readStringOrNull(offsets[2]) ?? defaultSpoolName,
+    spool: reader.readStringOrNull(offsets[2]) ?? '',
     subject: reader.readStringOrNull(offsets[3]) ?? '',
   );
   return object;
@@ -109,7 +109,7 @@ P _threadCollectionDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readStringOrNull(offset) ?? defaultSpoolName) as P;
+      return (reader.readStringOrNull(offset) ?? '') as P;
     case 3:
       return (reader.readStringOrNull(offset) ?? '') as P;
     default:

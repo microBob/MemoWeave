@@ -6,7 +6,7 @@ part of 'thread_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$threadViewModelHash() => r'afd4c137c121d223190fe63c3f4636629e0cfa6c';
+String _$threadViewModelHash() => r'b5facf745c33527f42c17dba4095ce47872de283';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,19 +30,14 @@ class _SystemHash {
 }
 
 abstract class _$ThreadViewModel
-    extends BuildlessAutoDisposeNotifier<ThreadState> {
+    extends BuildlessAutoDisposeAsyncNotifier<ThreadState> {
   late final ({
     TextEditingController spoolTextEditingController,
-    TextEditingController subjectTextEditingController,
     int threadId
   }) props;
 
-  ThreadState build(
-    ({
-      TextEditingController spoolTextEditingController,
-      TextEditingController subjectTextEditingController,
-      int threadId
-    }) props,
+  FutureOr<ThreadState> build(
+    ({TextEditingController spoolTextEditingController, int threadId}) props,
   );
 }
 
@@ -59,7 +54,7 @@ const threadViewModelProvider = ThreadViewModelFamily();
 /// Used by [ThreadView].
 ///
 /// Copied from [ThreadViewModel].
-class ThreadViewModelFamily extends Family<ThreadState> {
+class ThreadViewModelFamily extends Family<AsyncValue<ThreadState>> {
   /// ViewModel for a Thread.
   ///
   /// Used by [ThreadView].
@@ -73,11 +68,7 @@ class ThreadViewModelFamily extends Family<ThreadState> {
   ///
   /// Copied from [ThreadViewModel].
   ThreadViewModelProvider call(
-    ({
-      TextEditingController spoolTextEditingController,
-      TextEditingController subjectTextEditingController,
-      int threadId
-    }) props,
+    ({TextEditingController spoolTextEditingController, int threadId}) props,
   ) {
     return ThreadViewModelProvider(
       props,
@@ -114,7 +105,7 @@ class ThreadViewModelFamily extends Family<ThreadState> {
 ///
 /// Copied from [ThreadViewModel].
 class ThreadViewModelProvider
-    extends AutoDisposeNotifierProviderImpl<ThreadViewModel, ThreadState> {
+    extends AutoDisposeAsyncNotifierProviderImpl<ThreadViewModel, ThreadState> {
   /// ViewModel for a Thread.
   ///
   /// Used by [ThreadView].
@@ -137,7 +128,6 @@ class ThreadViewModelProvider
 
   final ({
     TextEditingController spoolTextEditingController,
-    TextEditingController subjectTextEditingController,
     int threadId
   }) props;
 
@@ -155,7 +145,7 @@ class ThreadViewModelProvider
   }
 
   @override
-  ThreadState runNotifierBuild(
+  FutureOr<ThreadState> runNotifierBuild(
     covariant ThreadViewModel notifier,
   ) {
     return notifier.build(
