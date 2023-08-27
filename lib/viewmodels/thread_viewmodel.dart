@@ -48,15 +48,18 @@ class ThreadViewModel extends _$ThreadViewModel {
     state = await AsyncValue.guard(() async {
       final currentState = await _getState();
 
-      // Create new Thread
+      // Create new Thread.
       final newThreadCollection = currentState.threadCollection
           .copyWith(spool: props.spoolTextEditingController.text);
 
-      // Write to database
+      // Write to database.
       final databaseManager = await ref.read(databaseManagerProvider.future);
       await databaseManager.putThreadCollection(newThreadCollection);
 
-      // Return state on completion
+      // Prompt spools list to recompute.
+      ref.invalidate(spoolsProvider);
+
+      // Return state on completion.
       return _getState();
     });
   }

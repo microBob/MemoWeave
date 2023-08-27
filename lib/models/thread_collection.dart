@@ -10,7 +10,7 @@ part 'thread_collection.g.dart';
 class ThreadCollection {
   /// Unique identifier for this thread.
   ///
-  /// Will lbe assigned by the database system if null.
+  /// Will be assigned by the database system if null.
   /// Not really used by the app and is mainly for the database system to index.
   Id? id;
 
