@@ -83,6 +83,7 @@ ThreadCollection _threadCollectionDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = ThreadCollection(
+    dateTime: reader.readDateTime(offsets[0]),
     id: id,
     spool: reader.readStringOrNull(offsets[1]) ?? '',
     subject: reader.readStringOrNull(offsets[2]) ?? '',

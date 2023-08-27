@@ -48,17 +48,13 @@ class ThreadViewModel extends _$ThreadViewModel {
     state = await AsyncValue.guard(() async {
       final currentState = await _getState();
 
-      print("Current state: ${currentState.threadCollection.dateTime}");
-
       // Create new Thread
       final newThreadCollection = currentState.threadCollection
           .copyWith(spool: props.spoolTextEditingController.text);
 
-      print("New State: ${newThreadCollection.dateTime}");
-
       // Write to database
       final databaseManager = await ref.read(databaseManagerProvider.future);
-      databaseManager.putThreadCollection(newThreadCollection);
+      await databaseManager.putThreadCollection(newThreadCollection);
 
       // Return state on completion
       return _getState();

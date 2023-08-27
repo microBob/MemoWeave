@@ -29,23 +29,24 @@ class ThreadCollection {
 
   /// Ordered set of [BlockCollection] objects that make up the content of this
   /// thread.
-  final IsarLinks<BlockCollection> blocks;
+  final blocks = IsarLinks<BlockCollection>();
 
   /// Default constructor.
   ///
-  /// Defines [id], [spool], [subject], [dateTime], and [blocks].
+  /// Defines [id], [spool], [subject], [inDateTime], and [blocks].
   /// Will supply default values if none are given.
   ThreadCollection({
     this.id,
     this.spool = '',
     this.subject = '',
-    DateTime? inDateTime,
-    IsarLinks<BlockCollection>? inBlocks,
-  })  : dateTime = inDateTime ?? DateTime.now(),
-        blocks = inBlocks ?? IsarLinks<BlockCollection>() {
+    required this.dateTime,
+    Set<BlockCollection>? blocks,
+  }) {
     // Create a starting block if there are none.
-    if (blocks.isEmpty) {
-      blocks.add(BlockCollection());
+    if (blocks == null || blocks.isEmpty) {
+      this.blocks.add(BlockCollection());
+    } else {
+      this.blocks.addAll(blocks);
     }
   }
 
@@ -64,8 +65,8 @@ class ThreadCollection {
       id: id ?? this.id,
       spool: spool ?? this.spool,
       subject: subject ?? this.subject,
-      inDateTime: dateTime ?? this.dateTime,
-      inBlocks: blocks ?? this.blocks,
+      dateTime: dateTime ?? this.dateTime,
+      blocks: blocks ?? this.blocks,
     );
   }
 

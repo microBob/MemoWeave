@@ -34,7 +34,7 @@ class MemoWeave extends ConsumerWidget {
           onPressed: () async {
             final databaseManager =
                 await ref.read(databaseManagerProvider.future);
-            final newThread = ThreadCollection(id: 3);
+            final newThread = ThreadCollection(id: 3, dateTime: DateTime.now());
             databaseManager.putThreadCollection(newThread);
           },
           child: const Icon(Icons.create),
