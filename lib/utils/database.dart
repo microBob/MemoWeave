@@ -36,9 +36,9 @@ class DatabaseManager {
     return _isar.threadCollections.get(id);
   }
 
-  Future<void> putThreadCollection(ThreadCollection threadCollection) async {
-    await _isar.writeTxn(() async {
-      await _isar.threadCollections.put(threadCollection);
+  void putThreadCollection(ThreadCollection threadCollection) {
+    _isar.writeTxnSync(() {
+      _isar.threadCollections.putSync(threadCollection);
     });
   }
 

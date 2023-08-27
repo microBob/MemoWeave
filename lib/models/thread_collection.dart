@@ -33,17 +33,16 @@ class ThreadCollection {
 
   /// Default constructor.
   ///
-  /// Defines [id], [spool], [subject], [inDateTime], and [blocks].
+  /// Defines [id], [spool], [subject], and [dateTime].
   /// Will supply default values if none are given.
   ThreadCollection({
     this.id,
     this.spool = '',
     this.subject = '',
     required this.dateTime,
-    Set<BlockCollection>? blocks,
+    Set<BlockCollection> blocks = const {},
   }) {
-    // Create a starting block if there are none.
-    if (blocks == null || blocks.isEmpty) {
+    if (blocks.isEmpty) {
       this.blocks.add(BlockCollection());
     } else {
       this.blocks.addAll(blocks);
@@ -59,7 +58,7 @@ class ThreadCollection {
     String? spool,
     String? subject,
     DateTime? dateTime,
-    IsarLinks<BlockCollection>? blocks,
+    Set<BlockCollection>? blocks,
   }) {
     return ThreadCollection(
       id: id ?? this.id,

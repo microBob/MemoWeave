@@ -54,7 +54,7 @@ class ThreadViewModel extends _$ThreadViewModel {
 
       // Write to database.
       final databaseManager = await ref.read(databaseManagerProvider.future);
-      await databaseManager.putThreadCollection(newThreadCollection);
+      databaseManager.putThreadCollection(newThreadCollection);
 
       // Prompt spools list to recompute.
       ref.invalidate(spoolsProvider);
