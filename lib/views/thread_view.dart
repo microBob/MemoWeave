@@ -3,9 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:memoweave/utils/database.dart';
-import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
+import 'package:memoweave/utils/use_block_texteditingcontroller.dart';
 import 'package:memoweave/viewmodels/thread_viewmodel.dart';
-import 'package:memoweave/widgets/block_widget.dart';
 
 class ThreadView extends HookConsumerWidget {
   final Id threadId;
@@ -28,6 +27,12 @@ class ThreadView extends HookConsumerWidget {
     if (threadState == null) {
       return const CircularProgressIndicator();
     }
+
+    final blockTextEditingController = useBlockTextEditingController();
+    blockTextEditingController.rootBlock =
+        threadState.threadCollection.blocks.first;
+    blockTextEditingController.text =
+        threadState.threadCollection.blocks.first.text;
 
     return Column(
       children: [
@@ -61,16 +66,19 @@ class ThreadView extends HookConsumerWidget {
             Text(threadState.threadCollection.dateTimeAsTime(context)),
           ],
         ),
-        ListView.builder(
-          itemBuilder: (_, index) => BlockWidget(
-            props: (
-              blockId: threadState.threadCollection.blocks.toList()[index].id!,
-              textFieldKey: GlobalKey(),
-              textFieldFocusNode: FocusNode(),
-              textEditingController: BlockTextEditingController()
-            ),
-          ),
-        ),
+        // ListView.builder(
+        //   itemBuilder: (_, index) => BlockWidget(
+        //     props: (
+        //       blockId: threadState.threadCollection.blocks.toList()[index].id!,
+        //       textFieldKey: GlobalKey(),
+        //       textFieldFocusNode: FocusNode(),
+        //       textEditingController: BlockTextEditingController()
+        //     ),
+        //   ),
+        // ),
+        TextField(
+          controller: blockTextEditingController,
+        )
       ],
     );
   }
