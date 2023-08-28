@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/block_props.dart';
@@ -16,55 +14,32 @@ part 'block_viewmodel.g.dart';
 class BlockViewModel extends _$BlockViewModel {
   /// Get props and initialize the Block.
   @override
-  FutureOr<BlockCollection> build(BlockProps props) async {
-    final state = await _getState();
+  BlockCollection build({
+    required BlockProps props,
+    required BlockTextEditingController blockTextEditingController,
+  }) {
+    blockTextEditingController.rootBlock = props.blockCollection;
+    blockTextEditingController.text = props.blockCollection.text;
 
-    props.textEditingController.rootBlock = state;
-    props.textEditingController.text = state.text;
+    blockTextEditingController.addListener(handleInput);
 
-    props.textEditingController.addListener(handleInput);
-
-    return state;
-  }
-
-  Future<BlockCollection> _getState() async {
-    final databaseManager = await ref.read(databaseManagerProvider.future);
-    final blockCollection =
-        await databaseManager.getBlockCollectionById(props.blockId);
-    if (blockCollection == null) {
-      throw FileSystemException(
-          'Block with ID ${props.blockId} does not exist!');
-    }
-
-    await blockCollection.children.load();
-    await blockCollection.parents.load();
-
-    return blockCollection;
+    return props.blockCollection;
   }
 
   /// Handle new input.
   ///
   /// Update [state]'s rootBlock with text/style and set cursor position.
   /// Throws [FormatException] if unable to find render editable.
-  void handleInput() async {
-    state = const AsyncValue.loading();
+  Future<void> handleInput() async {
+    // Create updated rootBlock.
+    final newRootBlock = state.copyWith(text: blockTextEditingController.text);
 
-    state = await AsyncValue.guard(
-      () async {
-        final currentState = await _getState();
+    blockTextEditingController.rootBlock = newRootBlock;
 
-        // Create updated rootBlock.
-        final newRootBlock =
-            currentState.copyWith(text: props.textEditingController.text);
+    // Write into database.
+    final databaseManager = await ref.read(databaseManagerProvider.future);
+    databaseManager.putBlockCollection(newRootBlock);
 
-        props.textEditingController.rootBlock = newRootBlock;
-
-        // Write into database.
-        final databaseManager = await ref.read(databaseManagerProvider.future);
-        databaseManager.putBlockCollection(newRootBlock);
-
-        return _getState();
-      },
-    );
+    state = newRootBlock;
   }
 }

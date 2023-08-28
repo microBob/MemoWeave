@@ -6,7 +6,7 @@ part of 'block_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$blockViewModelHash() => r'5fcdb39efcb1aed812959058df3108f377c303ef';
+String _$blockViewModelHash() => r'52c8281cffd3c2b4f186f841fe9346ce8b68cf36';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,22 +30,20 @@ class _SystemHash {
 }
 
 abstract class _$BlockViewModel
-    extends BuildlessAutoDisposeAsyncNotifier<BlockCollection> {
+    extends BuildlessAutoDisposeNotifier<BlockCollection> {
   late final ({
-    int blockId,
-    BlockTextEditingController textEditingController,
-    FocusNode textFieldFocusNode,
+    BlockCollection blockCollection,
     GlobalKey<State<StatefulWidget>> textFieldKey
   }) props;
+  late final BlockTextEditingController blockTextEditingController;
 
-  FutureOr<BlockCollection> build(
-    ({
-      int blockId,
-      BlockTextEditingController textEditingController,
-      FocusNode textFieldFocusNode,
+  BlockCollection build({
+    required ({
+      BlockCollection blockCollection,
       GlobalKey<State<StatefulWidget>> textFieldKey
     }) props,
-  );
+    required BlockTextEditingController blockTextEditingController,
+  });
 }
 
 /// Block logic.
@@ -61,7 +59,7 @@ const blockViewModelProvider = BlockViewModelFamily();
 /// ViewModel for [BlockWidget].
 ///
 /// Copied from [BlockViewModel].
-class BlockViewModelFamily extends Family<AsyncValue<BlockCollection>> {
+class BlockViewModelFamily extends Family<BlockCollection> {
   /// Block logic.
   ///
   /// ViewModel for [BlockWidget].
@@ -74,16 +72,16 @@ class BlockViewModelFamily extends Family<AsyncValue<BlockCollection>> {
   /// ViewModel for [BlockWidget].
   ///
   /// Copied from [BlockViewModel].
-  BlockViewModelProvider call(
-    ({
-      int blockId,
-      BlockTextEditingController textEditingController,
-      FocusNode textFieldFocusNode,
+  BlockViewModelProvider call({
+    required ({
+      BlockCollection blockCollection,
       GlobalKey<State<StatefulWidget>> textFieldKey
     }) props,
-  ) {
+    required BlockTextEditingController blockTextEditingController,
+  }) {
     return BlockViewModelProvider(
-      props,
+      props: props,
+      blockTextEditingController: blockTextEditingController,
     );
   }
 
@@ -92,7 +90,8 @@ class BlockViewModelFamily extends Family<AsyncValue<BlockCollection>> {
     covariant BlockViewModelProvider provider,
   ) {
     return call(
-      provider.props,
+      props: provider.props,
+      blockTextEditingController: provider.blockTextEditingController,
     );
   }
 
@@ -116,17 +115,20 @@ class BlockViewModelFamily extends Family<AsyncValue<BlockCollection>> {
 /// ViewModel for [BlockWidget].
 ///
 /// Copied from [BlockViewModel].
-class BlockViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
-    BlockViewModel, BlockCollection> {
+class BlockViewModelProvider
+    extends AutoDisposeNotifierProviderImpl<BlockViewModel, BlockCollection> {
   /// Block logic.
   ///
   /// ViewModel for [BlockWidget].
   ///
   /// Copied from [BlockViewModel].
-  BlockViewModelProvider(
-    this.props,
-  ) : super.internal(
-          () => BlockViewModel()..props = props,
+  BlockViewModelProvider({
+    required this.props,
+    required this.blockTextEditingController,
+  }) : super.internal(
+          () => BlockViewModel()
+            ..props = props
+            ..blockTextEditingController = blockTextEditingController,
           from: blockViewModelProvider,
           name: r'blockViewModelProvider',
           debugGetCreateSourceHash:
@@ -139,31 +141,34 @@ class BlockViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
         );
 
   final ({
-    int blockId,
-    BlockTextEditingController textEditingController,
-    FocusNode textFieldFocusNode,
+    BlockCollection blockCollection,
     GlobalKey<State<StatefulWidget>> textFieldKey
   }) props;
+  final BlockTextEditingController blockTextEditingController;
 
   @override
   bool operator ==(Object other) {
-    return other is BlockViewModelProvider && other.props == props;
+    return other is BlockViewModelProvider &&
+        other.props == props &&
+        other.blockTextEditingController == blockTextEditingController;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, props.hashCode);
+    hash = _SystemHash.combine(hash, blockTextEditingController.hashCode);
 
     return _SystemHash.finish(hash);
   }
 
   @override
-  FutureOr<BlockCollection> runNotifierBuild(
+  BlockCollection runNotifierBuild(
     covariant BlockViewModel notifier,
   ) {
     return notifier.build(
-      props,
+      props: props,
+      blockTextEditingController: blockTextEditingController,
     );
   }
 }
