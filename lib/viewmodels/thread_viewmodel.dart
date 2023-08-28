@@ -74,18 +74,20 @@ class ThreadViewModel extends _$ThreadViewModel {
   Future<void> subjectChanged(String newSubject) async {
     state = const AsyncValue.loading();
 
-    state = await AsyncValue.guard(() async {
-      final currentState = await _getState();
+    state = await AsyncValue.guard(
+      () async {
+        final currentState = await _getState();
 
-      // Create new Thread
-      final newThreadCollection =
-      currentState.threadCollection.copyWith(subject: newSubject);
+        // Create new Thread
+        final newThreadCollection =
+            currentState.threadCollection.copyWith(subject: newSubject);
 
-      // Write to database
-      final databaseManager = await ref.read(databaseManagerProvider.future);
-      databaseManager.putThreadCollection(newThreadCollection);
+        // Write to database
+        final databaseManager = await ref.read(databaseManagerProvider.future);
+        databaseManager.putThreadCollection(newThreadCollection);
 
-      return _getState();
-    });
+        return _getState();
+      },
+    );
   }
 }

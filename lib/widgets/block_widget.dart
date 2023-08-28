@@ -16,15 +16,28 @@ class BlockWidget extends ConsumerWidget {
   /// Attach to [BlockViewModel] and build UI.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Attach to ViewModel.
-    ref.watch(blockViewModelProvider(props));
+    final blockState = ref
+        .watch(
+          blockViewModelProvider(
+            (
+              blockId: props.blockId,
+              textEditingController: props.textEditingController,
+              textFieldFocusNode: props.textFieldFocusNode,
+              textFieldKey: props.textFieldKey,
+            ),
+          ),
+        )
+        .value;
+
+    if (blockState == null) {
+      return const CircularProgressIndicator();
+    }
 
     // Render TextField.
     return TextField(
       key: props.textFieldKey,
       focusNode: props.textFieldFocusNode,
       controller: props.textEditingController,
-      maxLines: null,
     );
   }
 }

@@ -12,5 +12,5 @@ typedef BlockProps = ({
   GlobalKey textFieldKey,
   FocusNode textFieldFocusNode,
   BlockTextEditingController textEditingController,
-  Id? blockId,
+  Id blockId,
 });

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/block_props.dart';
@@ -12,50 +14,32 @@ part 'block_viewmodel.g.dart';
 /// ViewModel for [BlockWidget].
 @riverpod
 class BlockViewModel extends _$BlockViewModel {
-  /// Props from the widget.
-  late BlockProps _props;
-
   /// Get props and initialize the Block.
   @override
-  BlockCollection build(BlockProps props) {
-    // Populate fields.
-    _props = props;
-    final blockId = props.blockId;
+  FutureOr<BlockCollection> build(BlockProps props) async {
+    final state = await _getState();
 
-    // Set change handler on TextEditingController.
-    _props.textEditingController.addListener(handleInput);
+    props.textEditingController.rootBlock = state;
+    props.textEditingController.text = state.text;
 
-    // Create a default state to use.
-    final defaultState = BlockCollection();
+    props.textEditingController.addListener(handleInput);
 
-    // Use default state if not loading previous.
-    if (blockId == null) {
-      return defaultState;
+    return state;
+  }
+
+  Future<BlockCollection> _getState() async {
+    final databaseManager = await ref.read(databaseManagerProvider.future);
+    final blockCollection =
+        await databaseManager.getBlockCollectionById(props.blockId);
+    if (blockCollection == null) {
+      throw FileSystemException(
+          'Block with ID ${props.blockId} does not exist!');
     }
 
-    // Load block from database.
-    return ref.watch(getBlockCollectionByIdProvider(id: blockId)).when(
-          data: (blockCollection) {
-            // Return default state if no block are found.
-            if (blockCollection == null) {
-              return defaultState;
-            }
+    await blockCollection.children.load();
+    await blockCollection.parents.load();
 
-            // Load text into text field.
-            _props.textEditingController.rootBlock = blockCollection;
-
-            // Update text field text after provider is built.
-            Future(() {
-              _props.textEditingController.text = blockCollection.text;
-            });
-
-            // Create state with block.
-            return blockCollection;
-          },
-          // Return the default state when one from the database is unavailable.
-          error: (_, __) => defaultState,
-          loading: () => defaultState,
-        );
+    return blockCollection;
   }
 
   /// Handle new input.
@@ -63,18 +47,24 @@ class BlockViewModel extends _$BlockViewModel {
   /// Update [state]'s rootBlock with text/style and set cursor position.
   /// Throws [FormatException] if unable to find render editable.
   void handleInput() async {
-    // Create updated rootBlock.
-    final newRootBlock =
-        state.copyWith(text: _props.textEditingController.text);
+    state = const AsyncValue.loading();
 
-    // Update rootBlock on Text Editing Controller.
-    _props.textEditingController.rootBlock = newRootBlock;
+    state = await AsyncValue.guard(
+      () async {
+        final currentState = await _getState();
 
-    // Write into database.
-    final databaseManager = await ref.read(databaseManagerProvider.future);
-    databaseManager.putBlockCollection(newRootBlock);
+        // Create updated rootBlock.
+        final newRootBlock =
+            currentState.copyWith(text: props.textEditingController.text);
 
-    // Update state.
-    state = newRootBlock;
+        props.textEditingController.rootBlock = newRootBlock;
+
+        // Write into database.
+        final databaseManager = await ref.read(databaseManagerProvider.future);
+        databaseManager.putBlockCollection(newRootBlock);
+
+        return _getState();
+      },
+    );
   }
 }

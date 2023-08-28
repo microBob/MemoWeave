@@ -6,7 +6,7 @@ part of 'block_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$blockViewModelHash() => r'21dd5e3e3555c2d4418e4452fe5213f0a4d18803';
+String _$blockViewModelHash() => r'5fcdb39efcb1aed812959058df3108f377c303ef';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,17 +30,17 @@ class _SystemHash {
 }
 
 abstract class _$BlockViewModel
-    extends BuildlessAutoDisposeNotifier<BlockCollection> {
+    extends BuildlessAutoDisposeAsyncNotifier<BlockCollection> {
   late final ({
-    int? blockId,
+    int blockId,
     BlockTextEditingController textEditingController,
     FocusNode textFieldFocusNode,
     GlobalKey<State<StatefulWidget>> textFieldKey
   }) props;
 
-  BlockCollection build(
+  FutureOr<BlockCollection> build(
     ({
-      int? blockId,
+      int blockId,
       BlockTextEditingController textEditingController,
       FocusNode textFieldFocusNode,
       GlobalKey<State<StatefulWidget>> textFieldKey
@@ -61,7 +61,7 @@ const blockViewModelProvider = BlockViewModelFamily();
 /// ViewModel for [BlockWidget].
 ///
 /// Copied from [BlockViewModel].
-class BlockViewModelFamily extends Family<BlockCollection> {
+class BlockViewModelFamily extends Family<AsyncValue<BlockCollection>> {
   /// Block logic.
   ///
   /// ViewModel for [BlockWidget].
@@ -76,7 +76,7 @@ class BlockViewModelFamily extends Family<BlockCollection> {
   /// Copied from [BlockViewModel].
   BlockViewModelProvider call(
     ({
-      int? blockId,
+      int blockId,
       BlockTextEditingController textEditingController,
       FocusNode textFieldFocusNode,
       GlobalKey<State<StatefulWidget>> textFieldKey
@@ -116,8 +116,8 @@ class BlockViewModelFamily extends Family<BlockCollection> {
 /// ViewModel for [BlockWidget].
 ///
 /// Copied from [BlockViewModel].
-class BlockViewModelProvider
-    extends AutoDisposeNotifierProviderImpl<BlockViewModel, BlockCollection> {
+class BlockViewModelProvider extends AutoDisposeAsyncNotifierProviderImpl<
+    BlockViewModel, BlockCollection> {
   /// Block logic.
   ///
   /// ViewModel for [BlockWidget].
@@ -139,7 +139,7 @@ class BlockViewModelProvider
         );
 
   final ({
-    int? blockId,
+    int blockId,
     BlockTextEditingController textEditingController,
     FocusNode textFieldFocusNode,
     GlobalKey<State<StatefulWidget>> textFieldKey
@@ -159,7 +159,7 @@ class BlockViewModelProvider
   }
 
   @override
-  BlockCollection runNotifierBuild(
+  FutureOr<BlockCollection> runNotifierBuild(
     covariant BlockViewModel notifier,
   ) {
     return notifier.build(
