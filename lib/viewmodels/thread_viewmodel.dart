@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:memoweave/models/thread_props.dart';
 import 'package:memoweave/models/thread_state.dart';
@@ -30,8 +32,13 @@ class ThreadViewModel extends _$ThreadViewModel {
     final databaseManager = await ref.read(databaseManagerProvider.future);
     final threadCollection =
         await databaseManager.getThreadCollectionById(props.threadId);
+    if (threadCollection == null) {
+      throw FileSystemException(
+          'Thread with ID ${props.threadId} does not exist!');
+    }
+    await threadCollection.blocks.load();
     return ThreadState(
-        threadCollection: threadCollection!, cursorRect: Rect.zero);
+        threadCollection: threadCollection, cursorRect: Rect.zero);
   }
 
   /// Construct or retrieve the data for a Thread.
@@ -72,7 +79,7 @@ class ThreadViewModel extends _$ThreadViewModel {
 
       // Create new Thread
       final newThreadCollection =
-          currentState.threadCollection.copyWith(subject: newSubject);
+      currentState.threadCollection.copyWith(subject: newSubject);
 
       // Write to database
       final databaseManager = await ref.read(databaseManagerProvider.future);
