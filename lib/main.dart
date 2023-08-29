@@ -24,10 +24,12 @@ class MemoWeave extends ConsumerWidget {
         appBar: AppBar(
           title: const Text('MemoWeave'),
         ),
-        body: const SafeArea(
-          minimum: EdgeInsets.all(24),
-          child: ThreadView(
-            threadId: 3,
+        body: const SingleChildScrollView(
+          child: SafeArea(
+            minimum: EdgeInsets.all(24),
+            child: ThreadView(
+              threadId: 3,
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(

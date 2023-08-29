@@ -27,6 +27,8 @@ class BlockWidget extends HookConsumerWidget {
       return TextField(
         key: _props.textFieldKey,
         controller: blockTextEditingController,
+        textInputAction: TextInputAction.newline,
+        maxLines: null,
       );
     }
 

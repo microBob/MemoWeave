@@ -60,12 +60,20 @@ class ThreadView extends HookConsumerWidget {
             Text(threadState.threadCollection.dateTimeAsTime(context)),
           ],
         ),
-        Column(
-          children: threadState.threadCollection.blocks
-              .map((block) => BlockWidget(
-                    props: (textFieldKey: GlobalKey(), blockCollection: block),
-                  ))
-              .toList(),
+        Focus(
+          onKeyEvent: (node, event) {
+            return KeyEventResult.handled;
+          },
+          child: Column(
+            children: threadState.threadCollection.blocks
+                .map((block) => BlockWidget(
+                      props: (
+                        textFieldKey: GlobalKey(),
+                        blockCollection: block
+                      ),
+                    ))
+                .toList(),
+          ),
         ),
       ],
     );

@@ -44,6 +44,8 @@ class ThreadCollection {
   }) {
     if (blocks.isEmpty) {
       this.blocks.add(BlockCollection());
+      this.blocks.add(BlockCollection());
+      this.blocks.add(BlockCollection());
     } else {
       this.blocks.addAll(blocks);
     }
