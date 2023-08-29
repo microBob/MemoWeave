@@ -23,6 +23,8 @@ class BlockViewModel extends _$BlockViewModel {
 
     blockTextEditingController.addListener(handleInput);
 
+    props.blockCollection.children.loadSync();
+
     return props.blockCollection;
   }
 

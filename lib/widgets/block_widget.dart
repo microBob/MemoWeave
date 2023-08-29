@@ -23,10 +23,20 @@ class BlockWidget extends HookConsumerWidget {
       blockTextEditingController: blockTextEditingController,
     ));
 
-    // Render TextField.
-    return TextField(
-      key: _props.textFieldKey,
-      controller: blockTextEditingController,
+    if (_props.blockCollection.children.isEmpty) {
+      return TextField(
+        key: _props.textFieldKey,
+        controller: blockTextEditingController,
+      );
+    }
+
+    return Column(
+      children: _props.blockCollection.children
+          .map((block) => BlockWidget(props: (
+                textFieldKey: GlobalKey(),
+                blockCollection: block,
+              )))
+          .toList(),
     );
   }
 }
