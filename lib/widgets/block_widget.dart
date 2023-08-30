@@ -22,25 +22,23 @@ class BlockWidget extends HookConsumerWidget {
       props: _props,
       blockTextEditingController: blockTextEditingController,
     );
+    ref.watch(provider);
 
-    return Focus(
-      onKeyEvent: ref.watch(provider.notifier).handleEditorTraversal,
-      child: Column(
-        children: [
-          TextField(
-            key: _props.textFieldKey,
-            controller: blockTextEditingController,
-            textInputAction: TextInputAction.newline,
-            maxLines: null,
-          ),
-          ..._props.blockCollection.children
-              .map((block) => BlockWidget(props: (
-                    textFieldKey: GlobalKey(),
-                    blockCollection: block,
-                  )))
-              .toList()
-        ],
-      ),
+    return Column(
+      children: [
+        TextField(
+          key: _props.textFieldKey,
+          controller: blockTextEditingController,
+          textInputAction: TextInputAction.newline,
+          maxLines: null,
+        ),
+        ..._props.blockCollection.children
+            .map((block) => BlockWidget(props: (
+                  textFieldKey: GlobalKey(),
+                  blockCollection: block,
+                )))
+            .toList()
+      ],
     );
   }
 }

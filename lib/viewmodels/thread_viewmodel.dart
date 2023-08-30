@@ -38,6 +38,7 @@ class ThreadViewModel extends _$ThreadViewModel {
           'Thread with ID ${props.threadId} does not exist!');
     }
     await threadCollection.blocks.load();
+
     return ThreadState(
         threadCollection: threadCollection, cursorRect: Rect.zero);
   }
@@ -100,7 +101,6 @@ class ThreadViewModel extends _$ThreadViewModel {
         case LogicalKeyboardKey.arrowUp:
           focusNode.previousFocus();
         case LogicalKeyboardKey.enter:
-          print("Enter");
           ref.invalidateSelf();
         default:
           return KeyEventResult.ignored;
