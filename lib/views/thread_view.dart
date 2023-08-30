@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
@@ -61,24 +60,19 @@ class ThreadView extends HookConsumerWidget {
             Text(threadState.threadCollection.dateTimeAsTime(context)),
           ],
         ),
-        Focus(
-          onKeyEvent: (node, event) {
-            if (event is KeyDownEvent &&
-                event.logicalKey == LogicalKeyboardKey.enter) {
-              print(node.nextFocus());
-              return KeyEventResult.handled;
-            }
-            return KeyEventResult.ignored;
-          },
-          child: Column(
-            children: threadState.threadCollection.blocks
-                .map((block) => BlockWidget(
-                      props: (
-                        textFieldKey: GlobalKey(),
-                        blockCollection: block
-                      ),
-                    ))
-                .toList(),
+        FocusTraversalGroup(
+          child: Focus(
+            onKeyEvent: ref.watch(provider.notifier).handleEditorTraversal,
+            child: Column(
+              children: threadState.threadCollection.blocks
+                  .map((block) => BlockWidget(
+                        props: (
+                          textFieldKey: GlobalKey(),
+                          blockCollection: block
+                        ),
+                      ))
+                  .toList(),
+            ),
           ),
         ),
       ],

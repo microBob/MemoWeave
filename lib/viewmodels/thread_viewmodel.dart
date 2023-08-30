@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:memoweave/models/thread_props.dart';
 import 'package:memoweave/models/thread_state.dart';
 import 'package:memoweave/utils/database.dart';
@@ -89,5 +90,20 @@ class ThreadViewModel extends _$ThreadViewModel {
         return _getState();
       },
     );
+  }
+
+  KeyEventResult handleEditorTraversal(FocusNode focusNode, KeyEvent keyEvent) {
+    if (keyEvent is KeyDownEvent || keyEvent is KeyRepeatEvent) {
+      switch (keyEvent.logicalKey) {
+        case LogicalKeyboardKey.arrowDown:
+          focusNode.nextFocus();
+        case LogicalKeyboardKey.arrowUp:
+          focusNode.previousFocus();
+        default:
+          return KeyEventResult.ignored;
+      }
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
   }
 }
