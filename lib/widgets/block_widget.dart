@@ -18,27 +18,29 @@ class BlockWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final blockTextEditingController = useBlockTextEditingController();
-    ref.watch(blockViewModelProvider(
+    final provider = blockViewModelProvider(
       props: _props,
       blockTextEditingController: blockTextEditingController,
-    ));
+    );
 
-    if (_props.blockCollection.children.isEmpty) {
-      return TextField(
-        key: _props.textFieldKey,
-        controller: blockTextEditingController,
-        textInputAction: TextInputAction.newline,
-        maxLines: null,
-      );
-    }
-
-    return Column(
-      children: _props.blockCollection.children
-          .map((block) => BlockWidget(props: (
-                textFieldKey: GlobalKey(),
-                blockCollection: block,
-              )))
-          .toList(),
+    return Focus(
+      onKeyEvent: ref.watch(provider.notifier).handleEditorTraversal,
+      child: Column(
+        children: [
+          TextField(
+            key: _props.textFieldKey,
+            controller: blockTextEditingController,
+            textInputAction: TextInputAction.newline,
+            maxLines: null,
+          ),
+          ..._props.blockCollection.children
+              .map((block) => BlockWidget(props: (
+                    textFieldKey: GlobalKey(),
+                    blockCollection: block,
+                  )))
+              .toList()
+        ],
+      ),
     );
   }
 }

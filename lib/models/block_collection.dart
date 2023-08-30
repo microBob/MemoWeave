@@ -39,7 +39,7 @@ class BlockCollection {
   final List<StyleNode> inlineStyles;
 
   /// Ordered set of hierarchical children to this block.
-  final IsarLinks<BlockCollection> children;
+  final children = IsarLinks<BlockCollection>();
 
   /// Links pointing back to parent blocks.
   ///
@@ -57,8 +57,10 @@ class BlockCollection {
     this.text = 'Blank state text',
     this.blockStyle = BlockStyle.none,
     this.inlineStyles = const [],
-    IsarLinks<BlockCollection>? inChildren,
-  }) : children = inChildren ?? IsarLinks<BlockCollection>() {
+    Set<BlockCollection> children = const {},
+  }) {
+    this.children.addAll(children);
+
     // Verify inlineStyles.
     for (var i = 0; i < inlineStyles.length - 1; ++i) {
       // Is not overlapping next style.
@@ -92,14 +94,14 @@ class BlockCollection {
     String? text,
     BlockStyle? blockStyle,
     List<StyleNode>? inlineStyles,
-    IsarLinks<BlockCollection>? children,
+    Set<BlockCollection>? children,
   }) {
     return BlockCollection(
       id: id ?? this.id,
       text: text ?? this.text,
       blockStyle: blockStyle ?? this.blockStyle,
       inlineStyles: inlineStyles ?? this.inlineStyles,
-      inChildren: children ?? this.children,
+      children: children ?? this.children,
     );
   }
 }

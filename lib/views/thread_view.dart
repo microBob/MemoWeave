@@ -62,7 +62,7 @@ class ThreadView extends HookConsumerWidget {
         ),
         FocusTraversalGroup(
           child: Focus(
-            onKeyEvent: ref.watch(provider.notifier).handleEditorTraversal,
+            // onKeyEvent: ref.watch(provider.notifier).handleEditorTraversal,
             child: Column(
               children: threadState.threadCollection.blocks
                   .map((block) => BlockWidget(

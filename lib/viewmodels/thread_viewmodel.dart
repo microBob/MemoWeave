@@ -99,6 +99,9 @@ class ThreadViewModel extends _$ThreadViewModel {
           focusNode.nextFocus();
         case LogicalKeyboardKey.arrowUp:
           focusNode.previousFocus();
+        case LogicalKeyboardKey.enter:
+          print("Enter");
+          ref.invalidateSelf();
         default:
           return KeyEventResult.ignored;
       }

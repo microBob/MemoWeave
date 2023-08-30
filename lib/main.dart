@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/thread_collection.dart';
 import 'package:memoweave/utils/database.dart';
 import 'package:memoweave/views/thread_view.dart';
@@ -36,7 +37,17 @@ class MemoWeave extends ConsumerWidget {
           onPressed: () async {
             final databaseManager =
                 await ref.read(databaseManagerProvider.future);
-            final newThread = ThreadCollection(id: 3, dateTime: DateTime.now());
+            final newThread =
+                ThreadCollection(id: 3, dateTime: DateTime.now(), blocks: {
+              BlockCollection(
+                children: {
+                  BlockCollection(),
+                  BlockCollection(),
+                },
+              ),
+              BlockCollection(),
+              BlockCollection(),
+            });
             databaseManager.putThreadCollection(newThread);
           },
           child: const Icon(Icons.create),
