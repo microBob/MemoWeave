@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/block_props.dart';
 import 'package:memoweave/utils/database.dart';
@@ -43,5 +44,24 @@ class BlockViewModel extends _$BlockViewModel {
     databaseManager.putBlockCollection(newRootBlock);
 
     state = newRootBlock;
+  }
+
+  KeyEventResult handleEditorTraversal(FocusNode focusNode, KeyEvent keyEvent) {
+    if (keyEvent is KeyDownEvent || keyEvent is KeyRepeatEvent) {
+      switch (keyEvent.logicalKey) {
+        case LogicalKeyboardKey.arrowDown:
+          focusNode.nextFocus();
+          focusNode.nextFocus();
+        case LogicalKeyboardKey.arrowUp:
+          focusNode.previousFocus();
+          focusNode.previousFocus();
+        case LogicalKeyboardKey.enter:
+          ref.invalidateSelf();
+        default:
+          return KeyEventResult.ignored;
+      }
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
   }
 }
