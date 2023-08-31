@@ -10,9 +10,8 @@ part 'thread_collection.g.dart';
 class ThreadCollection {
   /// Unique identifier for this thread.
   ///
-  /// Will be assigned by the database system if null.
-  /// Not really used by the app and is mainly for the database system to index.
-  Id? id;
+  /// Automatically assigned by the database.
+  final Id id = Isar.autoIncrement;
 
   /// The spool this thread is part of.
   final String spool;
@@ -29,25 +28,22 @@ class ThreadCollection {
 
   /// Ordered set of [BlockCollection] objects that make up the content of this
   /// thread.
-  final blocks = IsarLinks<BlockCollection>();
+  final List<Id> blocks;
 
   /// Default constructor.
   ///
   /// Defines [id], [spool], [subject], and [dateTime].
   /// Will supply default values if none are given.
   ThreadCollection({
-    this.id,
     this.spool = '',
     this.subject = '',
     required this.dateTime,
-    Iterable<BlockCollection> blocks = const {},
+    this.blocks = const [],
   }) {
     if (blocks.isEmpty) {
-      this.blocks.add(BlockCollection());
-      this.blocks.add(BlockCollection());
-      this.blocks.add(BlockCollection());
-    } else {
-      this.blocks.addAll(blocks);
+      blocks.add(1);
+      blocks.add(2);
+      blocks.add(3);
     }
   }
 
@@ -60,10 +56,9 @@ class ThreadCollection {
     String? spool,
     String? subject,
     DateTime? dateTime,
-    Iterable<BlockCollection>? blocks,
+    List<Id>? blocks,
   }) {
     return ThreadCollection(
-      id: id ?? this.id,
       spool: spool ?? this.spool,
       subject: subject ?? this.subject,
       dateTime: dateTime ?? this.dateTime,

@@ -25,10 +25,6 @@ class BlockViewModel extends _$BlockViewModel {
 
     blockTextEditingController.addListener(handleInput);
 
-    props.blockCollection.children.loadSync();
-    props.blockCollection.parents.loadSync();
-    props.blockCollection.threads.loadSync();
-
     return props.blockCollection;
   }
 
