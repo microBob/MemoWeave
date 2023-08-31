@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/thread_collection.dart';
 import 'package:memoweave/utils/database.dart';
+import 'package:memoweave/viewmodels/thread_viewmodel.dart';
 import 'package:memoweave/views/thread_view.dart';
 
 void main() {
@@ -33,24 +34,33 @@ class MemoWeave extends ConsumerWidget {
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final databaseManager =
-                await ref.read(databaseManagerProvider.future);
-            final newThread =
-                ThreadCollection(id: 3, dateTime: DateTime.now(), blocks: {
-              BlockCollection(
-                children: {
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: () => ref.invalidate(threadViewModelProvider),
+              child: const Icon(Icons.refresh),
+            ),
+            FloatingActionButton(
+              onPressed: () async {
+                final databaseManager =
+                    await ref.read(databaseManagerProvider.future);
+                final newThread =
+                    ThreadCollection(id: 3, dateTime: DateTime.now(), blocks: {
+                  BlockCollection(
+                    children: {
+                      BlockCollection(),
+                      BlockCollection(),
+                    },
+                  ),
                   BlockCollection(),
                   BlockCollection(),
-                },
-              ),
-              BlockCollection(),
-              BlockCollection(),
-            });
-            databaseManager.putThreadCollection(newThread);
-          },
-          child: const Icon(Icons.create),
+                });
+                databaseManager.putThreadCollection(newThread);
+              },
+              child: const Icon(Icons.create),
+            ),
+          ],
         ),
       ),
     );

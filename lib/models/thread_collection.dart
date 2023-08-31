@@ -40,7 +40,7 @@ class ThreadCollection {
     this.spool = '',
     this.subject = '',
     required this.dateTime,
-    Set<BlockCollection> blocks = const {},
+    Iterable<BlockCollection> blocks = const {},
   }) {
     if (blocks.isEmpty) {
       this.blocks.add(BlockCollection());
@@ -60,7 +60,7 @@ class ThreadCollection {
     String? spool,
     String? subject,
     DateTime? dateTime,
-    Set<BlockCollection>? blocks,
+    Iterable<BlockCollection>? blocks,
   }) {
     return ThreadCollection(
       id: id ?? this.id,
@@ -77,4 +77,9 @@ class ThreadCollection {
       MediaQuery.of(context).alwaysUse24HourFormat
           ? DateFormat.Hm().format(dateTime)
           : DateFormat.jm().format(dateTime);
+
+  @override
+  String toString() {
+    return 'Thread $id: "$subject"';
+  }
 }

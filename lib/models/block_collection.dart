@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/style_node.dart';
+import 'package:memoweave/models/thread_collection.dart';
 
 part 'block_collection.g.dart';
 
@@ -47,6 +48,9 @@ class BlockCollection {
   @Backlink(to: 'children')
   final parents = IsarLinks<BlockCollection>();
 
+  @Backlink(to: 'blocks')
+  final threads = IsarLinks<ThreadCollection>();
+
   /// Default constructor.
   ///
   /// Defines [id], [text], [blockStyle], [inlineStyles], and [children].
@@ -57,7 +61,7 @@ class BlockCollection {
     this.text = 'Blank state text',
     this.blockStyle = BlockStyle.none,
     this.inlineStyles = const [],
-    Set<BlockCollection> children = const {},
+    Iterable<BlockCollection> children = const {},
   }) {
     this.children.addAll(children);
 
@@ -94,7 +98,7 @@ class BlockCollection {
     String? text,
     BlockStyle? blockStyle,
     List<StyleNode>? inlineStyles,
-    Set<BlockCollection>? children,
+    Iterable<BlockCollection>? children,
   }) {
     return BlockCollection(
       id: id ?? this.id,
@@ -103,5 +107,10 @@ class BlockCollection {
       inlineStyles: inlineStyles ?? this.inlineStyles,
       children: children ?? this.children,
     );
+  }
+
+  @override
+  String toString() {
+    return 'Block $id: "$text"';
   }
 }

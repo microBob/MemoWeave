@@ -54,6 +54,13 @@ const BlockCollectionSchema = CollectionSchema(
       target: r'BlockCollection',
       single: false,
       linkName: r'children',
+    ),
+    r'threads': LinkSchema(
+      id: -6950325008890308698,
+      name: r'threads',
+      target: r'ThreadCollection',
+      single: false,
+      linkName: r'blocks',
     )
   },
   embeddedSchemas: {r'StyleNode': StyleNodeSchema},
@@ -170,7 +177,7 @@ Id _blockCollectionGetId(BlockCollection object) {
 }
 
 List<IsarLinkBase<dynamic>> _blockCollectionGetLinks(BlockCollection object) {
-  return [object.children, object.parents];
+  return [object.children, object.parents, object.threads];
 }
 
 void _blockCollectionAttach(
@@ -180,6 +187,8 @@ void _blockCollectionAttach(
       .attach(col, col.isar.collection<BlockCollection>(), r'children', id);
   object.parents
       .attach(col, col.isar.collection<BlockCollection>(), r'parents', id);
+  object.threads
+      .attach(col, col.isar.collection<ThreadCollection>(), r'threads', id);
 }
 
 extension BlockCollectionQueryWhereSort
@@ -742,15 +751,72 @@ extension BlockCollectionQueryLinks
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      parentsLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
+      parentsLengthBetween(int lower,
+      int upper, {
+        bool includeLower = true,
+        bool includeUpper = true,
+      }) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
           r'parents', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition> threads(
+      FilterQuery<ThreadCollection> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'threads');
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+  threadsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'threads', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+  threadsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'threads', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+  threadsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'threads', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+  threadsLengthLessThan(int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'threads', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+  threadsLengthGreaterThan(int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'threads', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
+  threadsLengthBetween(int lower,
+      int upper, {
+        bool includeLower = true,
+        bool includeUpper = true,
+      }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'threads', lower, includeLower, upper, includeUpper);
     });
   }
 }
