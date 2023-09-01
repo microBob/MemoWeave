@@ -3,13 +3,18 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:memoweave/utils/database.dart';
-import 'package:memoweave/viewmodels/thread_viewmodel.dart';
 import 'package:memoweave/widgets/block_widget.dart';
 
 class ThreadView extends HookConsumerWidget {
-  final Id threadId;
+  final Id _threadId;
+  final DatabaseManager _databaseManager;
 
-  const ThreadView({super.key, required this.threadId});
+  const ThreadView(
+      {super.key,
+      required int threadId,
+      required DatabaseManager databaseManager})
+      : _threadId = threadId,
+        _databaseManager = databaseManager;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -17,10 +22,7 @@ class ThreadView extends HookConsumerWidget {
     final spoolTextEditingController = useTextEditingController();
 
     // Provider with props.
-    final provider = threadViewModelProvider((
-      threadId: threadId,
-      spoolTextEditingController: spoolTextEditingController,
-    ));
+    final provider = threadViewModelProvider();
 
     final threadState = ref.watch(provider).value;
 

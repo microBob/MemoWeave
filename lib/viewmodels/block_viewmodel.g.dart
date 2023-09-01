@@ -32,14 +32,14 @@ class _SystemHash {
 abstract class _$BlockViewModel
     extends BuildlessAutoDisposeNotifier<BlockCollection> {
   late final ({
-    BlockCollection blockCollection,
+    int blockId,
     GlobalKey<State<StatefulWidget>> textFieldKey
   }) props;
   late final BlockTextEditingController blockTextEditingController;
 
   BlockCollection build({
     required ({
-      BlockCollection blockCollection,
+      int blockId,
       GlobalKey<State<StatefulWidget>> textFieldKey
     }) props,
     required BlockTextEditingController blockTextEditingController,
@@ -74,7 +74,7 @@ class BlockViewModelFamily extends Family<BlockCollection> {
   /// Copied from [BlockViewModel].
   BlockViewModelProvider call({
     required ({
-      BlockCollection blockCollection,
+      int blockId,
       GlobalKey<State<StatefulWidget>> textFieldKey
     }) props,
     required BlockTextEditingController blockTextEditingController,
@@ -140,10 +140,7 @@ class BlockViewModelProvider
               BlockViewModelFamily._allTransitiveDependencies,
         );
 
-  final ({
-    BlockCollection blockCollection,
-    GlobalKey<State<StatefulWidget>> textFieldKey
-  }) props;
+  final ({int blockId, GlobalKey<State<StatefulWidget>> textFieldKey}) props;
   final BlockTextEditingController blockTextEditingController;
 
   @override

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:memoweave/models/thread_props.dart';
+import 'package:isar/isar.dart';
 import 'package:memoweave/models/thread_state.dart';
 import 'package:memoweave/utils/database.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,29 +15,28 @@ part 'thread_viewmodel.g.dart';
 @riverpod
 class ThreadViewModel extends _$ThreadViewModel {
   @override
-  FutureOr<ThreadState> build(ThreadProps props) async {
-    // Get latest state.
-    final state = await _getState();
-
+  ThreadState build({
+    required final Id threadId,
+    required final DatabaseManager databaseManager,
+    required final TextEditingController spoolTextEditingController,
+  }) {
     // Set initial spool.
-    props.spoolTextEditingController.text = state.threadCollection.spool;
+    spoolTextEditingController.text = state.threadCollection.spool;
 
     // Add listener to spool changes.
-    props.spoolTextEditingController.addListener(spoolSelectionChanged);
+    spoolTextEditingController.addListener(spoolSelectionChanged);
 
     // Return state.
-    return state;
+    return T;
   }
 
   Future<ThreadState> _getState() async {
     final databaseManager = await ref.read(databaseManagerProvider.future);
     final threadCollection =
-        await databaseManager.getThreadCollectionById(props.threadId);
+        await databaseManager.getThreadCollectionById(threadId);
     if (threadCollection == null) {
-      throw FileSystemException(
-          'Thread with ID ${props.threadId} does not exist!');
+      throw FileSystemException('Thread with ID ${threadId} does not exist!');
     }
-    await threadCollection.blocks.load();
 
     return ThreadState(
         threadCollection: threadCollection, cursorRect: Rect.zero);
@@ -51,15 +50,13 @@ class ThreadViewModel extends _$ThreadViewModel {
         .toList();
   }
 
-  Future<void> spoolSelectionChanged() async {
-    state = const AsyncValue.loading();
+  void spoolSelectionChanged() {
+    // Create new Thread.
+    final newThreadCollection =
+        state.threadCollection.copyWith(spool: spoolTextEditingController.text);
 
     state = await AsyncValue.guard(() async {
       final currentState = await _getState();
-
-      // Create new Thread.
-      final newThreadCollection = currentState.threadCollection
-          .copyWith(spool: props.spoolTextEditingController.text);
 
       // Write to database.
       final databaseManager = await ref.read(databaseManagerProvider.future);

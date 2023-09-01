@@ -22,7 +22,7 @@ class BlockWidget extends HookConsumerWidget {
       props: _props,
       blockTextEditingController: blockTextEditingController,
     );
-    ref.watch(provider);
+    // ref.watch(provider);
 
     return Column(
       children: [
@@ -38,12 +38,12 @@ class BlockWidget extends HookConsumerWidget {
             // maxLines: null,
           ),
         ),
-        ..._props.blockCollection.children
-            .map((block) => BlockWidget(props: (
-                  textFieldKey: GlobalKey(),
-                  blockCollection: block,
-                )))
-            .toList()
+        // ..._props.blockCollection.children
+        //     .map((block) => BlockWidget(props: (
+        //           textFieldKey: GlobalKey(),
+        //           blockCollection: block,
+        //         )))
+        //     .toList()
       ],
     );
   }
