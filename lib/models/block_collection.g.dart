@@ -23,9 +23,9 @@ const BlockCollectionSchema = CollectionSchema(
       type: IsarType.byte,
       enumMap: _BlockCollectionblockStyleEnumValueMap,
     ),
-    r'children': PropertySchema(
+    r'childrenBlockIds': PropertySchema(
       id: 1,
-      name: r'children',
+      name: r'childrenBlockIds',
       type: IsarType.longList,
     ),
     r'inlineStyles': PropertySchema(
@@ -60,7 +60,7 @@ int _blockCollectionEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.children.length * 8;
+  bytesCount += 3 + object.childrenBlockIds.length * 8;
   bytesCount += 3 + object.inlineStyles.length * 3;
   {
     final offsets = allOffsets[StyleNode]!;
@@ -80,7 +80,7 @@ void _blockCollectionSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeByte(offsets[0], object.blockStyle.index);
-  writer.writeLongList(offsets[1], object.children);
+  writer.writeLongList(offsets[1], object.childrenBlockIds);
   writer.writeObjectList<StyleNode>(
     offsets[2],
     allOffsets,
@@ -100,7 +100,7 @@ BlockCollection _blockCollectionDeserialize(
     blockStyle: _BlockCollectionblockStyleValueEnumMap[
             reader.readByteOrNull(offsets[0])] ??
         BlockStyle.none,
-    children: reader.readLongList(offsets[1]) ?? const [],
+    childrenBlockIds: reader.readLongList(offsets[1]) ?? const [],
     inlineStyles: reader.readObjectList<StyleNode>(
           offsets[2],
           StyleNodeSchema.deserialize,
@@ -310,45 +310,45 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenElementEqualTo(int value) {
+      childrenBlockIdsElementEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'children',
+        property: r'childrenBlockIds',
         value: value,
       ));
     });
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenElementGreaterThan(
+      childrenBlockIdsElementGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'children',
+        property: r'childrenBlockIds',
         value: value,
       ));
     });
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenElementLessThan(
+      childrenBlockIdsElementLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'children',
+        property: r'childrenBlockIds',
         value: value,
       ));
     });
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenElementBetween(
+      childrenBlockIdsElementBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -356,7 +356,7 @@ extension BlockCollectionQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'children',
+        property: r'childrenBlockIds',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -366,10 +366,10 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenLengthEqualTo(int length) {
+      childrenBlockIdsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'children',
+        r'childrenBlockIds',
         length,
         true,
         length,
@@ -379,10 +379,10 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenIsEmpty() {
+      childrenBlockIdsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'children',
+        r'childrenBlockIds',
         0,
         true,
         0,
@@ -392,10 +392,10 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenIsNotEmpty() {
+      childrenBlockIdsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'children',
+        r'childrenBlockIds',
         0,
         false,
         999999,
@@ -405,13 +405,13 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenLengthLessThan(
+      childrenBlockIdsLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'children',
+        r'childrenBlockIds',
         0,
         true,
         length,
@@ -421,13 +421,13 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenLengthGreaterThan(
+      childrenBlockIdsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'children',
+        r'childrenBlockIds',
         length,
         include,
         999999,
@@ -437,7 +437,7 @@ extension BlockCollectionQueryFilter
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QAfterFilterCondition>
-      childrenLengthBetween(
+      childrenBlockIdsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -445,7 +445,7 @@ extension BlockCollectionQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'children',
+        r'childrenBlockIds',
         lower,
         includeLower,
         upper,
@@ -831,9 +831,9 @@ extension BlockCollectionQueryWhereDistinct
   }
 
   QueryBuilder<BlockCollection, BlockCollection, QDistinct>
-      distinctByChildren() {
+      distinctByChildrenBlockIds() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'children');
+      return query.addDistinctBy(r'childrenBlockIds');
     });
   }
 
@@ -861,9 +861,9 @@ extension BlockCollectionQueryProperty
   }
 
   QueryBuilder<BlockCollection, List<int>, QQueryOperations>
-      childrenProperty() {
+      childrenBlockIdsProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'children');
+      return query.addPropertyName(r'childrenBlockIds');
     });
   }
 

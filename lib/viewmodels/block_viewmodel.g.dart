@@ -6,7 +6,7 @@ part of 'block_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$blockViewModelHash() => r'626fcb7c255c11efd2c1a4fe3ca4fc908e7f7224';
+String _$blockViewModelHash() => r'97850c19bd9cd8ca56e6a3c57c0825c6de330f09';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,11 +30,11 @@ class _SystemHash {
 }
 
 abstract class _$BlockViewModel
-    extends BuildlessAutoDisposeNotifier<BlockCollection> {
+    extends BuildlessAutoDisposeNotifier<BlockState> {
   late final ({DatabaseManager databaseManager, int id}) databaseProps;
   late final BlockTextEditingController blockTextEditingController;
 
-  BlockCollection build({
+  BlockState build({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
     required BlockTextEditingController blockTextEditingController,
   });
@@ -53,7 +53,7 @@ const blockViewModelProvider = BlockViewModelFamily();
 /// ViewModel for [BlockWidget].
 ///
 /// Copied from [BlockViewModel].
-class BlockViewModelFamily extends Family<BlockCollection> {
+class BlockViewModelFamily extends Family<BlockState> {
   /// Block logic.
   ///
   /// ViewModel for [BlockWidget].
@@ -107,7 +107,7 @@ class BlockViewModelFamily extends Family<BlockCollection> {
 ///
 /// Copied from [BlockViewModel].
 class BlockViewModelProvider
-    extends AutoDisposeNotifierProviderImpl<BlockViewModel, BlockCollection> {
+    extends AutoDisposeNotifierProviderImpl<BlockViewModel, BlockState> {
   /// Block logic.
   ///
   /// ViewModel for [BlockWidget].
@@ -151,7 +151,7 @@ class BlockViewModelProvider
   }
 
   @override
-  BlockCollection runNotifierBuild(
+  BlockState runNotifierBuild(
     covariant BlockViewModel notifier,
   ) {
     return notifier.build(

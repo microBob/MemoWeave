@@ -54,11 +54,11 @@ class ThreadView extends HookConsumerWidget {
         ),
         FocusTraversalGroup(
           child: Column(
-            children: threadState.threadCollection.blocks
-                .map((block) => BlockWidget(
-                      props: (
-                        textFieldKey: GlobalKey(),
-                        blockCollection: block
+            children: threadState.threadCollection.blockIds
+                .map((blockId) => BlockWidget(
+                      databaseProps: (
+                        id: blockId,
+                        databaseManager: _databaseProps.databaseManager,
                       ),
                     ))
                 .toList(),

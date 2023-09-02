@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:memoweave/models/block_collection.dart';
+import 'package:memoweave/models/block_state.dart';
 import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/utils/database.dart';
 import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
@@ -17,7 +17,7 @@ part 'block_viewmodel.g.dart';
 class BlockViewModel extends _$BlockViewModel {
   /// Get props and initialize the Block.
   @override
-  BlockCollection build({
+  BlockState build({
     required final DatabaseProps databaseProps,
     required final BlockTextEditingController blockTextEditingController,
   }) {
@@ -34,27 +34,32 @@ class BlockViewModel extends _$BlockViewModel {
 
     blockTextEditingController.addListener(handleInput);
 
-    return blockCollection;
+    return BlockState(
+      databaseProps: databaseProps,
+      blockTextEditingController: blockTextEditingController,
+      blockCollection: blockCollection,
+    );
   }
 
   /// Handle new input.
   ///
   /// Update [state]'s rootBlock with text/style and set cursor position.
   /// Throws [FormatException] if unable to find render editable.
-  Future<void> handleInput() async {
+  void handleInput() {
     // Create updated rootBlock.
-    final newRootBlock = state.copyWith(text: blockTextEditingController.text);
+    final newBlockCollection = state.blockCollection
+        .copyWith(text: state.blockTextEditingController.text);
 
-    blockTextEditingController.rootBlock = newRootBlock;
+    state.blockTextEditingController.rootBlock = newBlockCollection;
 
     // Write into database.
-    final databaseManager = await ref.read(databaseManagerProvider.future);
-    databaseManager.putBlockCollection(newRootBlock);
+    state.databaseProps.databaseManager.putBlockCollection(newBlockCollection);
 
-    state = newRootBlock;
+    state = state.copyWith(blockCollection: newBlockCollection);
   }
 
-  Future<KeyEventResult> handleEditorTraversal(FocusNode focusNode, KeyEvent keyEvent) async {
+  Future<KeyEventResult> handleEditorTraversal(
+      FocusNode focusNode, KeyEvent keyEvent) async {
     if (keyEvent is KeyDownEvent || keyEvent is KeyRepeatEvent) {
       switch (keyEvent.logicalKey) {
         case LogicalKeyboardKey.arrowDown:

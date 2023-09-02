@@ -23,7 +23,7 @@ class BlockWidget extends HookConsumerWidget {
       databaseProps: _databaseProps,
       blockTextEditingController: blockTextEditingController,
     );
-    // ref.watch(provider);
+    final blockState = ref.watch(provider);
 
     return Column(
       children: [
@@ -38,12 +38,14 @@ class BlockWidget extends HookConsumerWidget {
             // maxLines: null,
           ),
         ),
-        // ..._props.blockCollection.children
-        //     .map((block) => BlockWidget(props: (
-        //           textFieldKey: GlobalKey(),
-        //           blockCollection: block,
-        //         )))
-        //     .toList()
+        ...blockState.blockCollection.childrenBlockIds
+            .map((blockId) => BlockWidget(
+                  databaseProps: (
+                    id: blockId,
+                    databaseManager: _databaseProps.databaseManager,
+                  ),
+                ))
+            .toList()
       ],
     );
   }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/models/thread_state.dart';
+import 'package:memoweave/utils/database.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'thread_viewmodel.g.dart';

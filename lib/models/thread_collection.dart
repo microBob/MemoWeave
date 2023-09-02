@@ -28,7 +28,7 @@ class ThreadCollection {
 
   /// Ordered set of [BlockCollection] objects that make up the content of this
   /// thread.
-  final List<Id> blocks;
+  final List<Id> blockIds;
 
   /// Default constructor.
   ///
@@ -38,31 +38,25 @@ class ThreadCollection {
     this.spool = '',
     this.subject = '',
     required this.dateTime,
-    this.blocks = const [],
-  }) {
-    if (blocks.isEmpty) {
-      blocks.add(1);
-      blocks.add(2);
-      blocks.add(3);
-    }
-  }
+    this.blockIds = const [1, 2, 3],
+  });
 
   /// Copy builder.
   ///
   /// Creates a copy of the current Thread and updates the fields to
-  /// [id], [spool], [subject], [dateTime], and [blocks] when provided.
+  /// [id], [spool], [subject], [dateTime], and [blockIds] when provided.
   ThreadCollection copyWith({
     Id? id,
     String? spool,
     String? subject,
     DateTime? dateTime,
-    List<Id>? blocks,
+    List<Id>? blockIds,
   }) {
     return ThreadCollection(
       spool: spool ?? this.spool,
       subject: subject ?? this.subject,
       dateTime: dateTime ?? this.dateTime,
-      blocks: blocks ?? this.blocks,
+      blockIds: blockIds ?? this.blockIds,
     );
   }
 

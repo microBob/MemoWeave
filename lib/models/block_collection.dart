@@ -39,7 +39,7 @@ class BlockCollection {
   final List<StyleNode> inlineStyles;
 
   /// Ordered set of hierarchical children to this block.
-  final List<Id> children;
+  final List<Id> childrenBlockIds;
 
   /// Links pointing back to parent blocks.
   // ///
@@ -52,14 +52,14 @@ class BlockCollection {
 
   /// Default constructor.
   ///
-  /// Defines [id], [text], [blockStyle], [inlineStyles], and [children].
+  /// Defines [id], [text], [blockStyle], [inlineStyles], and [childrenBlockIds].
   /// Will supply default values if none are given.
   /// Throws [FormatException] on invalid input.
   BlockCollection({
     this.text = 'Blank state text',
     this.blockStyle = BlockStyle.none,
     this.inlineStyles = const [],
-    this.children = const [],
+    this.childrenBlockIds = const [],
   }) {
     // Verify inlineStyles.
     for (var i = 0; i < inlineStyles.length - 1; ++i) {
@@ -94,13 +94,13 @@ class BlockCollection {
     String? text,
     BlockStyle? blockStyle,
     List<StyleNode>? inlineStyles,
-    List<Id>? children,
+    List<Id>? childrenBlockIds,
   }) {
     return BlockCollection(
       text: text ?? this.text,
       blockStyle: blockStyle ?? this.blockStyle,
       inlineStyles: inlineStyles ?? this.inlineStyles,
-      children: children ?? this.children,
+      childrenBlockIds: childrenBlockIds ?? this.childrenBlockIds,
     );
   }
 
