@@ -39,6 +39,7 @@ dependencies:
   intl: ^0.18.1
   hooks_riverpod: ^2.3.8
   flutter_hooks: ^0.20.0
+  stack_trace: ^1.11.0
 
 dev_dependencies:
   flutter_test:

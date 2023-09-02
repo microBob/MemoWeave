@@ -13,8 +13,6 @@ class DatabaseManager {
   /// Reference to open database.
   final Isar _isar;
 
-  List<String> cache = [];
-
   /// Constructor defining the open database.
   DatabaseManager({required Isar isar}) : _isar = isar;
 
@@ -26,9 +24,9 @@ class DatabaseManager {
   /// Setter function for the given [blockCollection].
   ///
   /// Will add to the database if it's new or update an existing record.
-  Future<void> putBlockCollection(BlockCollection blockCollection) async {
-    await _isar.writeTxn(() async {
-      await _isar.blockCollections.put(blockCollection);
+  void putBlockCollection(BlockCollection blockCollection) {
+    _isar.writeTxnSync(() {
+      _isar.blockCollections.putSync(blockCollection);
     });
   }
 

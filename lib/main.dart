@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/thread_collection.dart';
 import 'package:memoweave/utils/database.dart';
 import 'package:memoweave/viewmodels/thread_viewmodel.dart';
 import 'package:memoweave/views/thread_view.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 void main() {
   runApp(const ProviderScope(child: MemoWeave()));
+
+  FlutterError.demangleStackTrace = (StackTrace stackTrace) {
+    if (stackTrace is Trace) return stackTrace.vmTrace;
+    if (stackTrace is Chain) return stackTrace.toTrace().vmTrace;
+    return stackTrace;
+  };
 }
 
 class MemoWeave extends ConsumerWidget {
@@ -29,8 +37,10 @@ class MemoWeave extends ConsumerWidget {
               body: SafeArea(
                 minimum: const EdgeInsets.all(24),
                 // child: Placeholder(),
-                child: ThreadView(
-                  databaseProps: (id: 3, databaseManager: databaseManager),
+                child: SingleChildScrollView(
+                  child: ThreadView(
+                    databaseProps: (id: 1, databaseManager: databaseManager),
+                  ),
                 ),
               ),
               floatingActionButton: Column(
@@ -42,9 +52,11 @@ class MemoWeave extends ConsumerWidget {
                   ),
                   FloatingActionButton(
                     onPressed: () {
-                      final newThread =
-                          ThreadCollection(dateTime: DateTime.now());
-                      databaseManager.putThreadCollection(newThread);
+                      databaseManager.putThreadCollection(
+                          ThreadCollection(dateTime: DateTime.now()));
+                      for (var i = 0; i < 3; ++i) {
+                        databaseManager.putBlockCollection(BlockCollection());
+                      }
                     },
                     child: const Icon(Icons.create),
                   ),
