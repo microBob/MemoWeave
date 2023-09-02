@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'block_viewmodel.dart';
+part of 'thread_viewmodel.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$blockViewModelHash() => r'626fcb7c255c11efd2c1a4fe3ca4fc908e7f7224';
+String _$threadViewModelHash() => r'dd0c0c75f74f5d3a1aa365a6bce4608e33768f4c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,60 +29,60 @@ class _SystemHash {
   }
 }
 
-abstract class _$BlockViewModel
-    extends BuildlessAutoDisposeNotifier<BlockCollection> {
+abstract class _$ThreadViewModel
+    extends BuildlessAutoDisposeNotifier<ThreadState> {
   late final ({DatabaseManager databaseManager, int id}) databaseProps;
-  late final BlockTextEditingController blockTextEditingController;
+  late final TextEditingController spoolTextEditingController;
 
-  BlockCollection build({
+  ThreadState build({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
-    required BlockTextEditingController blockTextEditingController,
+    required TextEditingController spoolTextEditingController,
   });
 }
 
-/// Block logic.
+/// ViewModel for a Thread.
 ///
-/// ViewModel for [BlockWidget].
+/// Used by [ThreadView].
 ///
-/// Copied from [BlockViewModel].
-@ProviderFor(BlockViewModel)
-const blockViewModelProvider = BlockViewModelFamily();
+/// Copied from [ThreadViewModel].
+@ProviderFor(ThreadViewModel)
+const threadViewModelProvider = ThreadViewModelFamily();
 
-/// Block logic.
+/// ViewModel for a Thread.
 ///
-/// ViewModel for [BlockWidget].
+/// Used by [ThreadView].
 ///
-/// Copied from [BlockViewModel].
-class BlockViewModelFamily extends Family<BlockCollection> {
-  /// Block logic.
+/// Copied from [ThreadViewModel].
+class ThreadViewModelFamily extends Family<ThreadState> {
+  /// ViewModel for a Thread.
   ///
-  /// ViewModel for [BlockWidget].
+  /// Used by [ThreadView].
   ///
-  /// Copied from [BlockViewModel].
-  const BlockViewModelFamily();
+  /// Copied from [ThreadViewModel].
+  const ThreadViewModelFamily();
 
-  /// Block logic.
+  /// ViewModel for a Thread.
   ///
-  /// ViewModel for [BlockWidget].
+  /// Used by [ThreadView].
   ///
-  /// Copied from [BlockViewModel].
-  BlockViewModelProvider call({
+  /// Copied from [ThreadViewModel].
+  ThreadViewModelProvider call({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
-    required BlockTextEditingController blockTextEditingController,
+    required TextEditingController spoolTextEditingController,
   }) {
-    return BlockViewModelProvider(
+    return ThreadViewModelProvider(
       databaseProps: databaseProps,
-      blockTextEditingController: blockTextEditingController,
+      spoolTextEditingController: spoolTextEditingController,
     );
   }
 
   @override
-  BlockViewModelProvider getProviderOverride(
-    covariant BlockViewModelProvider provider,
+  ThreadViewModelProvider getProviderOverride(
+    covariant ThreadViewModelProvider provider,
   ) {
     return call(
       databaseProps: provider.databaseProps,
-      blockTextEditingController: provider.blockTextEditingController,
+      spoolTextEditingController: provider.spoolTextEditingController,
     );
   }
 
@@ -98,65 +98,65 @@ class BlockViewModelFamily extends Family<BlockCollection> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'blockViewModelProvider';
+  String? get name => r'threadViewModelProvider';
 }
 
-/// Block logic.
+/// ViewModel for a Thread.
 ///
-/// ViewModel for [BlockWidget].
+/// Used by [ThreadView].
 ///
-/// Copied from [BlockViewModel].
-class BlockViewModelProvider
-    extends AutoDisposeNotifierProviderImpl<BlockViewModel, BlockCollection> {
-  /// Block logic.
+/// Copied from [ThreadViewModel].
+class ThreadViewModelProvider
+    extends AutoDisposeNotifierProviderImpl<ThreadViewModel, ThreadState> {
+  /// ViewModel for a Thread.
   ///
-  /// ViewModel for [BlockWidget].
+  /// Used by [ThreadView].
   ///
-  /// Copied from [BlockViewModel].
-  BlockViewModelProvider({
+  /// Copied from [ThreadViewModel].
+  ThreadViewModelProvider({
     required this.databaseProps,
-    required this.blockTextEditingController,
+    required this.spoolTextEditingController,
   }) : super.internal(
-          () => BlockViewModel()
+          () => ThreadViewModel()
             ..databaseProps = databaseProps
-            ..blockTextEditingController = blockTextEditingController,
-          from: blockViewModelProvider,
-          name: r'blockViewModelProvider',
+            ..spoolTextEditingController = spoolTextEditingController,
+          from: threadViewModelProvider,
+          name: r'threadViewModelProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$blockViewModelHash,
-          dependencies: BlockViewModelFamily._dependencies,
+                  : _$threadViewModelHash,
+          dependencies: ThreadViewModelFamily._dependencies,
           allTransitiveDependencies:
-              BlockViewModelFamily._allTransitiveDependencies,
+              ThreadViewModelFamily._allTransitiveDependencies,
         );
 
   final ({DatabaseManager databaseManager, int id}) databaseProps;
-  final BlockTextEditingController blockTextEditingController;
+  final TextEditingController spoolTextEditingController;
 
   @override
   bool operator ==(Object other) {
-    return other is BlockViewModelProvider &&
+    return other is ThreadViewModelProvider &&
         other.databaseProps == databaseProps &&
-        other.blockTextEditingController == blockTextEditingController;
+        other.spoolTextEditingController == spoolTextEditingController;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, databaseProps.hashCode);
-    hash = _SystemHash.combine(hash, blockTextEditingController.hashCode);
+    hash = _SystemHash.combine(hash, spoolTextEditingController.hashCode);
 
     return _SystemHash.finish(hash);
   }
 
   @override
-  BlockCollection runNotifierBuild(
-    covariant BlockViewModel notifier,
+  ThreadState runNotifierBuild(
+    covariant ThreadViewModel notifier,
   ) {
     return notifier.build(
       databaseProps: databaseProps,
-      blockTextEditingController: blockTextEditingController,
+      spoolTextEditingController: spoolTextEditingController,
     );
   }
 }

@@ -16,11 +16,11 @@ class DatabaseManager {
   List<String> cache = [];
 
   /// Constructor defining the open database.
-  DatabaseManager(Isar isar) : _isar = isar;
+  DatabaseManager({required Isar isar}) : _isar = isar;
 
   /// Getter function for Blocks by [id].
-  Future<BlockCollection?> getBlockCollectionById(Id id) async {
-    return _isar.blockCollections.get(id);
+  BlockCollection? getBlockCollectionById(Id id) {
+    return _isar.blockCollections.getSync(id);
   }
 
   /// Setter function for the given [blockCollection].
@@ -32,8 +32,8 @@ class DatabaseManager {
     });
   }
 
-  Future<ThreadCollection?> getThreadCollectionById(Id id) async {
-    return _isar.threadCollections.get(id);
+  ThreadCollection? getThreadCollectionById(Id id) {
+    return _isar.threadCollections.getSync(id);
   }
 
   void putThreadCollection(ThreadCollection threadCollection) {
@@ -43,58 +43,27 @@ class DatabaseManager {
   }
 
   /// Get all spool names.
-  Future<Set<String>> get spools async {
-    final spools =
-        await _isar.threadCollections.where().spoolProperty().findAll();
-    return spools.toSet();
+  Set<String> get spools {
+    return _isar.threadCollections
+        .where()
+        .spoolProperty()
+        .findAllSync()
+        .toSet();
   }
 }
 
-/// Provider for the [Isar] database.
+/// Provider for the instance of the [DatabaseManager].
 ///
-/// Primarily used by other providers that handle interaction.
+/// Uses the current open [Isar] instance.
 @Riverpod(keepAlive: true)
-Future<Isar> databaseInstance(DatabaseInstanceRef ref) async {
+Future<DatabaseManager> databaseManager(DatabaseManagerRef ref) async {
   final dir = await getApplicationDocumentsDirectory();
-  return Isar.open(
+  final isar = await Isar.open(
     [
       BlockCollectionSchema,
       ThreadCollectionSchema,
     ],
     directory: dir.path,
   );
-}
-
-/// Provider for the instance of the [DatabaseManager].
-///
-/// Uses the current open [Isar] instance.
-@riverpod
-Future<DatabaseManager> databaseManager(DatabaseManagerRef ref) async {
-  final isar = await ref.watch(databaseInstanceProvider.future);
-  return DatabaseManager(isar);
-}
-
-/// Handles retrieving a [BlockCollection] with the given [Id].
-///
-/// Returns null if not found.
-@riverpod
-Future<BlockCollection?> getBlockCollectionById(GetBlockCollectionByIdRef ref,
-    {required Id id}) async {
-  final databaseManager = await ref.watch(databaseManagerProvider.future);
-  return databaseManager.getBlockCollectionById(id);
-}
-
-@riverpod
-Future<ThreadCollection?> getThreadCollectionById(
-    GetThreadCollectionByIdRef ref,
-    {required Id id}) async {
-  final databaseManager = await ref.watch(databaseManagerProvider.future);
-  return databaseManager.getThreadCollectionById(id);
-}
-
-/// Handles retrieving all spool names.
-@riverpod
-Future<Set<String>> spools(SpoolsRef ref) async {
-  final databaseManager = await ref.watch(databaseManagerProvider.future);
-  return databaseManager.spools;
+  return DatabaseManager(isar: isar);
 }

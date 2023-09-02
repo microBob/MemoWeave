@@ -26,12 +26,11 @@ class MemoWeave extends ConsumerWidget {
               appBar: AppBar(
                 title: const Text('MemoWeave'),
               ),
-              body: const SingleChildScrollView(
+              body: SingleChildScrollView(
                 child: SafeArea(
-                  minimum: EdgeInsets.all(24),
+                  minimum: const EdgeInsets.all(24),
                   child: ThreadView(
-                    threadId: 3,
-                    databaseManager: databaseManager,
+                    databaseProps: (id: 3, databaseManager: databaseManager),
                   ),
                 ),
               ),
