@@ -11,7 +11,7 @@ class ThreadCollection {
   /// Unique identifier for this thread.
   ///
   /// Automatically assigned by the database.
-  final Id id = Isar.autoIncrement;
+  final Id id;
 
   /// The spool this thread is part of.
   final String spool;
@@ -35,6 +35,7 @@ class ThreadCollection {
   /// Defines [id], [spool], [subject], and [dateTime].
   /// Will supply default values if none are given.
   ThreadCollection({
+    this.id = Isar.autoIncrement,
     this.spool = '',
     this.subject = '',
     required this.dateTime,
@@ -53,6 +54,7 @@ class ThreadCollection {
     List<Id>? blockIds,
   }) {
     return ThreadCollection(
+      id: id ?? this.id,
       spool: spool ?? this.spool,
       subject: subject ?? this.subject,
       dateTime: dateTime ?? this.dateTime,

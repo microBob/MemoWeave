@@ -101,6 +101,7 @@ BlockCollection _blockCollectionDeserialize(
             reader.readByteOrNull(offsets[0])] ??
         BlockStyle.none,
     childrenBlockIds: reader.readLongList(offsets[1]) ?? const [],
+    id: id,
     inlineStyles: reader.readObjectList<StyleNode>(
           offsets[2],
           StyleNodeSchema.deserialize,

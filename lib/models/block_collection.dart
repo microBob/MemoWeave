@@ -20,7 +20,7 @@ class BlockCollection {
   /// Unique identifier for this block.
   ///
   /// Assigned by the database system.
-  final Id id = Isar.autoIncrement;
+  final Id id;
 
   /// Block content.
   final String text;
@@ -56,6 +56,7 @@ class BlockCollection {
   /// Will supply default values if none are given.
   /// Throws [FormatException] on invalid input.
   BlockCollection({
+    this.id = Isar.autoIncrement,
     this.text = 'Blank state text',
     this.blockStyle = BlockStyle.none,
     this.inlineStyles = const [],
@@ -97,6 +98,7 @@ class BlockCollection {
     List<Id>? childrenBlockIds,
   }) {
     return BlockCollection(
+      id: id ?? this.id,
       text: text ?? this.text,
       blockStyle: blockStyle ?? this.blockStyle,
       inlineStyles: inlineStyles ?? this.inlineStyles,

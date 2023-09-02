@@ -85,6 +85,7 @@ ThreadCollection _threadCollectionDeserialize(
   final object = ThreadCollection(
     blockIds: reader.readLongList(offsets[0]) ?? const [1, 2, 3],
     dateTime: reader.readDateTime(offsets[1]),
+    id: id,
     spool: reader.readStringOrNull(offsets[2]) ?? '',
     subject: reader.readStringOrNull(offsets[3]) ?? '',
   );
