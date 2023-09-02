@@ -48,6 +48,20 @@ class DatabaseManager {
         .findAllSync()
         .toSet();
   }
+
+  List<BlockCollection> getParentBlocksOfBlock(Id blockId) {
+    return _isar.blockCollections
+        .filter()
+        .childrenBlockIdsElementEqualTo(blockId)
+        .findAllSync();
+  }
+
+  List<ThreadCollection> getParentThreadsOfBlock(Id blockId) {
+    return _isar.threadCollections
+        .filter()
+        .blockIdsElementEqualTo(blockId)
+        .findAllSync();
+  }
 }
 
 /// Provider for the instance of the [DatabaseManager].

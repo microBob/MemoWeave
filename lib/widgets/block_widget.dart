@@ -28,14 +28,10 @@ class BlockWidget extends HookConsumerWidget {
     return Column(
       children: [
         Focus(
-          onKeyEvent: (node, event) {
-            ref.watch(provider.notifier).handleEditorTraversal(node, event);
-            return KeyEventResult.ignored;
-          },
+          onKeyEvent: ref.watch(provider.notifier).handleEditorTraversal,
           child: TextField(
             controller: blockTextEditingController,
             textInputAction: TextInputAction.newline,
-            // maxLines: null,
           ),
         ),
         ...blockState.blockCollection.childrenBlockIds
