@@ -19,6 +19,15 @@ class ThreadViewModel extends _$ThreadViewModel {
     required final TextEditingController spoolTextEditingController,
   }) {
     // Subscribe to changes and update state
+    databaseProps.databaseManager.onThreadChanged(databaseProps.id).listen(
+      (_) {
+        print('Updating Thread');
+        state = _getState(
+          databaseProps: databaseProps,
+          spoolTextEditingController: spoolTextEditingController,
+        );
+      },
+    );
 
     return _getState(
       databaseProps: databaseProps,

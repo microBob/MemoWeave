@@ -21,6 +21,18 @@ class DatabaseManager {
     return _isar.blockCollections.getSync(id);
   }
 
+  ThreadCollection? getThreadCollectionById(Id id) {
+    return _isar.threadCollections.getSync(id);
+  }
+
+  Stream<BlockCollection?> onBlockChanged(Id id) {
+    return _isar.blockCollections.watchObject(id);
+  }
+
+  Stream<void> onThreadChanged(Id id) {
+    return _isar.threadCollections.watchObjectLazy(id);
+  }
+
   /// Setter function for the given [blockCollection].
   ///
   /// Will add to the database if it's new or update an existing record.
@@ -28,10 +40,6 @@ class DatabaseManager {
     _isar.writeTxnSync(() {
       _isar.blockCollections.putSync(blockCollection);
     });
-  }
-
-  ThreadCollection? getThreadCollectionById(Id id) {
-    return _isar.threadCollections.getSync(id);
   }
 
   void putThreadCollection(ThreadCollection threadCollection) {
@@ -61,6 +69,38 @@ class DatabaseManager {
         .filter()
         .blockIdsElementEqualTo(blockId)
         .findAllSync();
+  }
+
+  void insertBlockAfter(Id blockId) {
+    final blockParents = getParentBlocksOfBlock(blockId);
+    final threadParents = getParentThreadsOfBlock(blockId);
+
+    _isar.writeTxnSync(() {
+      final newBlockId = _isar.blockCollections.putSync(BlockCollection());
+
+      for (final blockParent in blockParents) {
+        final childrenBlockIds = blockParent.childrenBlockIds.toList();
+        childrenBlockIds.insert(
+          childrenBlockIds.indexOf(blockId) + 1,
+          newBlockId,
+        );
+
+        final newBlockParent =
+            blockParent.copyWith(childrenBlockIds: childrenBlockIds);
+        _isar.blockCollections.putSync(newBlockParent);
+      }
+
+      for (final threadParent in threadParents) {
+        final blockIds = threadParent.blockIds.toList();
+        blockIds.insert(
+          blockIds.indexOf(blockId) + 1,
+          newBlockId,
+        );
+
+        final newThreadParent = threadParent.copyWith(blockIds: blockIds);
+        _isar.threadCollections.putSync(newThreadParent);
+      }
+    });
   }
 }
 

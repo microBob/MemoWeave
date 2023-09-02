@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/block_state.dart';
 import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/utils/database.dart';
@@ -69,37 +68,9 @@ class BlockViewModel extends _$BlockViewModel {
           focusNode.previousFocus();
           focusNode.previousFocus();
         case LogicalKeyboardKey.enter:
-          final blockParents = state.databaseProps.databaseManager
-              .getParentBlocksOfBlock(state.databaseProps.id);
-          final threadParents = state.databaseProps.databaseManager
-              .getParentThreadsOfBlock(state.databaseProps.id);
+          state.databaseProps.databaseManager
+              .insertBlockAfter(state.databaseProps.id);
 
-          final newBlock = BlockCollection();
-
-          print('Block parents: ${blockParents.length}');
-          for (final blockParent in blockParents) {
-            final childBlockIds = blockParent.childrenBlockIds;
-            childBlockIds.insert(
-              childBlockIds.indexOf(state.databaseProps.id) + 1,
-              newBlock.id,
-            );
-
-            final newBlockParent =
-                blockParent.copyWith(childrenBlockIds: childBlockIds);
-            state.databaseProps.databaseManager
-                .putBlockCollection(newBlockParent);
-          }
-
-          print('Thread parents: ${threadParents.length}');
-          for (final threadParent in threadParents) {
-            final blockIds = threadParent.blockIds;
-            blockIds.insert(
-                blockIds.indexOf(state.databaseProps.id), newBlock.id);
-
-            final newThreadParent = threadParent.copyWith(blockIds: blockIds);
-            state.databaseProps.databaseManager
-                .putThreadCollection(newThreadParent);
-          }
           focusNode.nextFocus();
           focusNode.nextFocus();
         default:
