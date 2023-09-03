@@ -18,6 +18,7 @@ class BlockWidget extends HookConsumerWidget {
   /// Attach to [BlockViewModel] and build UI.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print('Rebuilding Block Widget ${_databaseProps.id}');
     final blockTextEditingController = useBlockTextEditingController();
     final provider = blockViewModelProvider(
       databaseProps: _databaseProps,
@@ -35,12 +36,14 @@ class BlockWidget extends HookConsumerWidget {
           ),
         ),
         ...blockState.blockCollection.childrenBlockIds
-            .map((blockId) => BlockWidget(
-                  databaseProps: (
-                    id: blockId,
-                    databaseManager: _databaseProps.databaseManager,
-                  ),
-                ))
+            .map(
+              (blockId) => BlockWidget(
+                databaseProps: (
+                  id: blockId,
+                  databaseManager: _databaseProps.databaseManager,
+                ),
+              ),
+            )
             .toList()
       ],
     );

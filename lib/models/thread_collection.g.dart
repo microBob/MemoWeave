@@ -83,7 +83,7 @@ ThreadCollection _threadCollectionDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = ThreadCollection(
-    blockIds: reader.readLongList(offsets[0]) ?? const [1, 2, 3],
+    blockIds: reader.readLongList(offsets[0]) ?? const [1],
     dateTime: reader.readDateTime(offsets[1]),
     id: id,
     spool: reader.readStringOrNull(offsets[2]) ?? '',
@@ -100,7 +100,7 @@ P _threadCollectionDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readLongList(offset) ?? const [1, 2, 3]) as P;
+      return (reader.readLongList(offset) ?? const [1]) as P;
     case 1:
       return (reader.readDateTime(offset)) as P;
     case 2:

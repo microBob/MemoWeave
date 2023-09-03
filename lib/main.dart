@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:memoweave/models/block_collection.dart';
-import 'package:memoweave/models/thread_collection.dart';
 import 'package:memoweave/utils/database.dart';
 import 'package:memoweave/viewmodels/thread_viewmodel.dart';
 import 'package:memoweave/views/thread_view.dart';
@@ -51,13 +49,7 @@ class MemoWeave extends ConsumerWidget {
                     child: const Icon(Icons.refresh),
                   ),
                   FloatingActionButton(
-                    onPressed: () {
-                      databaseManager.putThreadCollection(
-                          ThreadCollection(dateTime: DateTime.now()));
-                      for (var i = 0; i < 3; ++i) {
-                        databaseManager.putBlockCollection(BlockCollection());
-                      }
-                    },
+                    onPressed: databaseManager.createNewThread,
                     child: const Icon(Icons.create),
                   ),
                 ],

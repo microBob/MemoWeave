@@ -102,6 +102,14 @@ class DatabaseManager {
       }
     });
   }
+
+  void createNewThread() {
+    _isar.writeTxnSync(() {
+      final newBlockId = _isar.blockCollections.putSync(BlockCollection());
+      _isar.threadCollections.putSync(
+          ThreadCollection(dateTime: DateTime.now(), blockIds: [newBlockId]));
+    });
+  }
 }
 
 /// Provider for the instance of the [DatabaseManager].

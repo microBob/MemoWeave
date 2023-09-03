@@ -21,6 +21,7 @@ class BlockViewModel extends _$BlockViewModel {
     required final DatabaseProps databaseProps,
     required final BlockTextEditingController blockTextEditingController,
   }) {
+    print('Building block VC ${databaseProps.id}');
     final blockCollection =
         databaseProps.databaseManager.getBlockCollectionById(databaseProps.id);
 
@@ -46,6 +47,8 @@ class BlockViewModel extends _$BlockViewModel {
   /// Update [state]'s rootBlock with text/style and set cursor position.
   /// Throws [FormatException] if unable to find render editable.
   void handleInput() {
+    print(
+        'Handling input on Block ${state.blockCollection.id}; text: ${state.blockTextEditingController.text}, selection: ${state.blockTextEditingController.selection}');
     // Create updated rootBlock.
     final newBlockCollection = state.blockCollection
         .copyWith(text: state.blockTextEditingController.text);
@@ -71,8 +74,8 @@ class BlockViewModel extends _$BlockViewModel {
           state.databaseProps.databaseManager
               .insertBlockAfter(state.databaseProps.id);
 
-          focusNode.nextFocus();
-          focusNode.nextFocus();
+        // focusNode.nextFocus();
+        // focusNode.nextFocus();
         default:
           return KeyEventResult.ignored;
       }

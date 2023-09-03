@@ -39,7 +39,7 @@ class ThreadCollection {
     this.spool = '',
     this.subject = '',
     required this.dateTime,
-    this.blockIds = const [1, 2, 3],
+    this.blockIds = const [],
   });
 
   /// Copy builder.
