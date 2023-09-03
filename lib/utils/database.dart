@@ -57,6 +57,10 @@ class DatabaseManager {
         .toSet();
   }
 
+  List<Id> get threadIds {
+    return _isar.threadCollections.where().idProperty().findAllSync();
+  }
+
   List<BlockCollection> getParentBlocksOfBlock(Id blockId) {
     return _isar.blockCollections
         .filter()

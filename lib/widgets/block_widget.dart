@@ -26,26 +26,28 @@ class BlockWidget extends HookConsumerWidget {
     );
     final blockState = ref.watch(provider);
 
-    return Column(
-      children: [
-        Focus(
-          onKeyEvent: ref.watch(provider.notifier).handleEditorTraversal,
-          child: TextField(
-            controller: blockTextEditingController,
-            textInputAction: TextInputAction.newline,
+    return ListView.builder(
+      itemBuilder: (context, index) {
+        if (index == 0) {
+          return Focus(
+            onKeyEvent: ref.watch(provider.notifier).handleEditorTraversal,
+            child: TextField(
+              controller: blockTextEditingController,
+              textInputAction: TextInputAction.newline,
+            ),
+          );
+        }
+
+        return BlockWidget(
+          databaseProps: (
+            id: blockState.blockCollection.childrenBlockIds[index - 1],
+            databaseManager: _databaseProps.databaseManager
           ),
-        ),
-        ...blockState.blockCollection.childrenBlockIds
-            .map(
-              (blockId) => BlockWidget(
-                databaseProps: (
-                  id: blockId,
-                  databaseManager: _databaseProps.databaseManager,
-                ),
-              ),
-            )
-            .toList()
-      ],
+        );
+      },
+      itemCount: blockState.blockCollection.childrenBlockIds.length + 1,
+      shrinkWrap: true,
+      physics: const ClampingScrollPhysics(),
     );
   }
 }

@@ -6,7 +6,7 @@ part of 'block_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$blockViewModelHash() => r'9d194586b4c1173e00e362152631d0ece18ecbc7';
+String _$blockViewModelHash() => r'03312de16126e1656cba43b7334b503a7fc864cf';
 
 /// Copied from Dart SDK
 class _SystemHash {

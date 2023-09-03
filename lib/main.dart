@@ -28,33 +28,41 @@ class MemoWeave extends ConsumerWidget {
         useMaterial3: true,
       ),
       home: ref.watch(databaseManagerProvider).when(
-            data: (databaseManager) => Scaffold(
-              appBar: AppBar(
-                title: const Text('MemoWeave'),
-              ),
-              body: SafeArea(
-                minimum: const EdgeInsets.all(24),
-                // child: Placeholder(),
-                child: SingleChildScrollView(
-                  child: ThreadView(
-                    databaseProps: (id: 1, databaseManager: databaseManager),
+            data: (databaseManager) {
+              final threadIds = databaseManager.threadIds;
+
+              return Scaffold(
+                appBar: AppBar(
+                  title: const Text('MemoWeave'),
+                ),
+                body: SafeArea(
+                  minimum: const EdgeInsets.all(24),
+                  // child: Placeholder(),
+                  child: ListView.builder(
+                    itemBuilder: (context, index) => ThreadView(
+                      databaseProps: (
+                        id: threadIds[index],
+                        databaseManager: databaseManager
+                      ),
+                    ),
+                    itemCount: threadIds.length,
                   ),
                 ),
-              ),
-              floatingActionButton: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FloatingActionButton(
-                    onPressed: () => ref.invalidate(threadViewModelProvider),
-                    child: const Icon(Icons.refresh),
-                  ),
-                  FloatingActionButton(
-                    onPressed: databaseManager.createNewThread,
-                    child: const Icon(Icons.create),
-                  ),
-                ],
-              ),
-            ),
+                floatingActionButton: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FloatingActionButton(
+                      onPressed: () => ref.invalidate(threadViewModelProvider),
+                      child: const Icon(Icons.refresh),
+                    ),
+                    FloatingActionButton(
+                      onPressed: databaseManager.createNewThread,
+                      child: const Icon(Icons.create),
+                    ),
+                  ],
+                ),
+              );
+            },
             error: (error, stackFrame) => Text('$stackFrame: $error'),
             loading: () => const CircularProgressIndicator(),
           ),
