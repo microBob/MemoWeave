@@ -15,13 +15,11 @@ class BlockState {
 
   BlockState copyWith({
     DatabaseProps? databaseProps,
-    BlockTextEditingController? blockTextEditingController,
     BlockCollection? blockCollection,
   }) {
     return BlockState(
       databaseProps: databaseProps ?? this.databaseProps,
-      blockTextEditingController:
-          blockTextEditingController ?? this.blockTextEditingController,
+      blockTextEditingController: blockTextEditingController,
       blockCollection: blockCollection ?? this.blockCollection,
     );
   }

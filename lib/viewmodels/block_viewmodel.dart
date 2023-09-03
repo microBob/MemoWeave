@@ -47,6 +47,7 @@ class BlockViewModel extends _$BlockViewModel {
   /// Update [state]'s rootBlock with text/style and set cursor position.
   /// Throws [FormatException] if unable to find render editable.
   void handleInput() {
+    if (!state.blockTextEditingController.selection.isValid) return;
     print(
         'Handling input on Block ${state.blockCollection.id}; text: ${state.blockTextEditingController.text}, selection: ${state.blockTextEditingController.selection}');
     // Create updated rootBlock.

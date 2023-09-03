@@ -13,6 +13,7 @@ class ThreadView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print('Building Thread Widget ${_databaseProps.id}');
     // Header TextEditingControllers.
     final spoolTextEditingController = useTextEditingController();
 
@@ -32,7 +33,7 @@ class ThreadView extends HookConsumerWidget {
             // Spool picker.
             DropdownMenu(
               dropdownMenuEntries:
-                  ref.watch(provider.notifier).spoolsAsDropdownMenuEntries(),
+              ref.watch(provider.notifier).spoolsAsDropdownMenuEntries(),
               label: const Text('Spool'),
               controller: spoolTextEditingController,
             ),
@@ -56,8 +57,8 @@ class ThreadView extends HookConsumerWidget {
           child: ListView.builder(
             itemBuilder: (context, index) => BlockWidget(
               databaseProps: (
-                id: threadState.threadCollection.blockIds[index],
-                databaseManager: _databaseProps.databaseManager
+              id: threadState.threadCollection.blockIds[index],
+              databaseManager: _databaseProps.databaseManager
               ),
             ),
             itemCount: threadState.threadCollection.blockIds.length,

@@ -23,11 +23,11 @@ class ThreadViewModel extends _$ThreadViewModel {
     databaseProps.databaseManager.onThreadChanged(databaseProps.id).listen(
       (_) {
         print('Thread ${databaseProps.id} changed!');
-        ref.invalidateSelf();
-        // state = _getState(
-        //   databaseProps: databaseProps,
-        //   spoolTextEditingController: spoolTextEditingController,
-        // );
+        // ref.invalidateSelf();
+        state = _getState(
+          databaseProps: databaseProps,
+          spoolTextEditingController: spoolTextEditingController,
+        );
       },
     );
 

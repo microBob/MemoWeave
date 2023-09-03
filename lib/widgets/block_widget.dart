@@ -18,7 +18,7 @@ class BlockWidget extends HookConsumerWidget {
   /// Attach to [BlockViewModel] and build UI.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('Rebuilding Block Widget ${_databaseProps.id}');
+    print('Building Block Widget ${_databaseProps.id}');
     final blockTextEditingController = useBlockTextEditingController();
     final provider = blockViewModelProvider(
       databaseProps: _databaseProps,
