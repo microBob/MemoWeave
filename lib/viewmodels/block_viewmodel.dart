@@ -69,8 +69,8 @@ class BlockViewModel extends _$BlockViewModel {
         case LogicalKeyboardKey.enter:
           databaseProps.databaseManager.insertBlockAfter(databaseProps.id);
 
-        // focusNode.nextFocus();
-        // focusNode.nextFocus();
+          focusNode.nextFocus();
+          focusNode.nextFocus();
         default:
           return KeyEventResult.ignored;
       }
