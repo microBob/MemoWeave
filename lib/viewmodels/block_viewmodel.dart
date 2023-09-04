@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/block_state.dart';
 import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/utils/database.dart';
@@ -29,7 +30,7 @@ class BlockViewModel extends _$BlockViewModel {
           'Failed to get Block of ID ${databaseProps.id}');
     }
 
-    blockTextEditingController.rootBlock = blockCollection;
+    blockTextEditingController.blockCollection = blockCollection;
     blockTextEditingController.text = blockCollection.text;
 
     blockTextEditingController.addListener(handleInput);
@@ -49,7 +50,7 @@ class BlockViewModel extends _$BlockViewModel {
     final newBlockCollection =
         state.blockCollection.copyWith(text: blockTextEditingController.text);
 
-    blockTextEditingController.rootBlock = newBlockCollection;
+    blockTextEditingController.blockCollection = newBlockCollection;
 
     // Write into database.
     databaseProps.databaseManager.putBlockCollection(newBlockCollection);
@@ -67,7 +68,16 @@ class BlockViewModel extends _$BlockViewModel {
           focusNode.previousFocus();
           focusNode.previousFocus();
         case LogicalKeyboardKey.enter:
-          databaseProps.databaseManager.insertBlockAfter(databaseProps.id);
+          final newBlockCollection = BlockCollection(
+            text: blockTextEditingController.text
+                .substring(blockTextEditingController.selection.baseOffset),
+          );
+          blockTextEditingController.text = blockTextEditingController.text
+              .substring(0, blockTextEditingController.selection.baseOffset);
+          databaseProps.databaseManager.insertBlockAfter(
+            blockId: databaseProps.id,
+            blockCollection: newBlockCollection,
+          );
 
           focusNode.nextFocus();
           focusNode.nextFocus();

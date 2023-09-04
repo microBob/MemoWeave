@@ -8,7 +8,7 @@ import 'package:memoweave/models/style_node.dart';
 class BlockTextEditingController extends TextEditingController {
   BlockCollection? _rootBlock;
 
-  set rootBlock(BlockCollection rootBlock) {
+  set blockCollection(BlockCollection rootBlock) {
     _rootBlock = rootBlock;
   }
 

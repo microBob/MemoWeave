@@ -75,12 +75,16 @@ class DatabaseManager {
         .findAllSync();
   }
 
-  void insertBlockAfter(Id blockId) {
+  void insertBlockAfter({
+    required Id blockId,
+    BlockCollection? blockCollection,
+  }) {
     final blockParents = getParentBlocksOfBlock(blockId);
     final threadParents = getParentThreadsOfBlock(blockId);
 
     _isar.writeTxnSync(() {
-      final newBlockId = _isar.blockCollections.putSync(BlockCollection());
+      final newBlockId =
+          _isar.blockCollections.putSync(blockCollection ?? BlockCollection());
 
       for (final blockParent in blockParents) {
         final childrenBlockIds = blockParent.childrenBlockIds.toList();
