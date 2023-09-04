@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:memoweave/models/block_state.dart';
 import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/utils/database.dart';
-import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'block_viewmodel.g.dart';
@@ -19,7 +18,7 @@ class BlockViewModel extends _$BlockViewModel {
   @override
   BlockState build({
     required final DatabaseProps databaseProps,
-    required final BlockTextEditingController blockTextEditingController,
+    required final TextEditingController blockTextEditingController,
   }) {
     print('Building block VC ${databaseProps.id}');
     final blockCollection =
@@ -30,7 +29,7 @@ class BlockViewModel extends _$BlockViewModel {
           'Failed to get Block of ID ${databaseProps.id}');
     }
 
-    blockTextEditingController.rootBlock = blockCollection;
+    // blockTextEditingController.rootBlock = blockCollection;
     blockTextEditingController.text = blockCollection.text;
 
     blockTextEditingController.addListener(handleInput);
@@ -45,14 +44,14 @@ class BlockViewModel extends _$BlockViewModel {
   /// Update [state]'s rootBlock with text/style and set cursor position.
   /// Throws [FormatException] if unable to find render editable.
   void handleInput() {
-    if (!blockTextEditingController.selection.isValid) return;
     print(
         'Handling input on Block ${state.blockCollection.id}; text: ${blockTextEditingController.text}, selection: ${blockTextEditingController.selection}');
+    if (!blockTextEditingController.selection.isValid) return;
     // Create updated rootBlock.
     final newBlockCollection =
         state.blockCollection.copyWith(text: blockTextEditingController.text);
 
-    blockTextEditingController.rootBlock = newBlockCollection;
+    // blockTextEditingController.rootBlock = newBlockCollection;
 
     // Write into database.
     databaseProps.databaseManager.putBlockCollection(newBlockCollection);

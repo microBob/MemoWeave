@@ -16,21 +16,21 @@ class _BlockTextEditingController extends Hook<BlockTextEditingController> {
 
 class _BlockTextEditingControllerState
     extends HookState<BlockTextEditingController, _BlockTextEditingController> {
-  late final BlockTextEditingController textEditingController;
+  late final BlockTextEditingController _blockTextEditingController;
 
   @override
   void initHook() {
     super.initHook();
-    textEditingController = BlockTextEditingController();
+    _blockTextEditingController = BlockTextEditingController();
   }
 
   @override
   BlockTextEditingController build(BuildContext context) =>
-      textEditingController;
+      _blockTextEditingController;
 
   @override
   void dispose() {
-    textEditingController.dispose();
+    _blockTextEditingController.dispose();
     super.dispose();
   }
 }
