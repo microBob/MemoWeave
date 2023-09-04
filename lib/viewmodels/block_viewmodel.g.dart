@@ -6,7 +6,7 @@ part of 'block_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$blockViewModelHash() => r'9b62163891c1bb4c3f6178917b08a117395ab445';
+String _$blockViewModelHash() => r'17a3918d1b5062c77750a45dc23350c1f51d37e9';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -33,10 +33,12 @@ abstract class _$BlockViewModel
     extends BuildlessAutoDisposeNotifier<BlockState> {
   late final ({DatabaseManager databaseManager, int id}) databaseProps;
   late final BlockTextEditingController blockTextEditingController;
+  late final BuildContext context;
 
   BlockState build({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
     required BlockTextEditingController blockTextEditingController,
+    required BuildContext context,
   });
 }
 
@@ -69,10 +71,12 @@ class BlockViewModelFamily extends Family<BlockState> {
   BlockViewModelProvider call({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
     required BlockTextEditingController blockTextEditingController,
+    required BuildContext context,
   }) {
     return BlockViewModelProvider(
       databaseProps: databaseProps,
       blockTextEditingController: blockTextEditingController,
+      context: context,
     );
   }
 
@@ -83,6 +87,7 @@ class BlockViewModelFamily extends Family<BlockState> {
     return call(
       databaseProps: provider.databaseProps,
       blockTextEditingController: provider.blockTextEditingController,
+      context: provider.context,
     );
   }
 
@@ -116,10 +121,12 @@ class BlockViewModelProvider
   BlockViewModelProvider({
     required this.databaseProps,
     required this.blockTextEditingController,
+    required this.context,
   }) : super.internal(
-          () => BlockViewModel()
+        () => BlockViewModel()
             ..databaseProps = databaseProps
-            ..blockTextEditingController = blockTextEditingController,
+            ..blockTextEditingController = blockTextEditingController
+            ..context = context,
           from: blockViewModelProvider,
           name: r'blockViewModelProvider',
           debugGetCreateSourceHash:
@@ -133,12 +140,14 @@ class BlockViewModelProvider
 
   final ({DatabaseManager databaseManager, int id}) databaseProps;
   final BlockTextEditingController blockTextEditingController;
+  final BuildContext context;
 
   @override
   bool operator ==(Object other) {
     return other is BlockViewModelProvider &&
         other.databaseProps == databaseProps &&
-        other.blockTextEditingController == blockTextEditingController;
+        other.blockTextEditingController == blockTextEditingController &&
+        other.context == context;
   }
 
   @override
@@ -146,6 +155,7 @@ class BlockViewModelProvider
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, databaseProps.hashCode);
     hash = _SystemHash.combine(hash, blockTextEditingController.hashCode);
+    hash = _SystemHash.combine(hash, context.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -157,6 +167,7 @@ class BlockViewModelProvider
     return notifier.build(
       databaseProps: databaseProps,
       blockTextEditingController: blockTextEditingController,
+      context: context,
     );
   }
 }

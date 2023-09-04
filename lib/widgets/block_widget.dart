@@ -24,6 +24,7 @@ class BlockWidget extends HookConsumerWidget {
     final provider = blockViewModelProvider(
       databaseProps: _databaseProps,
       blockTextEditingController: blockTextEditingController,
+      context: context,
     );
     final blockState = ref.watch(provider);
 
@@ -35,6 +36,7 @@ class BlockWidget extends HookConsumerWidget {
             child: TextField(
               controller: blockTextEditingController,
               textInputAction: TextInputAction.newline,
+              maxLines: null,
             ),
           );
         }

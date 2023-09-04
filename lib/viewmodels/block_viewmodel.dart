@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +22,7 @@ class BlockViewModel extends _$BlockViewModel {
   BlockState build({
     required final DatabaseProps databaseProps,
     required final BlockTextEditingController blockTextEditingController,
+    required final BuildContext context,
   }) {
     final blockCollection =
         databaseProps.databaseManager.getBlockCollectionById(databaseProps.id);
@@ -46,7 +48,27 @@ class BlockViewModel extends _$BlockViewModel {
   /// Throws [FormatException] if unable to find render editable.
   void handleInput() {
     if (!blockTextEditingController.selection.isValid) return;
-    // Create updated rootBlock.
+
+    // Handle return
+    final index = blockTextEditingController.text.indexOf('\n');
+    if (index > -1) {
+      final newBlockCollection = BlockCollection(
+        text: blockTextEditingController.text
+            .substring(blockTextEditingController.selection.extentOffset),
+      );
+      blockTextEditingController.text = blockTextEditingController.text
+          .substring(
+              0, max(blockTextEditingController.selection.baseOffset - 1, 0));
+      databaseProps.databaseManager.insertBlockAfter(
+        blockId: databaseProps.id,
+        blockCollection: newBlockCollection,
+      );
+
+      FocusScope.of(context).nextFocus();
+      FocusScope.of(context).nextFocus();
+    }
+
+    // Create updated Block.
     final newBlockCollection =
         state.blockCollection.copyWith(text: blockTextEditingController.text);
 
@@ -67,20 +89,6 @@ class BlockViewModel extends _$BlockViewModel {
         case LogicalKeyboardKey.arrowUp:
           focusNode.previousFocus();
           focusNode.previousFocus();
-        case LogicalKeyboardKey.enter:
-          final newBlockCollection = BlockCollection(
-            text: blockTextEditingController.text
-                .substring(blockTextEditingController.selection.baseOffset),
-          );
-          blockTextEditingController.text = blockTextEditingController.text
-              .substring(0, blockTextEditingController.selection.baseOffset);
-          databaseProps.databaseManager.insertBlockAfter(
-            blockId: databaseProps.id,
-            blockCollection: newBlockCollection,
-          );
-
-          focusNode.nextFocus();
-          focusNode.nextFocus();
         default:
           return KeyEventResult.ignored;
       }
