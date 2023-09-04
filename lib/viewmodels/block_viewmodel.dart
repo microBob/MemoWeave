@@ -36,8 +36,6 @@ class BlockViewModel extends _$BlockViewModel {
     blockTextEditingController.addListener(handleInput);
 
     return BlockState(
-      databaseProps: databaseProps,
-      blockTextEditingController: blockTextEditingController,
       blockCollection: blockCollection,
     );
   }
@@ -47,17 +45,17 @@ class BlockViewModel extends _$BlockViewModel {
   /// Update [state]'s rootBlock with text/style and set cursor position.
   /// Throws [FormatException] if unable to find render editable.
   void handleInput() {
-    if (!state.blockTextEditingController.selection.isValid) return;
+    if (!blockTextEditingController.selection.isValid) return;
     print(
-        'Handling input on Block ${state.blockCollection.id}; text: ${state.blockTextEditingController.text}, selection: ${state.blockTextEditingController.selection}');
+        'Handling input on Block ${state.blockCollection.id}; text: ${blockTextEditingController.text}, selection: ${blockTextEditingController.selection}');
     // Create updated rootBlock.
-    final newBlockCollection = state.blockCollection
-        .copyWith(text: state.blockTextEditingController.text);
+    final newBlockCollection =
+        state.blockCollection.copyWith(text: blockTextEditingController.text);
 
-    state.blockTextEditingController.rootBlock = newBlockCollection;
+    blockTextEditingController.rootBlock = newBlockCollection;
 
     // Write into database.
-    state.databaseProps.databaseManager.putBlockCollection(newBlockCollection);
+    databaseProps.databaseManager.putBlockCollection(newBlockCollection);
 
     state = state.copyWith(blockCollection: newBlockCollection);
   }
@@ -72,8 +70,7 @@ class BlockViewModel extends _$BlockViewModel {
           focusNode.previousFocus();
           focusNode.previousFocus();
         case LogicalKeyboardKey.enter:
-          state.databaseProps.databaseManager
-              .insertBlockAfter(state.databaseProps.id);
+          databaseProps.databaseManager.insertBlockAfter(databaseProps.id);
 
         // focusNode.nextFocus();
         // focusNode.nextFocus();
