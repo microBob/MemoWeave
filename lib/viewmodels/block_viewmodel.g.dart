@@ -6,7 +6,7 @@ part of 'block_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$blockViewModelHash() => r'30cd9dd11ee4972816b0c5dd214fb921aa056051';
+String _$blockViewModelHash() => r'f37ba7736b1baded8b1542462505fe386ff01085';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -32,11 +32,11 @@ class _SystemHash {
 abstract class _$BlockViewModel
     extends BuildlessAutoDisposeNotifier<BlockState> {
   late final ({DatabaseManager databaseManager, int id}) databaseProps;
-  late final TextEditingController blockTextEditingController;
+  late final BlockTextEditingController blockTextEditingController;
 
   BlockState build({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
-    required TextEditingController blockTextEditingController,
+    required BlockTextEditingController blockTextEditingController,
   });
 }
 
@@ -68,7 +68,7 @@ class BlockViewModelFamily extends Family<BlockState> {
   /// Copied from [BlockViewModel].
   BlockViewModelProvider call({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
-    required TextEditingController blockTextEditingController,
+    required BlockTextEditingController blockTextEditingController,
   }) {
     return BlockViewModelProvider(
       databaseProps: databaseProps,
@@ -132,7 +132,7 @@ class BlockViewModelProvider
         );
 
   final ({DatabaseManager databaseManager, int id}) databaseProps;
-  final TextEditingController blockTextEditingController;
+  final BlockTextEditingController blockTextEditingController;
 
   @override
   bool operator ==(Object other) {

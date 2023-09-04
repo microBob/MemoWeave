@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
 
-BlockTextEditingController useBlockTextEditingController() {
-  return use(const _BlockTextEditingController());
+BlockTextEditingController useBlockTextEditingController(
+    {List<Object?>? keys}) {
+  return use(_BlockTextEditingController(keys: keys));
 }
 
 class _BlockTextEditingController extends Hook<BlockTextEditingController> {
-  const _BlockTextEditingController();
+  const _BlockTextEditingController({List<Object?>? keys}) : super(keys: keys);
 
   @override
   _BlockTextEditingControllerState createState() =>

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memoweave/models/database_props.dart';
+import 'package:memoweave/utils/use_block_texteditingcontroller.dart';
 import 'package:memoweave/viewmodels/block_viewmodel.dart';
 
 /// Text editor interface.
@@ -20,7 +20,7 @@ class BlockWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     print('Building Block Widget ${_databaseProps.id}');
     final blockTextEditingController =
-        useTextEditingController(keys: [_databaseProps]);
+        useBlockTextEditingController(keys: [_databaseProps]);
 
     final provider = blockViewModelProvider(
       databaseProps: _databaseProps,
