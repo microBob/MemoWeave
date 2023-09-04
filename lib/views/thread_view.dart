@@ -13,9 +13,9 @@ class ThreadView extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('Building Thread Widget ${_databaseProps.id}');
     // Header TextEditingControllers.
-    final spoolTextEditingController = useTextEditingController();
+    final spoolTextEditingController =
+        useTextEditingController(keys: [_databaseProps]);
 
     // Provider with props.
     final provider = threadViewModelProvider(

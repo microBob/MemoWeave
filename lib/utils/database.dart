@@ -29,8 +29,8 @@ class DatabaseManager {
     return _isar.blockCollections.watchObject(id);
   }
 
-  Stream<void> onThreadChanged(Id id) {
-    return _isar.threadCollections.watchObjectLazy(id);
+  Stream<ThreadCollection?> onThreadChanged(Id id) {
+    return _isar.threadCollections.watchObject(id);
   }
 
   /// Setter function for the given [blockCollection].

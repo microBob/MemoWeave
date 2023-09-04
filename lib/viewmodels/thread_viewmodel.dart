@@ -18,29 +18,6 @@ class ThreadViewModel extends _$ThreadViewModel {
     required final DatabaseProps databaseProps,
     required final TextEditingController spoolTextEditingController,
   }) {
-    print('Building Thread VC');
-    // Subscribe to changes and update state
-    databaseProps.databaseManager.onThreadChanged(databaseProps.id).listen(
-      (_) {
-        print('Thread ${databaseProps.id} changed!');
-        // ref.invalidateSelf();
-        state = _getState(
-          databaseProps: databaseProps,
-          spoolTextEditingController: spoolTextEditingController,
-        );
-      },
-    );
-
-    return _getState(
-      databaseProps: databaseProps,
-      spoolTextEditingController: spoolTextEditingController,
-    );
-  }
-
-  ThreadState _getState({
-    required final DatabaseProps databaseProps,
-    required final TextEditingController spoolTextEditingController,
-  }) {
     final threadCollection =
         databaseProps.databaseManager.getThreadCollectionById(databaseProps.id);
 
@@ -55,27 +32,32 @@ class ThreadViewModel extends _$ThreadViewModel {
     // Add listener to spool changes.
     spoolTextEditingController.addListener(spoolSelectionChanged);
 
+    // Subscribe to changes and update state
+    databaseProps.databaseManager.onThreadChanged(databaseProps.id).listen(
+      (threadCollection) {
+        state = state.copyWith(threadCollection: threadCollection);
+      },
+    );
+
     // Return state.
     return ThreadState(
-      databaseProps: databaseProps,
-      spoolTextEditingController: spoolTextEditingController,
       threadCollection: threadCollection,
       cursorRect: Rect.zero,
     );
   }
 
   List<DropdownMenuEntry> spoolsAsDropdownMenuEntries() {
-    return state.databaseProps.databaseManager.spools
+    return databaseProps.databaseManager.spools
         .map((element) => DropdownMenuEntry(value: element, label: element))
         .toList();
   }
 
   void spoolSelectionChanged() {
+    if (!spoolTextEditingController.selection.isValid) return;
     // Create new Thread.
-    final newThreadCollection = state.threadCollection
-        .copyWith(spool: state.spoolTextEditingController.text);
-    state.databaseProps.databaseManager
-        .putThreadCollection(newThreadCollection);
+    final newThreadCollection =
+        state.threadCollection.copyWith(spool: spoolTextEditingController.text);
+    databaseProps.databaseManager.putThreadCollection(newThreadCollection);
   }
 
   void subjectChanged(String newSubject) async {
@@ -84,7 +66,6 @@ class ThreadViewModel extends _$ThreadViewModel {
         state.threadCollection.copyWith(subject: newSubject);
 
     // Write to database
-    state.databaseProps.databaseManager
-        .putThreadCollection(newThreadCollection);
+    databaseProps.databaseManager.putThreadCollection(newThreadCollection);
   }
 }

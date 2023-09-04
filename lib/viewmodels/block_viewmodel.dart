@@ -21,7 +21,6 @@ class BlockViewModel extends _$BlockViewModel {
     required final DatabaseProps databaseProps,
     required final BlockTextEditingController blockTextEditingController,
   }) {
-    print('Building block VC ${databaseProps.id}');
     final blockCollection =
         databaseProps.databaseManager.getBlockCollectionById(databaseProps.id);
 
@@ -45,8 +44,6 @@ class BlockViewModel extends _$BlockViewModel {
   /// Update [state]'s rootBlock with text/style and set cursor position.
   /// Throws [FormatException] if unable to find render editable.
   void handleInput() {
-    print(
-        'Handling input on Block ${state.blockCollection.id}; text: ${blockTextEditingController.text}, selection: ${blockTextEditingController.selection}');
     if (!blockTextEditingController.selection.isValid) return;
     // Create updated rootBlock.
     final newBlockCollection =
