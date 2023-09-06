@@ -33,7 +33,7 @@ class ThreadView extends HookConsumerWidget {
             // Spool picker.
             DropdownMenu(
               dropdownMenuEntries:
-              ref.watch(provider.notifier).spoolsAsDropdownMenuEntries(),
+                  ref.watch(provider.notifier).spoolsAsDropdownMenuEntries(),
               label: const Text('Spool'),
               controller: spoolTextEditingController,
             ),
@@ -57,9 +57,12 @@ class ThreadView extends HookConsumerWidget {
           child: ListView.builder(
             itemBuilder: (context, index) => BlockWidget(
               databaseProps: (
-              id: threadState.threadCollection.blockIds[index],
-              databaseManager: _databaseProps.databaseManager
+                id: threadState.threadCollection.blockIds[index],
+                databaseManager: _databaseProps.databaseManager
               ),
+              onExtentOffsetChanged:
+                  ref.watch(provider.notifier).onCursorExtentOffsetChanged,
+              cursorExtentOffset: threadState.cursorExtentOffset,
             ),
             itemCount: threadState.threadCollection.blockIds.length,
             shrinkWrap: true,

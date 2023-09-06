@@ -10,10 +10,18 @@ import 'package:memoweave/viewmodels/block_viewmodel.dart';
 class BlockWidget extends HookConsumerWidget {
   /// Properties for this Block.
   final DatabaseProps _databaseProps;
+  final ValueChanged<TextSelection> _onExtentOffsetChanged;
+  final TextSelection _cursorExtentOffset;
 
   /// Constructor that passes [_props].
-  const BlockWidget({super.key, required final DatabaseProps databaseProps})
-      : _databaseProps = databaseProps;
+  const BlockWidget({
+    super.key,
+    required final DatabaseProps databaseProps,
+    required final ValueChanged<TextSelection> onExtentOffsetChanged,
+    required final TextSelection cursorExtentOffset,
+  })  : _databaseProps = databaseProps,
+        _onExtentOffsetChanged = onExtentOffsetChanged,
+        _cursorExtentOffset = cursorExtentOffset;
 
   /// Attach to [BlockViewModel] and build UI.
   @override
@@ -25,6 +33,8 @@ class BlockWidget extends HookConsumerWidget {
       databaseProps: _databaseProps,
       blockTextEditingController: blockTextEditingController,
       context: context,
+      onExtentOffsetChanged: _onExtentOffsetChanged,
+      cursorExtentOffset: _cursorExtentOffset,
     );
     final blockState = ref.watch(provider);
 
@@ -44,8 +54,10 @@ class BlockWidget extends HookConsumerWidget {
         return BlockWidget(
           databaseProps: (
             id: blockState.blockCollection.childrenBlockIds[index - 1],
-            databaseManager: _databaseProps.databaseManager
+            databaseManager: _databaseProps.databaseManager,
           ),
+          onExtentOffsetChanged: _onExtentOffsetChanged,
+          cursorExtentOffset: _cursorExtentOffset,
         );
       },
       itemCount: blockState.blockCollection.childrenBlockIds.length + 1,

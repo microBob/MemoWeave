@@ -23,6 +23,8 @@ class BlockViewModel extends _$BlockViewModel {
     required final DatabaseProps databaseProps,
     required final BlockTextEditingController blockTextEditingController,
     required final BuildContext context,
+    required final ValueChanged<TextSelection> onExtentOffsetChanged,
+    required final TextSelection cursorExtentOffset,
   }) {
     final blockCollection =
         databaseProps.databaseManager.getBlockCollectionById(databaseProps.id);
@@ -42,6 +44,12 @@ class BlockViewModel extends _$BlockViewModel {
     );
   }
 
+  void onFocusChanged(bool gainsFocus) {
+    if (gainsFocus) {
+      blockTextEditingController.selection = cursorExtentOffset;
+    }
+  }
+
   /// Handle new input.
   ///
   /// Update [state]'s rootBlock with text/style and set cursor position.
@@ -49,30 +57,37 @@ class BlockViewModel extends _$BlockViewModel {
   void handleInput() {
     if (!blockTextEditingController.selection.isValid) return;
 
-    // Handle return
-    final index = blockTextEditingController.text.indexOf('\n');
-    if (index > -1) {
-      final newBlockCollection = BlockCollection(
-        text: blockTextEditingController.text
-            .substring(blockTextEditingController.selection.extentOffset),
-      );
-      blockTextEditingController.text = blockTextEditingController.text
-          .substring(
-              0, max(blockTextEditingController.selection.baseOffset - 1, 0));
-      databaseProps.databaseManager.insertBlockAfter(
-        blockId: databaseProps.id,
-        blockCollection: newBlockCollection,
-      );
-
-      FocusScope.of(context).nextFocus();
-      FocusScope.of(context).nextFocus();
-    }
-
     // Create updated Block.
     final newBlockCollection =
         state.blockCollection.copyWith(text: blockTextEditingController.text);
 
     blockTextEditingController.blockCollection = newBlockCollection;
+
+    onExtentOffsetChanged(TextSelection.collapsed(
+        offset: blockTextEditingController.selection.extentOffset));
+
+    // Handle new-lines
+    final index = blockTextEditingController.text.indexOf('\n');
+    if (index > -1) {
+      final nextBlockCollection = BlockCollection(
+        text: blockTextEditingController.text
+            .substring(blockTextEditingController.selection.extentOffset),
+      );
+      blockTextEditingController.text =
+          blockTextEditingController.text.substring(
+        0,
+        max(blockTextEditingController.selection.baseOffset - 1, 0),
+      );
+      databaseProps.databaseManager.insertBlockAfter(
+        blockId: databaseProps.id,
+        blockCollection: nextBlockCollection,
+      );
+
+      onExtentOffsetChanged(const TextSelection.collapsed(offset: 0));
+
+      FocusScope.of(context).nextFocus();
+      FocusScope.of(context).nextFocus();
+    }
 
     // Write into database.
     databaseProps.databaseManager.putBlockCollection(newBlockCollection);

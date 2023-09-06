@@ -6,7 +6,7 @@ part of 'block_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$blockViewModelHash() => r'17a3918d1b5062c77750a45dc23350c1f51d37e9';
+String _$blockViewModelHash() => r'2840391f04ebc1b1ec58198231173cf796dcbdc2';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -34,11 +34,15 @@ abstract class _$BlockViewModel
   late final ({DatabaseManager databaseManager, int id}) databaseProps;
   late final BlockTextEditingController blockTextEditingController;
   late final BuildContext context;
+  late final void Function(TextSelection) onExtentOffsetChanged;
+  late final TextSelection cursorExtentOffset;
 
   BlockState build({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
     required BlockTextEditingController blockTextEditingController,
     required BuildContext context,
+    required void Function(TextSelection) onExtentOffsetChanged,
+    required TextSelection cursorExtentOffset,
   });
 }
 
@@ -72,11 +76,15 @@ class BlockViewModelFamily extends Family<BlockState> {
     required ({DatabaseManager databaseManager, int id}) databaseProps,
     required BlockTextEditingController blockTextEditingController,
     required BuildContext context,
+    required void Function(TextSelection) onExtentOffsetChanged,
+    required TextSelection cursorExtentOffset,
   }) {
     return BlockViewModelProvider(
       databaseProps: databaseProps,
       blockTextEditingController: blockTextEditingController,
       context: context,
+      onExtentOffsetChanged: onExtentOffsetChanged,
+      cursorExtentOffset: cursorExtentOffset,
     );
   }
 
@@ -88,6 +96,8 @@ class BlockViewModelFamily extends Family<BlockState> {
       databaseProps: provider.databaseProps,
       blockTextEditingController: provider.blockTextEditingController,
       context: provider.context,
+      onExtentOffsetChanged: provider.onExtentOffsetChanged,
+      cursorExtentOffset: provider.cursorExtentOffset,
     );
   }
 
@@ -122,11 +132,15 @@ class BlockViewModelProvider
     required this.databaseProps,
     required this.blockTextEditingController,
     required this.context,
+    required this.onExtentOffsetChanged,
+    required this.cursorExtentOffset,
   }) : super.internal(
-        () => BlockViewModel()
+          () => BlockViewModel()
             ..databaseProps = databaseProps
             ..blockTextEditingController = blockTextEditingController
-            ..context = context,
+            ..context = context
+            ..onExtentOffsetChanged = onExtentOffsetChanged
+            ..cursorExtentOffset = cursorExtentOffset,
           from: blockViewModelProvider,
           name: r'blockViewModelProvider',
           debugGetCreateSourceHash:
@@ -141,13 +155,17 @@ class BlockViewModelProvider
   final ({DatabaseManager databaseManager, int id}) databaseProps;
   final BlockTextEditingController blockTextEditingController;
   final BuildContext context;
+  final void Function(TextSelection) onExtentOffsetChanged;
+  final TextSelection cursorExtentOffset;
 
   @override
   bool operator ==(Object other) {
     return other is BlockViewModelProvider &&
         other.databaseProps == databaseProps &&
         other.blockTextEditingController == blockTextEditingController &&
-        other.context == context;
+        other.context == context &&
+        other.onExtentOffsetChanged == onExtentOffsetChanged &&
+        other.cursorExtentOffset == cursorExtentOffset;
   }
 
   @override
@@ -156,6 +174,8 @@ class BlockViewModelProvider
     hash = _SystemHash.combine(hash, databaseProps.hashCode);
     hash = _SystemHash.combine(hash, blockTextEditingController.hashCode);
     hash = _SystemHash.combine(hash, context.hashCode);
+    hash = _SystemHash.combine(hash, onExtentOffsetChanged.hashCode);
+    hash = _SystemHash.combine(hash, cursorExtentOffset.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -168,6 +188,8 @@ class BlockViewModelProvider
       databaseProps: databaseProps,
       blockTextEditingController: blockTextEditingController,
       context: context,
+      onExtentOffsetChanged: onExtentOffsetChanged,
+      cursorExtentOffset: cursorExtentOffset,
     );
   }
 }

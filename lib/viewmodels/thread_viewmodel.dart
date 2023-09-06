@@ -43,6 +43,7 @@ class ThreadViewModel extends _$ThreadViewModel {
     return ThreadState(
       threadCollection: threadCollection,
       cursorRect: Rect.zero,
+      cursorExtentOffset: const TextSelection.collapsed(offset: 0),
     );
   }
 
@@ -67,5 +68,13 @@ class ThreadViewModel extends _$ThreadViewModel {
 
     // Write to database
     databaseProps.databaseManager.putThreadCollection(newThreadCollection);
+  }
+
+  void onCursorExtentOffsetChanged(TextSelection offset) {
+    state = state.copyWith(cursorExtentOffset: offset);
+  }
+
+  TextSelection getCursorExtentOffset() {
+    return state.cursorExtentOffset;
   }
 }
