@@ -45,8 +45,10 @@ class BlockViewModel extends _$BlockViewModel {
   void onFocusChanged(bool gainsFocus) {
     final caretState = ref.read(caretViewModelProvider);
     if (gainsFocus && caretState.setFromFocusChange) {
-      final caretPosition =
-          min(caretState.caretPosition, blockTextEditingController.text.length);
+      final caretPosition = caretState.caretPosition == -1
+          ? blockTextEditingController.text.length
+          : min(
+              caretState.caretPosition, blockTextEditingController.text.length);
       blockTextEditingController.selection =
           TextSelection.collapsed(offset: caretPosition);
 
@@ -111,18 +113,45 @@ class BlockViewModel extends _$BlockViewModel {
     if (keyEvent is KeyDownEvent || keyEvent is KeyRepeatEvent) {
       switch (keyEvent.logicalKey) {
         case LogicalKeyboardKey.arrowDown:
+          ref.read(caretViewModelProvider.notifier).updateCaret(
+                caretPosition:
+                    blockTextEditingController.selection.extentOffset,
+                setFromFocusChange: true,
+              );
           focusNode.nextFocus();
           focusNode.nextFocus();
         case LogicalKeyboardKey.arrowUp:
+          ref.read(caretViewModelProvider.notifier).updateCaret(
+                caretPosition:
+                    blockTextEditingController.selection.extentOffset,
+                setFromFocusChange: true,
+              );
           focusNode.previousFocus();
           focusNode.previousFocus();
+        case LogicalKeyboardKey.arrowLeft:
+          if (blockTextEditingController.selection.extentOffset != 0) {
+            return KeyEventResult.ignored;
+          }
+          ref.read(caretViewModelProvider.notifier).updateCaret(
+                caretPosition: -1,
+                setFromFocusChange: true,
+              );
+          focusNode.previousFocus();
+          focusNode.previousFocus();
+        case LogicalKeyboardKey.arrowRight:
+          if (blockTextEditingController.selection.extentOffset !=
+              blockTextEditingController.text.length) {
+            return KeyEventResult.ignored;
+          }
+          ref.read(caretViewModelProvider.notifier).updateCaret(
+                caretPosition: 0,
+                setFromFocusChange: true,
+              );
+          focusNode.nextFocus();
+          focusNode.nextFocus();
         default:
           return KeyEventResult.ignored;
       }
-      ref.read(caretViewModelProvider.notifier).updateCaret(
-            caretPosition: blockTextEditingController.selection.extentOffset,
-            setFromFocusChange: true,
-          );
       return KeyEventResult.handled;
     }
     return KeyEventResult.ignored;
