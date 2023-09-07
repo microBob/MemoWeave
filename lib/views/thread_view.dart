@@ -41,30 +41,27 @@ class ThreadView extends HookConsumerWidget {
             // Thread subject line.
             IntrinsicWidth(
               child: TextFormField(
-                initialValue: threadState.threadCollection.subject,
+                initialValue: threadState.subject,
                 decoration: InputDecoration(
-                  hintText: threadState.threadCollection.dateTimeAsDate(),
+                  hintText: threadState.dateTimeAsDate(),
                 ),
                 onChanged: ref.watch(provider.notifier).subjectChanged,
               ),
             ),
             const Spacer(),
             // Time stamp.
-            Text(threadState.threadCollection.dateTimeAsTime(context)),
+            Text(threadState.dateTimeAsTime(context)),
           ],
         ),
         FocusTraversalGroup(
           child: ListView.builder(
             itemBuilder: (context, index) => BlockWidget(
               databaseProps: (
-                id: threadState.threadCollection.blockIds[index],
+                id: threadState.blockIds[index],
                 databaseManager: _databaseProps.databaseManager
               ),
-              onExtentOffsetChanged:
-                  ref.watch(provider.notifier).onCursorExtentOffsetChanged,
-              cursorExtentOffset: threadState.cursorExtentOffset,
             ),
-            itemCount: threadState.threadCollection.blockIds.length,
+            itemCount: threadState.blockIds.length,
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
           ),

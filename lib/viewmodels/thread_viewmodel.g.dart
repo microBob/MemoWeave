@@ -6,7 +6,7 @@ part of 'thread_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$threadViewModelHash() => r'cf241188023cbc7cb3a0d1910ce8e446eb4445e6';
+String _$threadViewModelHash() => r'395f1ba37075093985692dad2e51c12f6e8f90d3';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,11 +30,11 @@ class _SystemHash {
 }
 
 abstract class _$ThreadViewModel
-    extends BuildlessAutoDisposeNotifier<ThreadState> {
+    extends BuildlessAutoDisposeNotifier<ThreadCollection> {
   late final ({DatabaseManager databaseManager, int id}) databaseProps;
   late final TextEditingController spoolTextEditingController;
 
-  ThreadState build({
+  ThreadCollection build({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
     required TextEditingController spoolTextEditingController,
   });
@@ -53,7 +53,7 @@ const threadViewModelProvider = ThreadViewModelFamily();
 /// Used by [ThreadView].
 ///
 /// Copied from [ThreadViewModel].
-class ThreadViewModelFamily extends Family<ThreadState> {
+class ThreadViewModelFamily extends Family<ThreadCollection> {
   /// ViewModel for a Thread.
   ///
   /// Used by [ThreadView].
@@ -107,7 +107,7 @@ class ThreadViewModelFamily extends Family<ThreadState> {
 ///
 /// Copied from [ThreadViewModel].
 class ThreadViewModelProvider
-    extends AutoDisposeNotifierProviderImpl<ThreadViewModel, ThreadState> {
+    extends AutoDisposeNotifierProviderImpl<ThreadViewModel, ThreadCollection> {
   /// ViewModel for a Thread.
   ///
   /// Used by [ThreadView].
@@ -151,7 +151,7 @@ class ThreadViewModelProvider
   }
 
   @override
-  ThreadState runNotifierBuild(
+  ThreadCollection runNotifierBuild(
     covariant ThreadViewModel notifier,
   ) {
     return notifier.build(

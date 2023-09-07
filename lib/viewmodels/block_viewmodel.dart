@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memoweave/models/block_collection.dart';
-import 'package:memoweave/models/block_state.dart';
 import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/utils/database.dart';
 import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
@@ -20,12 +19,10 @@ part 'block_viewmodel.g.dart';
 class BlockViewModel extends _$BlockViewModel {
   /// Get props and initialize the Block.
   @override
-  BlockState build({
+  BlockCollection build({
     required final DatabaseProps databaseProps,
     required final BlockTextEditingController blockTextEditingController,
     required final BuildContext context,
-    required final ValueChanged<TextSelection> onExtentOffsetChanged,
-    required final TextSelection cursorExtentOffset,
   }) {
     final blockCollection =
         databaseProps.databaseManager.getBlockCollectionById(databaseProps.id);
@@ -42,9 +39,7 @@ class BlockViewModel extends _$BlockViewModel {
     // Listen for changes
     blockTextEditingController.addListener(handleInput);
 
-    return BlockState(
-      blockCollection: blockCollection,
-    );
+    return blockCollection;
   }
 
   void onFocusChanged(bool gainsFocus) {
@@ -71,12 +66,13 @@ class BlockViewModel extends _$BlockViewModel {
 
     // Create updated Block.
     final newBlockCollection =
-        state.blockCollection.copyWith(text: blockTextEditingController.text);
+        state.copyWith(text: blockTextEditingController.text);
 
     blockTextEditingController.blockCollection = newBlockCollection;
 
-    onExtentOffsetChanged(TextSelection.collapsed(
-        offset: blockTextEditingController.selection.extentOffset));
+    // Record new caret position.
+    ref.read(caretViewModelProvider.notifier).updateCaret(
+        caretPosition: blockTextEditingController.selection.extentOffset);
 
     // Handle new-lines
     final index = blockTextEditingController.text.indexOf('\n');
@@ -95,7 +91,11 @@ class BlockViewModel extends _$BlockViewModel {
         blockCollection: nextBlockCollection,
       );
 
-      onExtentOffsetChanged(const TextSelection.collapsed(offset: 0));
+      // Setup caret for next focus
+      ref.read(caretViewModelProvider.notifier).updateCaret(
+            caretPosition: 0,
+            setFromFocusChange: true,
+          );
 
       FocusScope.of(context).nextFocus();
       FocusScope.of(context).nextFocus();
@@ -104,7 +104,7 @@ class BlockViewModel extends _$BlockViewModel {
     // Write into database.
     databaseProps.databaseManager.putBlockCollection(newBlockCollection);
 
-    state = state.copyWith(blockCollection: newBlockCollection);
+    state = newBlockCollection;
   }
 
   KeyEventResult handleEditorTraversal(FocusNode focusNode, KeyEvent keyEvent) {
@@ -119,6 +119,10 @@ class BlockViewModel extends _$BlockViewModel {
         default:
           return KeyEventResult.ignored;
       }
+      ref.read(caretViewModelProvider.notifier).updateCaret(
+            caretPosition: blockTextEditingController.selection.extentOffset,
+            setFromFocusChange: true,
+          );
       return KeyEventResult.handled;
     }
     return KeyEventResult.ignored;

@@ -10,18 +10,12 @@ import 'package:memoweave/viewmodels/block_viewmodel.dart';
 class BlockWidget extends HookConsumerWidget {
   /// Properties for this Block.
   final DatabaseProps _databaseProps;
-  final ValueChanged<TextSelection> _onExtentOffsetChanged;
-  final TextSelection _cursorExtentOffset;
 
   /// Constructor that passes [_props].
   const BlockWidget({
     super.key,
     required final DatabaseProps databaseProps,
-    required final ValueChanged<TextSelection> onExtentOffsetChanged,
-    required final TextSelection cursorExtentOffset,
-  })  : _databaseProps = databaseProps,
-        _onExtentOffsetChanged = onExtentOffsetChanged,
-        _cursorExtentOffset = cursorExtentOffset;
+  }) : _databaseProps = databaseProps;
 
   /// Attach to [BlockViewModel] and build UI.
   @override
@@ -33,8 +27,6 @@ class BlockWidget extends HookConsumerWidget {
       databaseProps: _databaseProps,
       blockTextEditingController: blockTextEditingController,
       context: context,
-      onExtentOffsetChanged: _onExtentOffsetChanged,
-      cursorExtentOffset: _cursorExtentOffset,
     );
     final blockState = ref.watch(provider);
 
@@ -43,6 +35,7 @@ class BlockWidget extends HookConsumerWidget {
         if (index == 0) {
           return Focus(
             onKeyEvent: ref.watch(provider.notifier).handleEditorTraversal,
+            onFocusChange: ref.watch(provider.notifier).onFocusChanged,
             child: TextField(
               controller: blockTextEditingController,
               textInputAction: TextInputAction.newline,
@@ -53,14 +46,12 @@ class BlockWidget extends HookConsumerWidget {
 
         return BlockWidget(
           databaseProps: (
-            id: blockState.blockCollection.childrenBlockIds[index - 1],
+            id: blockState.childrenBlockIds[index - 1],
             databaseManager: _databaseProps.databaseManager,
           ),
-          onExtentOffsetChanged: _onExtentOffsetChanged,
-          cursorExtentOffset: _cursorExtentOffset,
         );
       },
-      itemCount: blockState.blockCollection.childrenBlockIds.length + 1,
+      itemCount: blockState.childrenBlockIds.length + 1,
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
     );

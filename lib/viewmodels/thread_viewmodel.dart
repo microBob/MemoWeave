@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:memoweave/models/database_props.dart';
-import 'package:memoweave/models/thread_state.dart';
+import 'package:memoweave/models/thread_collection.dart';
 import 'package:memoweave/utils/database.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -14,7 +14,7 @@ part 'thread_viewmodel.g.dart';
 @riverpod
 class ThreadViewModel extends _$ThreadViewModel {
   @override
-  ThreadState build({
+  ThreadCollection build({
     required final DatabaseProps databaseProps,
     required final TextEditingController spoolTextEditingController,
   }) {
@@ -35,16 +35,13 @@ class ThreadViewModel extends _$ThreadViewModel {
     // Subscribe to changes and update state
     databaseProps.databaseManager.onThreadChanged(databaseProps.id).listen(
       (threadCollection) {
-        state = state.copyWith(threadCollection: threadCollection);
+        if (threadCollection == null) return;
+        state = threadCollection;
       },
     );
 
     // Return state.
-    return ThreadState(
-      threadCollection: threadCollection,
-      cursorRect: Rect.zero,
-      cursorExtentOffset: const TextSelection.collapsed(offset: 0),
-    );
+    return threadCollection;
   }
 
   List<DropdownMenuEntry> spoolsAsDropdownMenuEntries() {
@@ -57,24 +54,15 @@ class ThreadViewModel extends _$ThreadViewModel {
     if (!spoolTextEditingController.selection.isValid) return;
     // Create new Thread.
     final newThreadCollection =
-        state.threadCollection.copyWith(spool: spoolTextEditingController.text);
+        state.copyWith(spool: spoolTextEditingController.text);
     databaseProps.databaseManager.putThreadCollection(newThreadCollection);
   }
 
   void subjectChanged(String newSubject) async {
     // Create new Thread
-    final newThreadCollection =
-        state.threadCollection.copyWith(subject: newSubject);
+    final newThreadCollection = state.copyWith(subject: newSubject);
 
     // Write to database
     databaseProps.databaseManager.putThreadCollection(newThreadCollection);
-  }
-
-  void onCursorExtentOffsetChanged(TextSelection offset) {
-    state = state.copyWith(cursorExtentOffset: offset);
-  }
-
-  TextSelection getCursorExtentOffset() {
-    return state.cursorExtentOffset;
   }
 }
