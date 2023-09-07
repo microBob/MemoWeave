@@ -149,6 +149,27 @@ class BlockViewModel extends _$BlockViewModel {
               );
           focusNode.nextFocus();
           focusNode.nextFocus();
+        case LogicalKeyboardKey.backspace:
+          if (blockTextEditingController.selection.extentOffset != 0) {
+            return KeyEventResult.ignored;
+          }
+          ref.read(caretViewModelProvider.notifier).updateCaret(
+                caretPosition: -1,
+                setFromFocusChange: true,
+              );
+          focusNode.previousFocus();
+          focusNode.previousFocus();
+        case LogicalKeyboardKey.delete:
+          if (blockTextEditingController.selection.extentOffset !=
+              blockTextEditingController.text.length) {
+            return KeyEventResult.ignored;
+          }
+          ref.read(caretViewModelProvider.notifier).updateCaret(
+                caretPosition: 0,
+                setFromFocusChange: true,
+              );
+          focusNode.nextFocus();
+          focusNode.nextFocus();
         default:
           return KeyEventResult.ignored;
       }
