@@ -8,6 +8,7 @@ import 'package:memoweave/models/block_state.dart';
 import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/utils/database.dart';
 import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
+import 'package:memoweave/viewmodels/caret_viewmodel.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'block_viewmodel.g.dart';
@@ -34,9 +35,11 @@ class BlockViewModel extends _$BlockViewModel {
           'Failed to get Block of ID ${databaseProps.id}');
     }
 
+    // Set initial block values
     blockTextEditingController.blockCollection = blockCollection;
     blockTextEditingController.text = blockCollection.text;
 
+    // Listen for changes
     blockTextEditingController.addListener(handleInput);
 
     return BlockState(
@@ -45,8 +48,17 @@ class BlockViewModel extends _$BlockViewModel {
   }
 
   void onFocusChanged(bool gainsFocus) {
-    if (gainsFocus) {
-      blockTextEditingController.selection = cursorExtentOffset;
+    final caretState = ref.read(caretViewModelProvider);
+    if (gainsFocus && caretState.setFromFocusChange) {
+      final caretPosition =
+          min(caretState.caretPosition, blockTextEditingController.text.length);
+      blockTextEditingController.selection =
+          TextSelection.collapsed(offset: caretPosition);
+
+      ref.read(caretViewModelProvider.notifier).updateCaret(
+            caretPosition: caretPosition,
+            setFromFocusChange: false,
+          );
     }
   }
 
