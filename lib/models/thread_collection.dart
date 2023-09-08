@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
-import 'package:memoweave/models/block_collection.dart';
+import 'package:memoweave/models/container_model.dart';
 
 part 'thread_collection.g.dart';
 
 /// Collection definition for a thread.
 @collection
-class ThreadCollection {
-  /// Unique identifier for this thread.
-  ///
-  /// Automatically assigned by the database.
-  final Id id;
-
+class ThreadCollection extends ContainerModel {
   /// The spool this thread is part of.
   final String spool;
 
@@ -26,20 +21,16 @@ class ThreadCollection {
   /// Will default to the current [DateTime] at creation.
   final DateTime dateTime;
 
-  /// Ordered set of [BlockCollection] objects that make up the content of this
-  /// thread.
-  final List<Id> blockIds;
-
   /// Default constructor.
   ///
   /// Defines [id], [spool], [subject], and [dateTime].
   /// Will supply default values if none are given.
   ThreadCollection({
-    this.id = Isar.autoIncrement,
+    super.id = Isar.autoIncrement,
+    super.children = const [],
     this.spool = '',
     this.subject = '',
     required this.dateTime,
-    this.blockIds = const [],
   });
 
   /// Copy builder.
@@ -48,17 +39,18 @@ class ThreadCollection {
   /// [id], [spool], [subject], [dateTime], and [blockIds] when provided.
   ThreadCollection copyWith({
     Id? id,
+    Id? parent,
+    List<Id>? children,
     String? spool,
     String? subject,
     DateTime? dateTime,
-    List<Id>? blockIds,
   }) {
     return ThreadCollection(
-      id: id ?? this.id,
+      id: id ?? super.id,
+      children: children ?? super.children,
       spool: spool ?? this.spool,
       subject: subject ?? this.subject,
       dateTime: dateTime ?? this.dateTime,
-      blockIds: blockIds ?? this.blockIds,
     );
   }
 

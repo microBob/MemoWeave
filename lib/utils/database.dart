@@ -64,14 +64,14 @@ class DatabaseManager {
   List<BlockCollection> getParentBlocksOfBlock(Id blockId) {
     return _isar.blockCollections
         .filter()
-        .childrenBlockIdsElementEqualTo(blockId)
+        .childrenElementEqualTo(blockId)
         .findAllSync();
   }
 
   List<ThreadCollection> getParentThreadsOfBlock(Id blockId) {
     return _isar.threadCollections
         .filter()
-        .blockIdsElementEqualTo(blockId)
+        .childrenElementEqualTo(blockId)
         .findAllSync();
   }
 
@@ -87,35 +87,39 @@ class DatabaseManager {
           _isar.blockCollections.putSync(blockCollection ?? BlockCollection());
 
       for (final blockParent in blockParents) {
-        final childrenBlockIds = blockParent.childrenBlockIds.toList();
+        final childrenBlockIds = blockParent.children.toList();
         childrenBlockIds.insert(
           childrenBlockIds.indexOf(blockId) + 1,
           newBlockId,
         );
 
-        final newBlockParent =
-            blockParent.copyWith(childrenBlockIds: childrenBlockIds);
+        final newBlockParent = blockParent.copyWith(children: childrenBlockIds);
         _isar.blockCollections.putSync(newBlockParent);
       }
 
       for (final threadParent in threadParents) {
-        final blockIds = threadParent.blockIds.toList();
+        final blockIds = threadParent.children.toList();
         blockIds.insert(
           blockIds.indexOf(blockId) + 1,
           newBlockId,
         );
 
-        final newThreadParent = threadParent.copyWith(blockIds: blockIds);
+        final newThreadParent = threadParent.copyWith(children: blockIds);
         _isar.threadCollections.putSync(newThreadParent);
       }
     });
+  }
+
+  void mergeBlock({required final Id blockId}) {
+    final blockParents = getParentBlocksOfBlock(blockId);
+    final threadParents = getParentThreadsOfBlock(blockId);
   }
 
   void createNewThread() {
     _isar.writeTxnSync(() {
       final newBlockId = _isar.blockCollections.putSync(BlockCollection());
       _isar.threadCollections.putSync(
-          ThreadCollection(dateTime: DateTime.now(), blockIds: [newBlockId]));
+          ThreadCollection(dateTime: DateTime.now(), children: [newBlockId]));
     });
   }
 }

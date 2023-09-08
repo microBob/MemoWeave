@@ -80,6 +80,7 @@ class BlockViewModel extends _$BlockViewModel {
     final index = blockTextEditingController.text.indexOf('\n');
     if (index > -1) {
       final nextBlockCollection = BlockCollection(
+        parent: state.parent,
         text: blockTextEditingController.text
             .substring(blockTextEditingController.selection.extentOffset),
       );
@@ -113,6 +114,7 @@ class BlockViewModel extends _$BlockViewModel {
     if (keyEvent is KeyDownEvent || keyEvent is KeyRepeatEvent) {
       switch (keyEvent.logicalKey) {
         case LogicalKeyboardKey.arrowDown:
+        // TODO: Check if on last line
           ref.read(caretViewModelProvider.notifier).updateCaret(
                 caretPosition:
                     blockTextEditingController.selection.extentOffset,
@@ -121,6 +123,7 @@ class BlockViewModel extends _$BlockViewModel {
           focusNode.nextFocus();
           focusNode.nextFocus();
         case LogicalKeyboardKey.arrowUp:
+        // TODO: Check if on first line
           ref.read(caretViewModelProvider.notifier).updateCaret(
                 caretPosition:
                     blockTextEditingController.selection.extentOffset,
