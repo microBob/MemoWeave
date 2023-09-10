@@ -23,7 +23,7 @@ class CaretViewModel extends _$CaretViewModel {
   }) {
     state = state.copyWith(
       caretPosition: caretPosition,
-      setFromFocusChange: setFromFocusChange,
+      setFromFocusChange: setFromFocusChange ?? false,
       caretRect: caretRect,
     );
   }

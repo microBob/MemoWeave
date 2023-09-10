@@ -43,6 +43,7 @@ class BlockViewModel extends _$BlockViewModel {
   }
 
   void onFocusChanged(bool gainsFocus) {
+    print("Focus changed: $gainsFocus");
     final caretState = ref.read(caretViewModelProvider);
     if (gainsFocus && caretState.setFromFocusChange) {
       final caretPosition = caretState.caretPosition == -1
@@ -54,8 +55,8 @@ class BlockViewModel extends _$BlockViewModel {
 
       ref.read(caretViewModelProvider.notifier).updateCaret(
             caretPosition: caretPosition,
-            setFromFocusChange: false,
-          );
+        setFromFocusChange: false,
+      );
     }
   }
 
@@ -64,6 +65,7 @@ class BlockViewModel extends _$BlockViewModel {
   /// Update [state]'s rootBlock with text/style and set cursor position.
   /// Throws [FormatException] if unable to find render editable.
   void handleInput() {
+    print(blockTextEditingController);
     if (!blockTextEditingController.selection.isValid) return;
 
     // Create updated Block.
@@ -75,34 +77,6 @@ class BlockViewModel extends _$BlockViewModel {
     // Record new caret position.
     ref.read(caretViewModelProvider.notifier).updateCaret(
         caretPosition: blockTextEditingController.selection.extentOffset);
-
-    // Handle new-lines
-    final index = blockTextEditingController.text.indexOf('\n');
-    if (index > -1) {
-      final nextBlockCollection = BlockCollection(
-        parent: state.parent,
-        text: blockTextEditingController.text
-            .substring(blockTextEditingController.selection.extentOffset),
-      );
-      blockTextEditingController.text =
-          blockTextEditingController.text.substring(
-        0,
-        max(blockTextEditingController.selection.baseOffset - 1, 0),
-      );
-      databaseProps.databaseManager.insertBlockAfter(
-        sourceBlockCollection: state,
-        newBlockCollection: nextBlockCollection,
-      );
-
-      // Setup caret for next focus
-      ref.read(caretViewModelProvider.notifier).updateCaret(
-            caretPosition: 0,
-            setFromFocusChange: true,
-          );
-
-      FocusScope.of(context).nextFocus();
-      FocusScope.of(context).nextFocus();
-    }
 
     // Write into database.
     databaseProps.databaseManager.putBlockCollection(newBlockCollection);
@@ -150,6 +124,35 @@ class BlockViewModel extends _$BlockViewModel {
                 caretPosition: 0,
                 setFromFocusChange: true,
               );
+          focusNode.nextFocus();
+          focusNode.nextFocus();
+        case LogicalKeyboardKey.enter || LogicalKeyboardKey.numpadEnter:
+          // Split text between current and next Block.
+          final nextBlockCollection = BlockCollection(
+            parent: state.parent,
+            text: blockTextEditingController.selection
+                .textAfter(blockTextEditingController.text),
+          );
+          blockTextEditingController.text = blockTextEditingController.selection
+              .textBefore(blockTextEditingController.text);
+
+          // Insert new Block into parent.
+          databaseProps.databaseManager.insertBlockAfter(
+            sourceBlockCollection: state,
+            newBlockCollection: nextBlockCollection,
+          );
+
+          // Set cursor to be at the start of the new Block.
+          ref.read(caretViewModelProvider.notifier).updateCaret(
+                caretPosition: 0,
+                setFromFocusChange: true,
+              );
+
+          // Update the current Block.
+          state = state.copyWith(text: blockTextEditingController.text);
+
+          // FIXME: this doesn't work for last block since a new one doesn't exist yet
+          // Focus on new next Block.
           focusNode.nextFocus();
           focusNode.nextFocus();
         case LogicalKeyboardKey.backspace:

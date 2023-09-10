@@ -6,7 +6,7 @@ part of 'caret_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$caretViewModelHash() => r'a318a6a72d4e45b5c5742edb1f74bfbdecf31424';
+String _$caretViewModelHash() => r'efe2b192654bb4f43fdd7479ab2ba0767ffca470';
 
 /// See also [CaretViewModel].
 @ProviderFor(CaretViewModel)

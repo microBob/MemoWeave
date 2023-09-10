@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:memoweave/utils/database.dart';
-import 'package:memoweave/viewmodels/thread_viewmodel.dart';
 import 'package:memoweave/views/thread_view.dart';
 import 'package:stack_trace/stack_trace.dart';
 
@@ -48,18 +47,9 @@ class MemoWeave extends ConsumerWidget {
                     itemCount: threadIds.length,
                   ),
                 ),
-                floatingActionButton: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    FloatingActionButton(
-                      onPressed: () => ref.invalidate(threadViewModelProvider),
-                      child: const Icon(Icons.refresh),
-                    ),
-                    FloatingActionButton(
-                      onPressed: databaseManager.createNewThread,
-                      child: const Icon(Icons.create),
-                    ),
-                  ],
+                floatingActionButton: FloatingActionButton(
+                  onPressed: databaseManager.createNewThread,
+                  child: const Icon(Icons.create),
                 ),
               );
             },
