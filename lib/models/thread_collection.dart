@@ -27,7 +27,7 @@ class ThreadCollection extends ContainerModel {
   /// Will supply default values if none are given.
   ThreadCollection({
     super.id = Isar.autoIncrement,
-    super.children = const [],
+    super.childIds = const [],
     this.spool = '',
     this.subject = '',
     required this.dateTime,
@@ -37,17 +37,17 @@ class ThreadCollection extends ContainerModel {
   ///
   /// Creates a copy of the current Thread and updates the fields to
   /// [id], [spool], [subject], [dateTime], and [blockIds] when provided.
+  @override
   ThreadCollection copyWith({
-    Id? id,
+    List<Id>? childIds,
     Id? parent,
-    List<Id>? children,
     String? spool,
     String? subject,
     DateTime? dateTime,
   }) {
     return ThreadCollection(
-      id: id ?? super.id,
-      children: children ?? super.children,
+      id: super.id,
+      childIds: childIds ?? super.childIds,
       spool: spool ?? this.spool,
       subject: subject ?? this.subject,
       dateTime: dateTime ?? this.dateTime,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/thread_collection.dart';
@@ -61,65 +63,53 @@ class DatabaseManager {
     return _isar.threadCollections.where().idProperty().findAllSync();
   }
 
-  List<BlockCollection> getParentBlocksOfBlock(Id blockId) {
-    return _isar.blockCollections
-        .filter()
-        .childrenElementEqualTo(blockId)
-        .findAllSync();
-  }
-
-  List<ThreadCollection> getParentThreadsOfBlock(Id blockId) {
-    return _isar.threadCollections
-        .filter()
-        .childrenElementEqualTo(blockId)
-        .findAllSync();
-  }
-
   void insertBlockAfter({
-    required Id blockId,
-    BlockCollection? blockCollection,
+    required BlockCollection sourceBlockCollection,
+    BlockCollection? newBlockCollection,
   }) {
-    final blockParents = getParentBlocksOfBlock(blockId);
-    final threadParents = getParentThreadsOfBlock(blockId);
-
     _isar.writeTxnSync(() {
-      final newBlockId =
-          _isar.blockCollections.putSync(blockCollection ?? BlockCollection());
+      final newBlockId = _isar.blockCollections.putSync(
+        newBlockCollection ??
+            BlockCollection(
+              parent: sourceBlockCollection.parent,
+              hasThreadAsParent: sourceBlockCollection.hasThreadAsParent,
+            ),
+      );
 
-      for (final blockParent in blockParents) {
-        final childrenBlockIds = blockParent.children.toList();
-        childrenBlockIds.insert(
-          childrenBlockIds.indexOf(blockId) + 1,
-          newBlockId,
-        );
+      final parentCollections = sourceBlockCollection.hasThreadAsParent
+          ? _isar.threadCollections
+          : _isar.blockCollections;
 
-        final newBlockParent = blockParent.copyWith(children: childrenBlockIds);
-        _isar.blockCollections.putSync(newBlockParent);
+      final parentCollection =
+          parentCollections.getSync(sourceBlockCollection.parent);
+      if (parentCollection == null) {
+        throw FileSystemException(
+            'Failed to get parent of Block ${sourceBlockCollection.id}:'
+            ' Thread ${sourceBlockCollection.parent}');
       }
+      final children = parentCollection.childIds.toList();
+      children.insert(
+        children.indexOf(sourceBlockCollection.id) + 1,
+        newBlockId,
+      );
 
-      for (final threadParent in threadParents) {
-        final blockIds = threadParent.children.toList();
-        blockIds.insert(
-          blockIds.indexOf(blockId) + 1,
-          newBlockId,
-        );
-
-        final newThreadParent = threadParent.copyWith(children: blockIds);
-        _isar.threadCollections.putSync(newThreadParent);
-      }
+      parentCollections.putSync(parentCollection.copyWith(childIds: children));
     });
   }
 
-  void mergeBlock({required final Id blockId}) {
-    final blockParents = getParentBlocksOfBlock(blockId);
-    final threadParents = getParentThreadsOfBlock(blockId);
-  }
+  void mergeBlock({required final Id blockId}) {}
 
   void createNewThread() {
     _isar.writeTxnSync(() {
-      final newBlockId = _isar.blockCollections.putSync(BlockCollection());
-      _isar.threadCollections.putSync(
-          ThreadCollection(dateTime: DateTime.now(), children: [newBlockId]));
+      final newThreadId = _isar.threadCollections
+          .putSync(ThreadCollection(dateTime: DateTime.now()));
+      final newBlockId = _isar.blockCollections.putSync(
+          BlockCollection(parent: newThreadId, hasThreadAsParent: true));
+
+      final newThread = _isar.threadCollections
+          .getSync(newThreadId)!
+          .copyWith(childIds: [newBlockId]);
+      _isar.threadCollections.putSync(newThread);
     });
   }
 }

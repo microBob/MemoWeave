@@ -46,12 +46,12 @@ class BlockWidget extends HookConsumerWidget {
 
         return BlockWidget(
           databaseProps: (
-            id: blockState.children[index - 1],
+            id: blockState.childIds[index - 1],
             databaseManager: _databaseProps.databaseManager,
           ),
         );
       },
-      itemCount: blockState.children.length + 1,
+      itemCount: blockState.childIds.length + 1,
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
     );

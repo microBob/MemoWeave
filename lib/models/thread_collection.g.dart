@@ -17,9 +17,9 @@ const ThreadCollectionSchema = CollectionSchema(
   name: r'ThreadCollection',
   id: -1191098789140832712,
   properties: {
-    r'children': PropertySchema(
+    r'childIds': PropertySchema(
       id: 0,
-      name: r'children',
+      name: r'childIds',
       type: IsarType.longList,
     ),
     r'dateTime': PropertySchema(
@@ -58,7 +58,7 @@ int _threadCollectionEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.children.length * 8;
+  bytesCount += 3 + object.childIds.length * 8;
   bytesCount += 3 + object.spool.length * 3;
   bytesCount += 3 + object.subject.length * 3;
   return bytesCount;
@@ -70,7 +70,7 @@ void _threadCollectionSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeLongList(offsets[0], object.children);
+  writer.writeLongList(offsets[0], object.childIds);
   writer.writeDateTime(offsets[1], object.dateTime);
   writer.writeString(offsets[2], object.spool);
   writer.writeString(offsets[3], object.subject);
@@ -83,7 +83,7 @@ ThreadCollection _threadCollectionDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = ThreadCollection(
-    children: reader.readLongList(offsets[0]) ?? const [],
+    childIds: reader.readLongList(offsets[0]) ?? const [],
     dateTime: reader.readDateTime(offsets[1]),
     id: id,
     spool: reader.readStringOrNull(offsets[2]) ?? '',
@@ -205,45 +205,45 @@ extension ThreadCollectionQueryWhere
 extension ThreadCollectionQueryFilter
     on QueryBuilder<ThreadCollection, ThreadCollection, QFilterCondition> {
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childrenElementEqualTo(int value) {
+      childIdsElementEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'children',
+        property: r'childIds',
         value: value,
       ));
     });
   }
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childrenElementGreaterThan(
+      childIdsElementGreaterThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'children',
+        property: r'childIds',
         value: value,
       ));
     });
   }
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childrenElementLessThan(
+      childIdsElementLessThan(
     int value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'children',
+        property: r'childIds',
         value: value,
       ));
     });
   }
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childrenElementBetween(
+      childIdsElementBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -251,7 +251,7 @@ extension ThreadCollectionQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'children',
+        property: r'childIds',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -261,10 +261,10 @@ extension ThreadCollectionQueryFilter
   }
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childrenLengthEqualTo(int length) {
+      childIdsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'children',
+        r'childIds',
         length,
         true,
         length,
@@ -274,10 +274,10 @@ extension ThreadCollectionQueryFilter
   }
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childrenIsEmpty() {
+      childIdsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'children',
+        r'childIds',
         0,
         true,
         0,
@@ -287,10 +287,10 @@ extension ThreadCollectionQueryFilter
   }
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childrenIsNotEmpty() {
+      childIdsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'children',
+        r'childIds',
         0,
         false,
         999999,
@@ -300,13 +300,13 @@ extension ThreadCollectionQueryFilter
   }
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childrenLengthLessThan(
+      childIdsLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'children',
+        r'childIds',
         0,
         true,
         length,
@@ -316,13 +316,13 @@ extension ThreadCollectionQueryFilter
   }
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childrenLengthGreaterThan(
+      childIdsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'children',
+        r'childIds',
         length,
         include,
         999999,
@@ -332,7 +332,7 @@ extension ThreadCollectionQueryFilter
   }
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childrenLengthBetween(
+      childIdsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -340,7 +340,7 @@ extension ThreadCollectionQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'children',
+        r'childIds',
         lower,
         includeLower,
         upper,
@@ -844,9 +844,9 @@ extension ThreadCollectionQuerySortThenBy
 extension ThreadCollectionQueryWhereDistinct
     on QueryBuilder<ThreadCollection, ThreadCollection, QDistinct> {
   QueryBuilder<ThreadCollection, ThreadCollection, QDistinct>
-      distinctByChildren() {
+      distinctByChildIds() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'children');
+      return query.addDistinctBy(r'childIds');
     });
   }
 
@@ -881,9 +881,9 @@ extension ThreadCollectionQueryProperty
   }
 
   QueryBuilder<ThreadCollection, List<int>, QQueryOperations>
-      childrenProperty() {
+      childIdsProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'children');
+      return query.addPropertyName(r'childIds');
     });
   }
 

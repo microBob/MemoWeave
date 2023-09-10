@@ -19,6 +19,7 @@ enum BlockStyle {
 @collection
 class BlockCollection extends ContainerModel {
   final int parent;
+  final bool hasThreadAsParent;
 
   /// Block content.
   final String text;
@@ -43,8 +44,9 @@ class BlockCollection extends ContainerModel {
   /// Throws [FormatException] on invalid input.
   BlockCollection({
     super.id = Isar.autoIncrement,
-    super.children = const [],
+    super.childIds = const [],
     required this.parent,
+    this.hasThreadAsParent = true,
     this.text = 'Blank state text',
     this.blockStyle = BlockStyle.none,
     this.inlineStyles = const [],
@@ -77,18 +79,20 @@ class BlockCollection extends ContainerModel {
   ///
   /// Creates a copy of the current Block and updates the fields to
   /// [id], [text], [blockStyle], and [inlineStyles] when provided.
+  @override
   BlockCollection copyWith({
-    Id? id,
-    List<Id>? children,
+    List<Id>? childIds,
     int? parent,
+    bool? hasThreadAsParent,
     String? text,
     BlockStyle? blockStyle,
     List<StyleNode>? inlineStyles,
   }) {
     return BlockCollection(
-      id: id ?? super.id,
-      children: children ?? super.children,
+      id: super.id,
+      childIds: childIds ?? super.childIds,
       parent: parent ?? this.parent,
+      hasThreadAsParent: hasThreadAsParent ?? this.hasThreadAsParent,
       text: text ?? this.text,
       blockStyle: blockStyle ?? this.blockStyle,
       inlineStyles: inlineStyles ?? this.inlineStyles,

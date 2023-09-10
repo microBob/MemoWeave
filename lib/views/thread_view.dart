@@ -57,11 +57,11 @@ class ThreadView extends HookConsumerWidget {
           child: ListView.builder(
             itemBuilder: (context, index) => BlockWidget(
               databaseProps: (
-                id: threadState.children[index],
+                id: threadState.childIds[index],
                 databaseManager: _databaseProps.databaseManager
               ),
             ),
-            itemCount: threadState.children.length,
+            itemCount: threadState.childIds.length,
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
           ),

@@ -90,8 +90,8 @@ class BlockViewModel extends _$BlockViewModel {
         max(blockTextEditingController.selection.baseOffset - 1, 0),
       );
       databaseProps.databaseManager.insertBlockAfter(
-        blockId: databaseProps.id,
-        blockCollection: nextBlockCollection,
+        sourceBlockCollection: state,
+        newBlockCollection: nextBlockCollection,
       );
 
       // Setup caret for next focus

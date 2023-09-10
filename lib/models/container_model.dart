@@ -7,7 +7,9 @@ abstract class ContainerModel {
   final Id id;
 
   /// Ordered list of [Id]'s for each child Block.
-  final List<Id> children;
+  final List<Id> childIds;
 
-  ContainerModel({required this.id, required this.children});
+  ContainerModel({this.id = Isar.autoIncrement, required this.childIds});
+
+  ContainerModel copyWith({List<Id>? childIds});
 }
