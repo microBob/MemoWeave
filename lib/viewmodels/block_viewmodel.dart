@@ -65,7 +65,6 @@ class BlockViewModel extends _$BlockViewModel {
   /// Update [state]'s rootBlock with text/style and set cursor position.
   /// Throws [FormatException] if unable to find render editable.
   void handleInput() {
-    print(blockTextEditingController);
     if (!blockTextEditingController.selection.isValid) return;
 
     // Create updated Block.
@@ -92,10 +91,10 @@ class BlockViewModel extends _$BlockViewModel {
           ref.read(caretViewModelProvider.notifier).updateCaret(
                 caretPosition:
                     blockTextEditingController.selection.extentOffset,
+                idOfBlockInFocus:
+                    databaseProps.databaseManager.getIdOfBlockAfter(state),
                 setFromFocusChange: true,
               );
-          focusNode.nextFocus();
-          focusNode.nextFocus();
         case LogicalKeyboardKey.arrowUp:
         // TODO: Check if on first line
           ref.read(caretViewModelProvider.notifier).updateCaret(

@@ -11,6 +11,7 @@ class CaretViewModel extends _$CaretViewModel {
   CaretState build() {
     return CaretState(
       caretPosition: 0,
+      idOfBlockInFocus: -1,
       setFromFocusChange: false,
       caretRect: Rect.zero,
     );
@@ -18,11 +19,13 @@ class CaretViewModel extends _$CaretViewModel {
 
   void updateCaret({
     final int? caretPosition,
+    final int? idOfBlockInFocus,
     final bool? setFromFocusChange,
     final Rect? caretRect,
   }) {
     state = state.copyWith(
       caretPosition: caretPosition,
+      idOfBlockInFocus: idOfBlockInFocus,
       setFromFocusChange: setFromFocusChange ?? false,
       caretRect: caretRect,
     );

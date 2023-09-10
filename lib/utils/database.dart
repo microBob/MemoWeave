@@ -63,10 +63,38 @@ class DatabaseManager {
     return _isar.threadCollections.where().idProperty().findAllSync();
   }
 
+  Id? getIdOfBlockAfter(BlockCollection sourceBlockCollection) {
+    // TODO: handle looking at child blocks
+    final parentCollection = (sourceBlockCollection.hasThreadAsParent
+            ? _isar.threadCollections
+            : _isar.blockCollections)
+        .getSync(sourceBlockCollection.parent);
+    if (parentCollection == null) {
+      throw FileSystemException(
+          'Failed to get parent of Block ${sourceBlockCollection.id}: '
+          'Parent ${sourceBlockCollection.parent}');
+    }
+
+    final sourceBlockIndex =
+        parentCollection.childIds.indexOf(sourceBlockCollection.id);
+    if (sourceBlockIndex == -1) {
+      throw FormatException(
+          'Block ${sourceBlockCollection.id} is not a child of '
+          'parent ${sourceBlockCollection.parent}');
+    }
+
+    // No Block after as this is the last one.
+    if (sourceBlockCollection.id == parentCollection.childIds.last) return null;
+
+    // Get Block after
+    return parentCollection.childIds[sourceBlockIndex + 1];
+  }
+
   void insertBlockAfter({
     required BlockCollection sourceBlockCollection,
     BlockCollection? newBlockCollection,
   }) {
+    // TODO: Handle inserting into children
     _isar.writeTxnSync(() {
       final newBlockId = _isar.blockCollections.putSync(
         newBlockCollection ??
