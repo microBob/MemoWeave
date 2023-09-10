@@ -22,7 +22,6 @@ class BlockViewModel extends _$BlockViewModel {
   BlockCollection build({
     required final DatabaseProps databaseProps,
     required final BlockTextEditingController blockTextEditingController,
-    required final BuildContext context,
   }) {
     final blockCollection =
         databaseProps.databaseManager.getBlockCollectionById(databaseProps.id);
@@ -43,7 +42,6 @@ class BlockViewModel extends _$BlockViewModel {
   }
 
   void onFocusChanged(bool gainsFocus) {
-    print("Focus changed: $gainsFocus");
     final caretState = ref.read(caretViewModelProvider);
     if (gainsFocus && caretState.setFromFocusChange) {
       final caretPosition = caretState.caretPosition == -1
@@ -55,8 +53,8 @@ class BlockViewModel extends _$BlockViewModel {
 
       ref.read(caretViewModelProvider.notifier).updateCaret(
             caretPosition: caretPosition,
-        setFromFocusChange: false,
-      );
+            setFromFocusChange: false,
+          );
     }
   }
 
@@ -98,33 +96,33 @@ class BlockViewModel extends _$BlockViewModel {
         case LogicalKeyboardKey.arrowUp:
         // TODO: Check if on first line
           ref.read(caretViewModelProvider.notifier).updateCaret(
-                caretPosition:
+            caretPosition:
                     blockTextEditingController.selection.extentOffset,
+                idOfBlockInFocus:
+                    databaseProps.databaseManager.getIdOfBlockBefore(state),
                 setFromFocusChange: true,
               );
-          focusNode.previousFocus();
-          focusNode.previousFocus();
         case LogicalKeyboardKey.arrowLeft:
           if (blockTextEditingController.selection.extentOffset != 0) {
             return KeyEventResult.ignored;
           }
           ref.read(caretViewModelProvider.notifier).updateCaret(
-                caretPosition: -1,
+            caretPosition: -1,
+                idOfBlockInFocus:
+                    databaseProps.databaseManager.getIdOfBlockBefore(state),
                 setFromFocusChange: true,
               );
-          focusNode.previousFocus();
-          focusNode.previousFocus();
         case LogicalKeyboardKey.arrowRight:
           if (blockTextEditingController.selection.extentOffset !=
               blockTextEditingController.text.length) {
             return KeyEventResult.ignored;
           }
           ref.read(caretViewModelProvider.notifier).updateCaret(
-                caretPosition: 0,
+            caretPosition: 0,
+                idOfBlockInFocus:
+                    databaseProps.databaseManager.getIdOfBlockAfter(state),
                 setFromFocusChange: true,
               );
-          focusNode.nextFocus();
-          focusNode.nextFocus();
         case LogicalKeyboardKey.enter || LogicalKeyboardKey.numpadEnter:
           // Split text between current and next Block.
           final nextBlockCollection = BlockCollection(
@@ -143,38 +141,35 @@ class BlockViewModel extends _$BlockViewModel {
 
           // Set cursor to be at the start of the new Block.
           ref.read(caretViewModelProvider.notifier).updateCaret(
-                caretPosition: 0,
+            caretPosition: 0,
+                idOfBlockInFocus:
+                    databaseProps.databaseManager.getIdOfBlockAfter(state),
                 setFromFocusChange: true,
               );
 
           // Update the current Block.
           state = state.copyWith(text: blockTextEditingController.text);
-
-          // FIXME: this doesn't work for last block since a new one doesn't exist yet
-          // Focus on new next Block.
-          focusNode.nextFocus();
-          focusNode.nextFocus();
         case LogicalKeyboardKey.backspace:
           if (blockTextEditingController.selection.extentOffset != 0) {
             return KeyEventResult.ignored;
           }
           ref.read(caretViewModelProvider.notifier).updateCaret(
-                caretPosition: -1,
+            caretPosition: -1,
+                idOfBlockInFocus:
+                    databaseProps.databaseManager.getIdOfBlockBefore(state),
                 setFromFocusChange: true,
               );
-          focusNode.previousFocus();
-          focusNode.previousFocus();
         case LogicalKeyboardKey.delete:
           if (blockTextEditingController.selection.extentOffset !=
               blockTextEditingController.text.length) {
             return KeyEventResult.ignored;
           }
           ref.read(caretViewModelProvider.notifier).updateCaret(
-                caretPosition: 0,
+            caretPosition: 0,
+                idOfBlockInFocus:
+                    databaseProps.databaseManager.getIdOfBlockAfter(state),
                 setFromFocusChange: true,
               );
-          focusNode.nextFocus();
-          focusNode.nextFocus();
         default:
           return KeyEventResult.ignored;
       }

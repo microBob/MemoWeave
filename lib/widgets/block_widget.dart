@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/utils/use_block_texteditingcontroller.dart';
@@ -23,13 +24,18 @@ class BlockWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final blockTextEditingController =
         useBlockTextEditingController(keys: [_databaseProps]);
+    final blockFocusNode = useFocusNode();
 
     final provider = blockViewModelProvider(
       databaseProps: _databaseProps,
       blockTextEditingController: blockTextEditingController,
-      context: context,
     );
     final blockState = ref.watch(provider);
+
+    // Set Block in focus if assigned focus.
+    if (ref.watch(caretViewModelProvider).idOfBlockInFocus == blockState.id) {
+      blockFocusNode.requestFocus();
+    }
 
     return ListView.builder(
       itemBuilder: (context, index) {
@@ -39,8 +45,7 @@ class BlockWidget extends HookConsumerWidget {
             onFocusChange: ref.watch(provider.notifier).onFocusChanged,
             child: TextField(
               controller: blockTextEditingController,
-              autofocus: ref.watch(caretViewModelProvider).idOfBlockInFocus ==
-                  blockState.id,
+              focusNode: blockFocusNode,
               textInputAction: TextInputAction.newline,
               maxLines: null,
             ),

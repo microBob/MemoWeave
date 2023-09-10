@@ -63,6 +63,34 @@ class DatabaseManager {
     return _isar.threadCollections.where().idProperty().findAllSync();
   }
 
+  Id? getIdOfBlockBefore(BlockCollection sourceBlockCollection) {
+    // TODO: handle looking at child blocks
+    final parentCollection = (sourceBlockCollection.hasThreadAsParent
+            ? _isar.threadCollections
+            : _isar.blockCollections)
+        .getSync(sourceBlockCollection.parent);
+    if (parentCollection == null) {
+      throw FileSystemException(
+          'Failed to get parent of Block ${sourceBlockCollection.id}: '
+          'Parent ${sourceBlockCollection.parent}');
+    }
+
+    final sourceBlockIndex =
+        parentCollection.childIds.indexOf(sourceBlockCollection.id);
+    if (sourceBlockIndex == -1) {
+      throw FormatException(
+          'Block ${sourceBlockCollection.id} is not a child of '
+          'parent ${sourceBlockCollection.parent}');
+    }
+
+    // No Block after as this is the last one.
+    if (sourceBlockCollection.id == parentCollection.childIds.first)
+      return null;
+
+    // Get Block after
+    return parentCollection.childIds[sourceBlockIndex - 1];
+  }
+
   Id? getIdOfBlockAfter(BlockCollection sourceBlockCollection) {
     // TODO: handle looking at child blocks
     final parentCollection = (sourceBlockCollection.hasThreadAsParent

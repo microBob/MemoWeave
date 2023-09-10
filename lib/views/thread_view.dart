@@ -53,18 +53,16 @@ class ThreadView extends HookConsumerWidget {
             Text(threadState.dateTimeAsTime(context)),
           ],
         ),
-        FocusTraversalGroup(
-          child: ListView.builder(
-            itemBuilder: (context, index) => BlockWidget(
-              databaseProps: (
-                id: threadState.childIds[index],
-                databaseManager: _databaseProps.databaseManager
-              ),
+        ListView.builder(
+          itemBuilder: (context, index) => BlockWidget(
+            databaseProps: (
+              id: threadState.childIds[index],
+              databaseManager: _databaseProps.databaseManager
             ),
-            itemCount: threadState.childIds.length,
-            shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
           ),
+          itemCount: threadState.childIds.length,
+          shrinkWrap: true,
+          physics: const ClampingScrollPhysics(),
         ),
       ],
     );
