@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -26,17 +25,21 @@ class BlockViewModel extends _$BlockViewModel {
     final blockCollection =
         databaseProps.databaseManager.getBlockCollectionById(databaseProps.id);
 
-    if (blockCollection == null) {
-      throw FileSystemException(
-          'Failed to get Block of ID ${databaseProps.id}');
-    }
-
     // Set initial block values
     blockTextEditingController.blockCollection = blockCollection;
     blockTextEditingController.text = blockCollection.text;
 
     // Listen for changes
     blockTextEditingController.addListener(handleInput);
+
+    // Subscribe to changes and update state
+    databaseProps.databaseManager.onBlockChanged(databaseProps.id).listen(
+      (blockCollection) {
+        if (blockCollection == null) return;
+        print('Update block: $blockCollection');
+        state = blockCollection;
+      },
+    );
 
     return blockCollection;
   }
@@ -147,16 +150,28 @@ class BlockViewModel extends _$BlockViewModel {
                 setFromFocusChange: true,
               );
 
-          // Update the current Block.
+          // Record the new text into the Block.
           state = state.copyWith(text: blockTextEditingController.text);
         case LogicalKeyboardKey.backspace:
           if (blockTextEditingController.selection.extentOffset != 0) {
             return KeyEventResult.ignored;
           }
+          final idOfBlockBefore =
+              databaseProps.databaseManager.getIdOfBlockBefore(state);
+          if (idOfBlockBefore == null) {
+            return KeyEventResult.ignored;
+          }
+
+          final blockBefore = databaseProps.databaseManager
+              .getBlockCollectionById(idOfBlockBefore);
+          databaseProps.databaseManager.concatBlockCollections(
+            firstBlockCollection: blockBefore,
+            secondBlockCollection: state,
+          );
+
           ref.read(caretViewModelProvider.notifier).updateCaret(
-            caretPosition: -1,
-                idOfBlockInFocus:
-                    databaseProps.databaseManager.getIdOfBlockBefore(state),
+                caretPosition: -1,
+                idOfBlockInFocus: idOfBlockBefore,
                 setFromFocusChange: true,
               );
         case LogicalKeyboardKey.delete:

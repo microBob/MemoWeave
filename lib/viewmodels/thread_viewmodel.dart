@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/models/thread_collection.dart';
@@ -20,11 +18,6 @@ class ThreadViewModel extends _$ThreadViewModel {
   }) {
     final threadCollection =
         databaseProps.databaseManager.getThreadCollectionById(databaseProps.id);
-
-    if (threadCollection == null) {
-      throw FileSystemException(
-          'Failed to get Thread of ID ${databaseProps.id}');
-    }
 
     // Set initial spool.
     spoolTextEditingController.text = threadCollection.spool;

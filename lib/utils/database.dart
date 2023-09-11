@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/block_collection.dart';
+import 'package:memoweave/models/container_model.dart';
 import 'package:memoweave/models/thread_collection.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,12 +20,20 @@ class DatabaseManager {
   DatabaseManager({required Isar isar}) : _isar = isar;
 
   /// Getter function for Blocks by [id].
-  BlockCollection? getBlockCollectionById(Id id) {
-    return _isar.blockCollections.getSync(id);
+  BlockCollection getBlockCollectionById(Id id) {
+    final blockCollection = _isar.blockCollections.getSync(id);
+    if (blockCollection == null) {
+      throw FileSystemException('Failed to get Block with ID $id');
+    }
+    return blockCollection;
   }
 
-  ThreadCollection? getThreadCollectionById(Id id) {
-    return _isar.threadCollections.getSync(id);
+  ThreadCollection getThreadCollectionById(Id id) {
+    final threadCollection = _isar.threadCollections.getSync(id);
+    if (threadCollection == null) {
+      throw FileSystemException('Failed to get Thread with ID $id');
+    }
+    return threadCollection;
   }
 
   Stream<BlockCollection?> onBlockChanged(Id id) {
@@ -84,24 +93,60 @@ class DatabaseManager {
     }
 
     // No Block after as this is the last one.
-    if (sourceBlockCollection.id == parentCollection.childIds.first)
+    if (sourceBlockCollection.id == parentCollection.childIds.first) {
       return null;
+    }
 
     // Get Block after
     return parentCollection.childIds[sourceBlockIndex - 1];
   }
 
+  void concatBlockCollections({
+    required final BlockCollection firstBlockCollection,
+    required final BlockCollection secondBlockCollection,
+  }) {
+    // Create merged new Block.
+    final concatenatedChildIds = firstBlockCollection.childIds.toList()
+      ..addAll(secondBlockCollection.childIds);
+
+    // TODO: Handle merging inline styles
+    // final mergedInlineStyles = aBlockCollection.inlineStyles.toList();
+    // mergedInlineStyles.addAll(bBlockCollection.inlineStyles);
+
+    final concatenatedCollection = firstBlockCollection.copyWith(
+      childIds: concatenatedChildIds,
+      text: firstBlockCollection.text + secondBlockCollection.text,
+    );
+
+    // Delete second Block's instance or replace with first Block.
+    final secondBlockParentCollection =
+        _getParentCollectionOf(secondBlockCollection);
+    final updatedChildIds = secondBlockParentCollection.childIds.toList();
+    if (secondBlockParentCollection.childIds
+        .contains(firstBlockCollection.id)) {
+      updatedChildIds.remove(secondBlockCollection.id);
+    } else {
+      updatedChildIds[updatedChildIds.indexOf(secondBlockCollection.id)] =
+          firstBlockCollection.id;
+    }
+    final updatedParent =
+        secondBlockParentCollection.copyWith(childIds: updatedChildIds);
+
+    _isar.writeTxnSync(() {
+      // Update first Block with concatenated result.
+      _isar.blockCollections.putSync(concatenatedCollection);
+
+      // Update second Block's parent
+      _getParentCollectionsOf(secondBlockCollection).putSync(updatedParent);
+
+      // Delete second Block.
+      _isar.blockCollections.deleteSync(secondBlockCollection.id);
+    });
+  }
+
   Id? getIdOfBlockAfter(BlockCollection sourceBlockCollection) {
     // TODO: handle looking at child blocks
-    final parentCollection = (sourceBlockCollection.hasThreadAsParent
-            ? _isar.threadCollections
-            : _isar.blockCollections)
-        .getSync(sourceBlockCollection.parent);
-    if (parentCollection == null) {
-      throw FileSystemException(
-          'Failed to get parent of Block ${sourceBlockCollection.id}: '
-          'Parent ${sourceBlockCollection.parent}');
-    }
+    final parentCollection = _getParentCollectionOf(sourceBlockCollection);
 
     final sourceBlockIndex =
         parentCollection.childIds.indexOf(sourceBlockCollection.id);
@@ -132,17 +177,9 @@ class DatabaseManager {
             ),
       );
 
-      final parentCollections = sourceBlockCollection.hasThreadAsParent
-          ? _isar.threadCollections
-          : _isar.blockCollections;
+      final parentCollections = _getParentCollectionsOf(sourceBlockCollection);
 
-      final parentCollection =
-          parentCollections.getSync(sourceBlockCollection.parent);
-      if (parentCollection == null) {
-        throw FileSystemException(
-            'Failed to get parent of Block ${sourceBlockCollection.id}:'
-            ' Thread ${sourceBlockCollection.parent}');
-      }
+      final parentCollection = _getParentCollectionOf(sourceBlockCollection);
       final children = parentCollection.childIds.toList();
       children.insert(
         children.indexOf(sourceBlockCollection.id) + 1,
@@ -152,8 +189,6 @@ class DatabaseManager {
       parentCollections.putSync(parentCollection.copyWith(childIds: children));
     });
   }
-
-  void mergeBlock({required final Id blockId}) {}
 
   void createNewThread() {
     _isar.writeTxnSync(() {
@@ -167,6 +202,24 @@ class DatabaseManager {
           .copyWith(childIds: [newBlockId]);
       _isar.threadCollections.putSync(newThread);
     });
+  }
+
+  IsarCollection<ContainerModel> _getParentCollectionsOf(
+      BlockCollection blockCollection) {
+    return blockCollection.hasThreadAsParent
+        ? _isar.threadCollections
+        : _isar.blockCollections;
+  }
+
+  ContainerModel _getParentCollectionOf(BlockCollection blockCollection) {
+    final parentCollection = _getParentCollectionsOf(blockCollection)
+        .getSync(blockCollection.parent);
+    if (parentCollection == null) {
+      throw FileSystemException(
+          'Failed to get parent of Block ${blockCollection.id}: '
+          'Parent ${blockCollection.parent}');
+    }
+    return parentCollection;
   }
 }
 
