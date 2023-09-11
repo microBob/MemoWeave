@@ -69,6 +69,7 @@ class BlockViewModel extends _$BlockViewModel {
   /// Update [state]'s rootBlock with text/style and set cursor position.
   /// Throws [FormatException] if unable to find render editable.
   void handleInput() {
+    print(blockTextEditingController);
     if (!blockTextEditingController.selection.isValid) return;
 
     // Record new caret position.
@@ -80,7 +81,7 @@ class BlockViewModel extends _$BlockViewModel {
 
     // Create updated Block.
     final newBlockCollection =
-        state.copyWith(text: blockTextEditingController.text);
+    state.copyWith(text: blockTextEditingController.text);
 
     blockTextEditingController.blockCollection = newBlockCollection;
 
@@ -169,14 +170,16 @@ class BlockViewModel extends _$BlockViewModel {
           if (blockTextEditingController.selection.extentOffset != 0) {
             return KeyEventResult.ignored;
           }
+
+          // Get Block before.
           final idOfBlockBefore =
               databaseProps.databaseManager.getIdOfBlockBefore(state);
           if (idOfBlockBefore == null) {
             return KeyEventResult.ignored;
           }
-
           final blockBefore = databaseProps.databaseManager
               .getBlockCollectionById(idOfBlockBefore);
+
           final updatedBlockBefore = blockBefore.copyWith(
             childIds: blockBefore.childIds.toList()..addAll(state.childIds),
             text: blockBefore.text + state.text,
@@ -196,12 +199,29 @@ class BlockViewModel extends _$BlockViewModel {
               blockTextEditingController.text.length) {
             return KeyEventResult.ignored;
           }
+
+          // Get Block after.
+          final idOfBlockAfter =
+              databaseProps.databaseManager.getIdOfBlockAfter(state);
+          if (idOfBlockAfter == null) {
+            return KeyEventResult.ignored;
+          }
+          final blockAfter = databaseProps.databaseManager
+              .getBlockCollectionById(idOfBlockAfter);
+
+          final updatedBlock = state.copyWith(
+            childIds: state.childIds.toList()..addAll(blockAfter.childIds),
+            text: state.text + blockAfter.text,
+          );
+
+          databaseProps.databaseManager.putBlockCollection(updatedBlock);
+          databaseProps.databaseManager.deleteBlockCollection(blockAfter);
+
           ref.read(caretViewModelProvider.notifier).updateCaret(
-            caretPosition: 0,
-                idOfBlockInFocus:
-                    databaseProps.databaseManager.getIdOfBlockAfter(state),
-                setFromFocusChange: true,
-              );
+              caretPosition: blockTextEditingController.selection.start,
+              idOfBlockInFocus: state.id,
+              setFromFocusChange: true);
+
         default:
           return KeyEventResult.ignored;
       }
