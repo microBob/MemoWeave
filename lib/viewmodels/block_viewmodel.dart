@@ -36,8 +36,11 @@ class BlockViewModel extends _$BlockViewModel {
     databaseProps.databaseManager.onBlockChanged(databaseProps.id).listen(
       (blockCollection) {
         if (blockCollection == null) return;
-        print('Update block: $blockCollection');
-        state = blockCollection;
+
+        // Handle text updates not originating from TextEditingController.
+        if (blockCollection.text != blockTextEditingController.text) {
+          blockTextEditingController.text = blockCollection.text;
+        }
       },
     );
 
@@ -68,15 +71,18 @@ class BlockViewModel extends _$BlockViewModel {
   void handleInput() {
     if (!blockTextEditingController.selection.isValid) return;
 
+    // Record new caret position.
+    ref.read(caretViewModelProvider.notifier).updateCaret(
+        caretPosition: blockTextEditingController.selection.extentOffset);
+
+    // Shortcut exit if no change to text.
+    if (blockTextEditingController.text == state.text) return;
+
     // Create updated Block.
     final newBlockCollection =
         state.copyWith(text: blockTextEditingController.text);
 
     blockTextEditingController.blockCollection = newBlockCollection;
-
-    // Record new caret position.
-    ref.read(caretViewModelProvider.notifier).updateCaret(
-        caretPosition: blockTextEditingController.selection.extentOffset);
 
     // Write into database.
     databaseProps.databaseManager.putBlockCollection(newBlockCollection);
@@ -164,13 +170,17 @@ class BlockViewModel extends _$BlockViewModel {
 
           final blockBefore = databaseProps.databaseManager
               .getBlockCollectionById(idOfBlockBefore);
-          databaseProps.databaseManager.concatBlockCollections(
-            firstBlockCollection: blockBefore,
-            secondBlockCollection: state,
+          final updatedBlockBefore = blockBefore.copyWith(
+            childIds: blockBefore.childIds.toList()..addAll(state.childIds),
+            text: blockBefore.text + state.text,
           );
 
+          // FIXME: consider creating a function that does this in one transaction
+          databaseProps.databaseManager.putBlockCollection(updatedBlockBefore);
+          databaseProps.databaseManager.deleteBlockCollection(state);
+
           ref.read(caretViewModelProvider.notifier).updateCaret(
-                caretPosition: -1,
+                caretPosition: blockBefore.text.length,
                 idOfBlockInFocus: idOfBlockBefore,
                 setFromFocusChange: true,
               );

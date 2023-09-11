@@ -101,46 +101,17 @@ class DatabaseManager {
     return parentCollection.childIds[sourceBlockIndex - 1];
   }
 
-  void concatBlockCollections({
-    required final BlockCollection firstBlockCollection,
-    required final BlockCollection secondBlockCollection,
-  }) {
-    // Create merged new Block.
-    final concatenatedChildIds = firstBlockCollection.childIds.toList()
-      ..addAll(secondBlockCollection.childIds);
-
-    // TODO: Handle merging inline styles
-    // final mergedInlineStyles = aBlockCollection.inlineStyles.toList();
-    // mergedInlineStyles.addAll(bBlockCollection.inlineStyles);
-
-    final concatenatedCollection = firstBlockCollection.copyWith(
-      childIds: concatenatedChildIds,
-      text: firstBlockCollection.text + secondBlockCollection.text,
-    );
-
-    // Delete second Block's instance or replace with first Block.
-    final secondBlockParentCollection =
-        _getParentCollectionOf(secondBlockCollection);
-    final updatedChildIds = secondBlockParentCollection.childIds.toList();
-    if (secondBlockParentCollection.childIds
-        .contains(firstBlockCollection.id)) {
-      updatedChildIds.remove(secondBlockCollection.id);
-    } else {
-      updatedChildIds[updatedChildIds.indexOf(secondBlockCollection.id)] =
-          firstBlockCollection.id;
-    }
-    final updatedParent =
-        secondBlockParentCollection.copyWith(childIds: updatedChildIds);
-
+  void deleteBlockCollection(BlockCollection blockCollection) {
     _isar.writeTxnSync(() {
-      // Update first Block with concatenated result.
-      _isar.blockCollections.putSync(concatenatedCollection);
+      // Remove Block from parent's children ID list.
+      final parentCollection = _getParentCollectionOf(blockCollection);
+      final updatedParentCollectionChildIds = parentCollection.childIds.toList()
+        ..remove(blockCollection.id);
+      _getParentCollectionsOf(blockCollection).putSync(
+          parentCollection.copyWith(childIds: updatedParentCollectionChildIds));
 
-      // Update second Block's parent
-      _getParentCollectionsOf(secondBlockCollection).putSync(updatedParent);
-
-      // Delete second Block.
-      _isar.blockCollections.deleteSync(secondBlockCollection.id);
+      // Delete collection.
+      _isar.blockCollections.deleteSync(blockCollection.id);
     });
   }
 
