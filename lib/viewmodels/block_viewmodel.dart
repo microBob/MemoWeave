@@ -36,7 +36,7 @@ class BlockViewModel extends _$BlockViewModel {
         if (blockCollection == null) return;
 
         // Handle text updates not originating from TextEditingController.
-        if (blockCollection.text != blockTextEditingController.text) {
+        if (blockTextEditingController.text != blockCollection.text) {
           blockTextEditingController.text = blockCollection.text;
         }
       },
@@ -69,7 +69,6 @@ class BlockViewModel extends _$BlockViewModel {
   /// Update [state]'s rootBlock with text/style and set cursor position.
   /// Throws [FormatException] if unable to find render editable.
   void handleInput() {
-    print(blockTextEditingController);
     if (!blockTextEditingController.selection.isValid) return;
 
     // Record new caret position.
@@ -81,7 +80,7 @@ class BlockViewModel extends _$BlockViewModel {
 
     // Create updated Block.
     final newBlockCollection =
-    state.copyWith(text: blockTextEditingController.text);
+        state.copyWith(text: blockTextEditingController.text);
 
     blockTextEditingController.blockCollection = newBlockCollection;
 
@@ -209,9 +208,15 @@ class BlockViewModel extends _$BlockViewModel {
           final blockAfter = databaseProps.databaseManager
               .getBlockCollectionById(idOfBlockAfter);
 
+          blockTextEditingController.value =
+              blockTextEditingController.value.copyWith(
+            text: state.text + blockAfter.text,
+            selection: blockTextEditingController.selection,
+          );
+
           final updatedBlock = state.copyWith(
             childIds: state.childIds.toList()..addAll(blockAfter.childIds),
-            text: state.text + blockAfter.text,
+            text: blockTextEditingController.text,
           );
 
           databaseProps.databaseManager.putBlockCollection(updatedBlock);
