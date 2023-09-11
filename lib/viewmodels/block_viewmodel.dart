@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memoweave/models/block_collection.dart';
@@ -50,16 +48,18 @@ class BlockViewModel extends _$BlockViewModel {
   void onFocusChanged(bool gainsFocus) {
     final caretState = ref.read(caretViewModelProvider);
     if (gainsFocus && caretState.setFromFocusChange) {
-      final caretPosition = caretState.caretPosition == -1
-          ? blockTextEditingController.text.length
-          : min(
-              caretState.caretPosition, blockTextEditingController.text.length);
+      // Set caret position as instructed from origin.
       blockTextEditingController.selection =
-          TextSelection.collapsed(offset: caretPosition);
+          TextSelection.collapsed(offset: caretState.caretPosition);
 
+      // Acknowledged caret position is set.
       ref.read(caretViewModelProvider.notifier).updateCaret(
-            caretPosition: caretPosition,
             setFromFocusChange: false,
+          );
+    } else if (gainsFocus) {
+      // Acknowledge this block is in focus.
+      ref.read(caretViewModelProvider.notifier).updateCaret(
+            idOfBlockInFocus: state.id,
           );
     }
   }
@@ -115,10 +115,17 @@ class BlockViewModel extends _$BlockViewModel {
           if (blockTextEditingController.selection.extentOffset != 0) {
             return KeyEventResult.ignored;
           }
+          final idOfBlockBefore =
+              databaseProps.databaseManager.getIdOfBlockBefore(state);
+          if (idOfBlockBefore == null) {
+            return KeyEventResult.ignored;
+          }
+          final blockBefore = databaseProps.databaseManager
+              .getBlockCollectionById(idOfBlockBefore);
+
           ref.read(caretViewModelProvider.notifier).updateCaret(
-            caretPosition: -1,
-                idOfBlockInFocus:
-                    databaseProps.databaseManager.getIdOfBlockBefore(state),
+                caretPosition: blockBefore.text.length,
+                idOfBlockInFocus: idOfBlockBefore,
                 setFromFocusChange: true,
               );
         case LogicalKeyboardKey.arrowRight:
