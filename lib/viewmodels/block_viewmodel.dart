@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:memoweave/models/block_collection.dart';
@@ -21,7 +23,7 @@ class BlockViewModel extends _$BlockViewModel {
     required final BlockTextEditingController blockTextEditingController,
   }) {
     final blockCollection =
-        databaseProps.databaseManager.getBlockCollectionById(databaseProps.id);
+    databaseProps.databaseManager.getBlockCollectionById(databaseProps.id);
 
     // Set initial block values
     blockTextEditingController.blockCollection = blockCollection;
@@ -32,7 +34,7 @@ class BlockViewModel extends _$BlockViewModel {
 
     // Subscribe to changes and update state
     databaseProps.databaseManager.onBlockChanged(databaseProps.id).listen(
-      (blockCollection) {
+          (blockCollection) {
         if (blockCollection == null) return;
 
         // Handle text updates not originating from TextEditingController.
@@ -49,8 +51,9 @@ class BlockViewModel extends _$BlockViewModel {
     final caretState = ref.read(caretViewModelProvider);
     if (gainsFocus && caretState.setFromFocusChange) {
       // Set caret position as instructed from origin.
-      blockTextEditingController.selection =
-          TextSelection.collapsed(offset: caretState.caretPosition);
+      blockTextEditingController.selection = TextSelection.collapsed(
+          offset: min(caretState.caretPosition,
+              blockTextEditingController.text.length));
 
       // Acknowledged caret position is set.
       ref.read(caretViewModelProvider.notifier).updateCaret(
@@ -59,8 +62,8 @@ class BlockViewModel extends _$BlockViewModel {
     } else if (gainsFocus) {
       // Acknowledge this block is in focus.
       ref.read(caretViewModelProvider.notifier).updateCaret(
-            idOfBlockInFocus: state.id,
-          );
+        idOfBlockInFocus: state.id,
+      );
     }
   }
 
@@ -80,7 +83,7 @@ class BlockViewModel extends _$BlockViewModel {
 
     // Create updated Block.
     final newBlockCollection =
-        state.copyWith(text: blockTextEditingController.text);
+    state.copyWith(text: blockTextEditingController.text);
 
     blockTextEditingController.blockCollection = newBlockCollection;
 
@@ -96,27 +99,27 @@ class BlockViewModel extends _$BlockViewModel {
         case LogicalKeyboardKey.arrowDown:
         // TODO: Check if on last line
           ref.read(caretViewModelProvider.notifier).updateCaret(
-                caretPosition:
-                    blockTextEditingController.selection.extentOffset,
-                idOfBlockInFocus:
-                    databaseProps.databaseManager.getIdOfBlockAfter(state),
-                setFromFocusChange: true,
-              );
+            caretPosition:
+            blockTextEditingController.selection.extentOffset,
+            idOfBlockInFocus:
+            databaseProps.databaseManager.getIdOfBlockAfter(state),
+            setFromFocusChange: true,
+          );
         case LogicalKeyboardKey.arrowUp:
         // TODO: Check if on first line
           ref.read(caretViewModelProvider.notifier).updateCaret(
             caretPosition:
-                    blockTextEditingController.selection.extentOffset,
-                idOfBlockInFocus:
-                    databaseProps.databaseManager.getIdOfBlockBefore(state),
-                setFromFocusChange: true,
-              );
+            blockTextEditingController.selection.extentOffset,
+            idOfBlockInFocus:
+            databaseProps.databaseManager.getIdOfBlockBefore(state),
+            setFromFocusChange: true,
+          );
         case LogicalKeyboardKey.arrowLeft:
           if (blockTextEditingController.selection.extentOffset != 0) {
             return KeyEventResult.ignored;
           }
           final idOfBlockBefore =
-              databaseProps.databaseManager.getIdOfBlockBefore(state);
+          databaseProps.databaseManager.getIdOfBlockBefore(state);
           if (idOfBlockBefore == null) {
             return KeyEventResult.ignored;
           }
@@ -124,10 +127,10 @@ class BlockViewModel extends _$BlockViewModel {
               .getBlockCollectionById(idOfBlockBefore);
 
           ref.read(caretViewModelProvider.notifier).updateCaret(
-                caretPosition: blockBefore.text.length,
-                idOfBlockInFocus: idOfBlockBefore,
-                setFromFocusChange: true,
-              );
+            caretPosition: blockBefore.text.length,
+            idOfBlockInFocus: idOfBlockBefore,
+            setFromFocusChange: true,
+          );
         case LogicalKeyboardKey.arrowRight:
           if (blockTextEditingController.selection.extentOffset !=
               blockTextEditingController.text.length) {
@@ -135,12 +138,12 @@ class BlockViewModel extends _$BlockViewModel {
           }
           ref.read(caretViewModelProvider.notifier).updateCaret(
             caretPosition: 0,
-                idOfBlockInFocus:
-                    databaseProps.databaseManager.getIdOfBlockAfter(state),
-                setFromFocusChange: true,
-              );
+            idOfBlockInFocus:
+            databaseProps.databaseManager.getIdOfBlockAfter(state),
+            setFromFocusChange: true,
+          );
         case LogicalKeyboardKey.enter || LogicalKeyboardKey.numpadEnter:
-          // Split text between current and next Block.
+        // Split text between current and next Block.
           final nextBlockCollection = BlockCollection(
             parent: state.parent,
             text: blockTextEditingController.selection
@@ -158,10 +161,10 @@ class BlockViewModel extends _$BlockViewModel {
           // Set cursor to be at the start of the new Block.
           ref.read(caretViewModelProvider.notifier).updateCaret(
             caretPosition: 0,
-                idOfBlockInFocus:
-                    databaseProps.databaseManager.getIdOfBlockAfter(state),
-                setFromFocusChange: true,
-              );
+            idOfBlockInFocus:
+            databaseProps.databaseManager.getIdOfBlockAfter(state),
+            setFromFocusChange: true,
+          );
 
           // Record the new text into the Block.
           state = state.copyWith(text: blockTextEditingController.text);
@@ -172,7 +175,7 @@ class BlockViewModel extends _$BlockViewModel {
 
           // Get Block before.
           final idOfBlockBefore =
-              databaseProps.databaseManager.getIdOfBlockBefore(state);
+          databaseProps.databaseManager.getIdOfBlockBefore(state);
           if (idOfBlockBefore == null) {
             return KeyEventResult.ignored;
           }
@@ -189,10 +192,10 @@ class BlockViewModel extends _$BlockViewModel {
           databaseProps.databaseManager.deleteBlockCollection(state);
 
           ref.read(caretViewModelProvider.notifier).updateCaret(
-                caretPosition: blockBefore.text.length,
-                idOfBlockInFocus: idOfBlockBefore,
-                setFromFocusChange: true,
-              );
+            caretPosition: blockBefore.text.length,
+            idOfBlockInFocus: idOfBlockBefore,
+            setFromFocusChange: true,
+          );
         case LogicalKeyboardKey.delete:
           if (blockTextEditingController.selection.extentOffset !=
               blockTextEditingController.text.length) {
@@ -201,7 +204,7 @@ class BlockViewModel extends _$BlockViewModel {
 
           // Get Block after.
           final idOfBlockAfter =
-              databaseProps.databaseManager.getIdOfBlockAfter(state);
+          databaseProps.databaseManager.getIdOfBlockAfter(state);
           if (idOfBlockAfter == null) {
             return KeyEventResult.ignored;
           }
@@ -210,9 +213,9 @@ class BlockViewModel extends _$BlockViewModel {
 
           blockTextEditingController.value =
               blockTextEditingController.value.copyWith(
-            text: state.text + blockAfter.text,
-            selection: blockTextEditingController.selection,
-          );
+                text: state.text + blockAfter.text,
+                selection: blockTextEditingController.selection,
+              );
 
           final updatedBlock = state.copyWith(
             childIds: state.childIds.toList()..addAll(blockAfter.childIds),
