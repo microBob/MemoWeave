@@ -9,12 +9,12 @@ import 'package:memoweave/viewmodels/caret_viewmodel.dart';
 /// Text editor interface.
 ///
 /// Renders text and handles input.
-class BlockWidget extends HookConsumerWidget {
+class BlockView extends HookConsumerWidget {
   /// Properties for this Block.
   final DatabaseProps _databaseProps;
 
   /// Constructor that passes [_props].
-  const BlockWidget({
+  const BlockView({
     super.key,
     required final DatabaseProps databaseProps,
   }) : _databaseProps = databaseProps;
@@ -24,10 +24,12 @@ class BlockWidget extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final blockTextEditingController =
         useBlockTextEditingController(keys: [_databaseProps]);
+    // final blockKey = GlobalKey();
     final blockFocusNode = useFocusNode();
 
     final provider = blockViewModelProvider(
       databaseProps: _databaseProps,
+      // blockKey: blockKey,
       blockTextEditingController: blockTextEditingController,
     );
     final blockState = ref.watch(provider);
@@ -44,6 +46,7 @@ class BlockWidget extends HookConsumerWidget {
             onKeyEvent: ref.watch(provider.notifier).handleEditorTraversal,
             onFocusChange: ref.watch(provider.notifier).onFocusChanged,
             child: TextField(
+              // key: blockKey,
               controller: blockTextEditingController,
               focusNode: blockFocusNode,
               textInputAction: TextInputAction.newline,
@@ -52,7 +55,7 @@ class BlockWidget extends HookConsumerWidget {
           );
         }
 
-        return BlockWidget(
+        return BlockView(
           databaseProps: (
             id: blockState.childIds[index - 1],
             databaseManager: _databaseProps.databaseManager,

@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/viewmodels/thread_viewmodel.dart';
-import 'package:memoweave/widgets/block_widget.dart';
+import 'package:memoweave/views/block_view.dart';
 
 class ThreadView extends HookConsumerWidget {
   final DatabaseProps _databaseProps;
@@ -54,7 +54,7 @@ class ThreadView extends HookConsumerWidget {
           ],
         ),
         ListView.builder(
-          itemBuilder: (context, index) => BlockWidget(
+          itemBuilder: (context, index) => BlockView(
             databaseProps: (
               id: threadState.childIds[index],
               databaseManager: _databaseProps.databaseManager

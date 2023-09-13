@@ -16,14 +16,17 @@ part 'block_viewmodel.g.dart';
 /// ViewModel for [BlockWidget].
 @riverpod
 class BlockViewModel extends _$BlockViewModel {
+  // late final RenderEditable _blockRenderEditable;
+
   /// Get props and initialize the Block.
   @override
   BlockCollection build({
     required final DatabaseProps databaseProps,
+    // required final GlobalKey blockKey,
     required final BlockTextEditingController blockTextEditingController,
   }) {
     final blockCollection =
-    databaseProps.databaseManager.getBlockCollectionById(databaseProps.id);
+        databaseProps.databaseManager.getBlockCollectionById(databaseProps.id);
 
     // Set initial block values
     blockTextEditingController.blockCollection = blockCollection;
@@ -34,7 +37,7 @@ class BlockViewModel extends _$BlockViewModel {
 
     // Subscribe to changes and update state
     databaseProps.databaseManager.onBlockChanged(databaseProps.id).listen(
-          (blockCollection) {
+      (blockCollection) {
         if (blockCollection == null) return;
 
         // Handle text updates not originating from TextEditingController.
@@ -43,6 +46,9 @@ class BlockViewModel extends _$BlockViewModel {
         }
       },
     );
+
+    // Find Render Editable
+    // Future(() => _findRenderEditable());
 
     return blockCollection;
   }
@@ -237,4 +243,28 @@ class BlockViewModel extends _$BlockViewModel {
     }
     return KeyEventResult.ignored;
   }
+
+  /// Search through widget tree to find [RenderEditable].
+  ///
+  /// Sets [_renderEditable] to the found [RenderEditable].
+// void _findRenderEditable([Element? root]) {
+//   // Starter case: No element given,
+//   // then we start from the TextField's children.
+//   if (root == null) {
+//     blockKey.currentContext?.visitChildElements((childElement) {
+//       _findRenderEditable(childElement);
+//     });
+//     return;
+//   }
+//
+//   // Regular case: Check the current object, then traverse children.
+//   var renderObject = root.renderObject;
+//   if (renderObject is RenderEditable) {
+//     _blockRenderEditable = renderObject;
+//   } else {
+//     root.visitChildElements((childElement) {
+//       _findRenderEditable(childElement);
+//     });
+//   }
+// }
 }
