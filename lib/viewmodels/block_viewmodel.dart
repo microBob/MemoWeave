@@ -177,7 +177,6 @@ class BlockViewModel extends _$BlockViewModel {
           // Set cursor to be at the start of the new Block.
           final nextBlockId =
               databaseProps.databaseManager.getIdOfBlockAfter(state);
-          print('Next block ID: $nextBlockId');
           ref.read(caretViewModelProvider.notifier).updateCaret(
                 caretPosition: 0,
                 idOfBlockInFocus: nextBlockId,

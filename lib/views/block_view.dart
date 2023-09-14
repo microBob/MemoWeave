@@ -21,7 +21,6 @@ class BlockView extends HookConsumerWidget {
   /// Attach to [BlockViewModel] and build UI.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('Build block widget: ${_databaseProps.id}');
     final blockTextEditingController =
         useBlockTextEditingController(keys: [_databaseProps]);
     final blockFocusNode = useFocusNode();
