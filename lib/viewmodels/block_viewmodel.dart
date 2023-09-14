@@ -17,13 +17,13 @@ part 'block_viewmodel.g.dart';
 /// ViewModel for [BlockWidget].
 @riverpod
 class BlockViewModel extends _$BlockViewModel {
+  final GlobalKey _blockKey = GlobalKey();
   late final RenderEditable _blockRenderEditable;
 
   /// Get props and initialize the Block.
   @override
   BlockCollection build({
     required final DatabaseProps databaseProps,
-    // required final GlobalKey blockKey,
     required final blockFocusNode,
     required final BlockTextEditingController blockTextEditingController,
   }) {
@@ -49,11 +49,10 @@ class BlockViewModel extends _$BlockViewModel {
       },
     );
 
-    // Subscribe to changes in focus.
+    // Check current block in focus and subscribe to changes in focus.
+    _checkShouldRequestFocus(ref.read(caretViewModelProvider).idOfBlockInFocus);
     ref.listen(caretViewModelProvider, (previous, next) {
-      if (next.idOfBlockInFocus == blockCollection.id) {
-        blockFocusNode.requestFocus();
-      }
+      _checkShouldRequestFocus(next.idOfBlockInFocus);
     });
 
     // Find Render Editable
@@ -61,6 +60,8 @@ class BlockViewModel extends _$BlockViewModel {
 
     return blockCollection;
   }
+
+  // GlobalKey getBlockKey() => _blockKey;
 
   void onFocusChanged(bool gainsFocus) {
     final caretState = ref.read(caretViewModelProvider);
@@ -72,13 +73,13 @@ class BlockViewModel extends _$BlockViewModel {
 
       // Acknowledged caret position is set.
       ref.read(caretViewModelProvider.notifier).updateCaret(
-            setFromFocusChange: false,
-          );
+        setFromFocusChange: false,
+      );
     } else if (gainsFocus) {
       // Acknowledge this block is in focus.
       ref.read(caretViewModelProvider.notifier).updateCaret(
-        idOfBlockInFocus: state.id,
-      );
+            idOfBlockInFocus: state.id,
+          );
     }
   }
 
@@ -98,7 +99,7 @@ class BlockViewModel extends _$BlockViewModel {
 
     // Create updated Block.
     final newBlockCollection =
-    state.copyWith(text: blockTextEditingController.text);
+        state.copyWith(text: blockTextEditingController.text);
 
     blockTextEditingController.blockCollection = newBlockCollection;
 
@@ -114,27 +115,27 @@ class BlockViewModel extends _$BlockViewModel {
         case LogicalKeyboardKey.arrowDown:
         // TODO: Check if on last line
           ref.read(caretViewModelProvider.notifier).updateCaret(
-            caretPosition:
-            blockTextEditingController.selection.extentOffset,
-            idOfBlockInFocus:
-            databaseProps.databaseManager.getIdOfBlockAfter(state),
-            setFromFocusChange: true,
-          );
+                caretPosition:
+                    blockTextEditingController.selection.extentOffset,
+                idOfBlockInFocus:
+                    databaseProps.databaseManager.getIdOfBlockAfter(state),
+                setFromFocusChange: true,
+              );
         case LogicalKeyboardKey.arrowUp:
         // TODO: Check if on first line
           ref.read(caretViewModelProvider.notifier).updateCaret(
-            caretPosition:
-            blockTextEditingController.selection.extentOffset,
-            idOfBlockInFocus:
-            databaseProps.databaseManager.getIdOfBlockBefore(state),
-            setFromFocusChange: true,
-          );
+                caretPosition:
+                    blockTextEditingController.selection.extentOffset,
+                idOfBlockInFocus:
+                    databaseProps.databaseManager.getIdOfBlockBefore(state),
+                setFromFocusChange: true,
+              );
         case LogicalKeyboardKey.arrowLeft:
           if (blockTextEditingController.selection.extentOffset != 0) {
             return KeyEventResult.ignored;
           }
           final idOfBlockBefore =
-          databaseProps.databaseManager.getIdOfBlockBefore(state);
+              databaseProps.databaseManager.getIdOfBlockBefore(state);
           if (idOfBlockBefore == null) {
             return KeyEventResult.ignored;
           }
@@ -142,21 +143,21 @@ class BlockViewModel extends _$BlockViewModel {
               .getBlockCollectionById(idOfBlockBefore);
 
           ref.read(caretViewModelProvider.notifier).updateCaret(
-            caretPosition: blockBefore.text.length,
-            idOfBlockInFocus: idOfBlockBefore,
-            setFromFocusChange: true,
-          );
+                caretPosition: blockBefore.text.length,
+                idOfBlockInFocus: idOfBlockBefore,
+                setFromFocusChange: true,
+              );
         case LogicalKeyboardKey.arrowRight:
           if (blockTextEditingController.selection.extentOffset !=
               blockTextEditingController.text.length) {
             return KeyEventResult.ignored;
           }
           ref.read(caretViewModelProvider.notifier).updateCaret(
-            caretPosition: 0,
-            idOfBlockInFocus:
-            databaseProps.databaseManager.getIdOfBlockAfter(state),
-            setFromFocusChange: true,
-          );
+                caretPosition: 0,
+                idOfBlockInFocus:
+                    databaseProps.databaseManager.getIdOfBlockAfter(state),
+                setFromFocusChange: true,
+              );
         case LogicalKeyboardKey.enter || LogicalKeyboardKey.numpadEnter:
         // Split text between current and next Block.
           final nextBlockCollection = BlockCollection(
@@ -174,12 +175,14 @@ class BlockViewModel extends _$BlockViewModel {
           );
 
           // Set cursor to be at the start of the new Block.
+          final nextBlockId =
+              databaseProps.databaseManager.getIdOfBlockAfter(state);
+          print('Next block ID: $nextBlockId');
           ref.read(caretViewModelProvider.notifier).updateCaret(
-            caretPosition: 0,
-            idOfBlockInFocus:
-            databaseProps.databaseManager.getIdOfBlockAfter(state),
-            setFromFocusChange: true,
-          );
+                caretPosition: 0,
+                idOfBlockInFocus: nextBlockId,
+                setFromFocusChange: true,
+              );
 
           // Record the new text into the Block.
           state = state.copyWith(text: blockTextEditingController.text);
@@ -190,7 +193,7 @@ class BlockViewModel extends _$BlockViewModel {
 
           // Get Block before.
           final idOfBlockBefore =
-          databaseProps.databaseManager.getIdOfBlockBefore(state);
+              databaseProps.databaseManager.getIdOfBlockBefore(state);
           if (idOfBlockBefore == null) {
             return KeyEventResult.ignored;
           }
@@ -207,10 +210,10 @@ class BlockViewModel extends _$BlockViewModel {
           databaseProps.databaseManager.deleteBlockCollection(state);
 
           ref.read(caretViewModelProvider.notifier).updateCaret(
-            caretPosition: blockBefore.text.length,
-            idOfBlockInFocus: idOfBlockBefore,
-            setFromFocusChange: true,
-          );
+                caretPosition: blockBefore.text.length,
+                idOfBlockInFocus: idOfBlockBefore,
+                setFromFocusChange: true,
+              );
         case LogicalKeyboardKey.delete:
           if (blockTextEditingController.selection.extentOffset !=
               blockTextEditingController.text.length) {
@@ -219,7 +222,7 @@ class BlockViewModel extends _$BlockViewModel {
 
           // Get Block after.
           final idOfBlockAfter =
-          databaseProps.databaseManager.getIdOfBlockAfter(state);
+              databaseProps.databaseManager.getIdOfBlockAfter(state);
           if (idOfBlockAfter == null) {
             return KeyEventResult.ignored;
           }
@@ -228,9 +231,9 @@ class BlockViewModel extends _$BlockViewModel {
 
           blockTextEditingController.value =
               blockTextEditingController.value.copyWith(
-                text: state.text + blockAfter.text,
-                selection: blockTextEditingController.selection,
-              );
+            text: state.text + blockAfter.text,
+            selection: blockTextEditingController.selection,
+          );
 
           final updatedBlock = state.copyWith(
             childIds: state.childIds.toList()..addAll(blockAfter.childIds),
@@ -251,6 +254,13 @@ class BlockViewModel extends _$BlockViewModel {
       return KeyEventResult.handled;
     }
     return KeyEventResult.ignored;
+  }
+
+  /// Request focus if the provided [idOfBlockInFocus] matches this Block's ID.
+  void _checkShouldRequestFocus(int idOfBlockInFocus) {
+    if (idOfBlockInFocus == databaseProps.id) {
+      blockFocusNode.requestFocus();
+    }
   }
 
   /// Search through widget tree to find [RenderEditable].

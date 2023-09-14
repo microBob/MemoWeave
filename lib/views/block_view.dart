@@ -24,12 +24,10 @@ class BlockView extends HookConsumerWidget {
     print('Build block widget: ${_databaseProps.id}');
     final blockTextEditingController =
         useBlockTextEditingController(keys: [_databaseProps]);
-    final blockKey = GlobalKey();
     final blockFocusNode = useFocusNode();
 
     final provider = blockViewModelProvider(
       databaseProps: _databaseProps,
-      // blockKey: blockKey,
       blockFocusNode: blockFocusNode,
       blockTextEditingController: blockTextEditingController,
     );
@@ -42,7 +40,7 @@ class BlockView extends HookConsumerWidget {
             onKeyEvent: ref.watch(provider.notifier).handleEditorTraversal,
             onFocusChange: ref.watch(provider.notifier).onFocusChanged,
             child: TextField(
-              // key: blockKey,
+              // key: ref.watch(provider.notifier).getBlockKey(),
               controller: blockTextEditingController,
               focusNode: blockFocusNode,
               textInputAction: TextInputAction.newline,
@@ -53,8 +51,8 @@ class BlockView extends HookConsumerWidget {
 
         return BlockView(
           databaseProps: (
-          id: blockState.childIds[index - 1],
-          databaseManager: _databaseProps.databaseManager,
+            id: blockState.childIds[index - 1],
+            databaseManager: _databaseProps.databaseManager,
           ),
         );
       },
