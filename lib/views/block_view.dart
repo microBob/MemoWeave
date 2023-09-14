@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/utils/use_block_texteditingcontroller.dart';
 import 'package:memoweave/viewmodels/block_viewmodel.dart';
-import 'package:memoweave/viewmodels/caret_viewmodel.dart';
 
 /// Text editor interface.
 ///
@@ -22,22 +21,19 @@ class BlockView extends HookConsumerWidget {
   /// Attach to [BlockViewModel] and build UI.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print('Build block widget: ${_databaseProps.id}');
     final blockTextEditingController =
         useBlockTextEditingController(keys: [_databaseProps]);
-    // final blockKey = GlobalKey();
+    final blockKey = GlobalKey();
     final blockFocusNode = useFocusNode();
 
     final provider = blockViewModelProvider(
       databaseProps: _databaseProps,
       // blockKey: blockKey,
+      blockFocusNode: blockFocusNode,
       blockTextEditingController: blockTextEditingController,
     );
     final blockState = ref.watch(provider);
-
-    // Set Block in focus if assigned focus.
-    if (ref.watch(caretViewModelProvider).idOfBlockInFocus == blockState.id) {
-      blockFocusNode.requestFocus();
-    }
 
     return ListView.builder(
       itemBuilder: (context, index) {
@@ -57,8 +53,8 @@ class BlockView extends HookConsumerWidget {
 
         return BlockView(
           databaseProps: (
-            id: blockState.childIds[index - 1],
-            databaseManager: _databaseProps.databaseManager,
+          id: blockState.childIds[index - 1],
+          databaseManager: _databaseProps.databaseManager,
           ),
         );
       },

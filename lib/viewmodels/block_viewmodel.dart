@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/database_props.dart';
@@ -16,13 +17,14 @@ part 'block_viewmodel.g.dart';
 /// ViewModel for [BlockWidget].
 @riverpod
 class BlockViewModel extends _$BlockViewModel {
-  // late final RenderEditable _blockRenderEditable;
+  late final RenderEditable _blockRenderEditable;
 
   /// Get props and initialize the Block.
   @override
   BlockCollection build({
     required final DatabaseProps databaseProps,
     // required final GlobalKey blockKey,
+    required final blockFocusNode,
     required final BlockTextEditingController blockTextEditingController,
   }) {
     final blockCollection =
@@ -46,6 +48,13 @@ class BlockViewModel extends _$BlockViewModel {
         }
       },
     );
+
+    // Subscribe to changes in focus.
+    ref.listen(caretViewModelProvider, (previous, next) {
+      if (next.idOfBlockInFocus == blockCollection.id) {
+        blockFocusNode.requestFocus();
+      }
+    });
 
     // Find Render Editable
     // Future(() => _findRenderEditable());
