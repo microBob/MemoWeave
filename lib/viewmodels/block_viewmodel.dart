@@ -17,13 +17,23 @@ part 'block_viewmodel.g.dart';
 /// ViewModel for [BlockWidget].
 @riverpod
 class BlockViewModel extends _$BlockViewModel {
-  final GlobalKey _blockKey = GlobalKey();
-  late final RenderEditable _blockRenderEditable;
+  late final RenderEditable? _blockRenderEditableCache;
+
+  RenderEditable get _blockRenderEditable {
+    _findRenderEditable();
+
+    if (_blockRenderEditableCache == null) {
+      throw FormatException(
+          'ERROR: Unable to find Block ${databaseProps.id} RenderEditable.');
+    }
+    return _blockRenderEditableCache!;
+  }
 
   /// Get props and initialize the Block.
   @override
   BlockCollection build({
     required final DatabaseProps databaseProps,
+    required final GlobalKey blockKey,
     required final blockFocusNode,
     required final BlockTextEditingController blockTextEditingController,
   }) {
@@ -73,8 +83,8 @@ class BlockViewModel extends _$BlockViewModel {
 
       // Acknowledged caret position is set.
       ref.read(caretViewModelProvider.notifier).updateCaret(
-        setFromFocusChange: false,
-      );
+            setFromFocusChange: false,
+          );
     } else if (gainsFocus) {
       // Acknowledge this block is in focus.
       ref.read(caretViewModelProvider.notifier).updateCaret(
@@ -113,7 +123,25 @@ class BlockViewModel extends _$BlockViewModel {
     if (keyEvent is KeyDownEvent || keyEvent is KeyRepeatEvent) {
       switch (keyEvent.logicalKey) {
         case LogicalKeyboardKey.arrowDown:
-        // TODO: Check if on last line
+          // Get current line as a TextSelection.
+          final currentLineAsTextSelection =
+              _blockRenderEditable.getLineAtOffset(
+            TextPosition(
+              offset: blockTextEditingController.selection.extentOffset,
+            ),
+          );
+
+          // Shortcut exit if not on last line.
+          if (!blockTextEditingController.text.endsWith(
+            blockTextEditingController.text.substring(
+              currentLineAsTextSelection.start,
+              currentLineAsTextSelection.end,
+            ),
+          )) {
+            return KeyEventResult.ignored;
+          }
+
+          // Move line down.
           ref.read(caretViewModelProvider.notifier).updateCaret(
                 caretPosition:
                     blockTextEditingController.selection.extentOffset,
@@ -122,7 +150,25 @@ class BlockViewModel extends _$BlockViewModel {
                 setFromFocusChange: true,
               );
         case LogicalKeyboardKey.arrowUp:
-        // TODO: Check if on first line
+          // Get current line as a TextSelection.
+          final currentLineAsTextSelection =
+              _blockRenderEditable.getLineAtOffset(
+            TextPosition(
+              offset: blockTextEditingController.selection.extentOffset,
+            ),
+          );
+
+          // Shortcut exit if not on first line.
+          if (!blockTextEditingController.text.startsWith(
+            blockTextEditingController.text.substring(
+              currentLineAsTextSelection.start,
+              currentLineAsTextSelection.end,
+            ),
+          )) {
+            return KeyEventResult.ignored;
+          }
+
+          // Move line up.
           ref.read(caretViewModelProvider.notifier).updateCaret(
                 caretPosition:
                     blockTextEditingController.selection.extentOffset,
@@ -265,24 +311,29 @@ class BlockViewModel extends _$BlockViewModel {
   /// Search through widget tree to find [RenderEditable].
   ///
   /// Sets [_renderEditable] to the found [RenderEditable].
-// void _findRenderEditable([Element? root]) {
-//   // Starter case: No element given,
-//   // then we start from the TextField's children.
-//   if (root == null) {
-//     blockKey.currentContext?.visitChildElements((childElement) {
-//       _findRenderEditable(childElement);
-//     });
-//     return;
-//   }
-//
-//   // Regular case: Check the current object, then traverse children.
-//   var renderObject = root.renderObject;
-//   if (renderObject is RenderEditable) {
-//     _blockRenderEditable = renderObject;
-//   } else {
-//     root.visitChildElements((childElement) {
-//       _findRenderEditable(childElement);
-//     });
-//   }
-// }
+  void _findRenderEditable([Element? root]) {
+    // Shortcut exit if it has already been found.
+    if (_blockRenderEditableCache != null) {
+      return;
+    }
+
+    // Starter case: No element given,
+    // then we start from the TextField's children.
+    if (root == null) {
+      blockKey.currentContext?.visitChildElements((childElement) {
+        _findRenderEditable(childElement);
+      });
+      return;
+    }
+
+    // Regular case: Check the current object, then traverse children.
+    var renderObject = root.renderObject;
+    if (renderObject is RenderEditable) {
+      _blockRenderEditableCache = renderObject;
+    } else {
+      root.visitChildElements((childElement) {
+        _findRenderEditable(childElement);
+      });
+    }
+  }
 }
