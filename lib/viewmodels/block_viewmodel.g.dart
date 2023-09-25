@@ -6,7 +6,7 @@ part of 'block_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$blockViewModelHash() => r'1e321dbb80028600b81870382f9739d933320402';
+String _$blockViewModelHash() => r'2965bb9c4aa433820e4236658cb0920fa72d8f87';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -130,7 +130,7 @@ class BlockViewModelProvider
     required this.blockTextEditingController,
   }) : super.internal(
           () => BlockViewModel()
-      ..databaseProps = databaseProps
+            ..databaseProps = databaseProps
             ..blockKey = blockKey
             ..blockFocusNode = blockFocusNode
             ..blockTextEditingController = blockTextEditingController,

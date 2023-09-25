@@ -17,7 +17,7 @@ part 'block_viewmodel.g.dart';
 /// ViewModel for [BlockWidget].
 @riverpod
 class BlockViewModel extends _$BlockViewModel {
-  late final RenderEditable? _blockRenderEditableCache;
+  RenderEditable? _blockRenderEditableCache;
 
   RenderEditable get _blockRenderEditable {
     _findRenderEditable();
@@ -65,9 +65,6 @@ class BlockViewModel extends _$BlockViewModel {
       _checkShouldRequestFocus(next.idOfBlockInFocus);
     });
 
-    // Find Render Editable
-    // Future(() => _findRenderEditable());
-
     return blockCollection;
   }
 
@@ -100,9 +97,12 @@ class BlockViewModel extends _$BlockViewModel {
   void handleInput() {
     if (!blockTextEditingController.selection.isValid) return;
 
-    // Record new caret position.
-    ref.read(caretViewModelProvider.notifier).updateCaret(
-        caretPosition: blockTextEditingController.selection.extentOffset);
+    // Record new caret position if current block is in focus.
+    if (ref.read(caretViewModelProvider).idOfBlockInFocus == databaseProps.id) {
+      ref.read(caretViewModelProvider.notifier).updateCaret(
+            caretPosition: blockTextEditingController.selection.extentOffset,
+          );
+    }
 
     // Shortcut exit if no change to text.
     if (blockTextEditingController.text == state.text) return;
