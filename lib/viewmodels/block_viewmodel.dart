@@ -68,8 +68,6 @@ class BlockViewModel extends _$BlockViewModel {
     return blockCollection;
   }
 
-  // GlobalKey getBlockKey() => _blockKey;
-
   void onFocusChanged(bool gainsFocus) {
     final caretState = ref.read(caretViewModelProvider);
     if (gainsFocus && caretState.setFromFocusChange) {
