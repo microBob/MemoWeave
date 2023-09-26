@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'caret_viewmodel.dart';
+part of 'id_of_block_in_focus.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$caretViewModelHash() => r'd2e16a0982b8e12c5231a1b5205c439e4322f7d2';
+String _$idOfBlockInFocusHash() => r'ca190d182b3f8ce1fa26c00ee40a2cc73b03e5ba';
 
-/// See also [CaretViewModel].
-@ProviderFor(CaretViewModel)
-final caretViewModelProvider =
-    AutoDisposeNotifierProvider<CaretViewModel, CaretState>.internal(
-  CaretViewModel.new,
-  name: r'caretViewModelProvider',
+/// See also [IdOfBlockInFocus].
+@ProviderFor(IdOfBlockInFocus)
+final idOfBlockInFocusProvider = AutoDisposeNotifierProvider<IdOfBlockInFocus,
+    IdOfBlockInFocusState>.internal(
+  IdOfBlockInFocus.new,
+  name: r'idOfBlockInFocusProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$caretViewModelHash,
+      : _$idOfBlockInFocusHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$CaretViewModel = AutoDisposeNotifier<CaretState>;
+typedef _$IdOfBlockInFocus = AutoDisposeNotifier<IdOfBlockInFocusState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member

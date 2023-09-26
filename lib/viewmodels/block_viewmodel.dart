@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/utils/database.dart';
+import 'package:memoweave/utils/id_of_block_in_focus.dart';
 import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
 import 'package:memoweave/viewmodels/caret_viewmodel.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -60,30 +61,31 @@ class BlockViewModel extends _$BlockViewModel {
     );
 
     // Check current block in focus and subscribe to changes in focus.
-    _checkShouldRequestFocus(ref.read(caretViewModelProvider).idOfBlockInFocus);
-    ref.listen(caretViewModelProvider, (previous, next) {
-      _checkShouldRequestFocus(next.idOfBlockInFocus);
+    _checkShouldRequestFocus(ref.read(idOfBlockInFocusProvider).blockId);
+    ref.listen(idOfBlockInFocusProvider, (previous, next) {
+      _checkShouldRequestFocus(next.blockId);
     });
 
     return blockCollection;
   }
 
   void onFocusChanged(bool gainsFocus) {
+    final idOfBlockInFocusState = ref.read(idOfBlockInFocusProvider);
     final caretState = ref.read(caretViewModelProvider);
-    if (gainsFocus && caretState.setFromFocusChange) {
+    if (gainsFocus && idOfBlockInFocusState.setFromTraversal) {
       // Set caret position as instructed from origin.
       blockTextEditingController.selection = TextSelection.collapsed(
           offset: min(caretState.caretPosition,
               blockTextEditingController.text.length));
 
       // Acknowledged caret position is set.
-      ref.read(caretViewModelProvider.notifier).updateCaret(
-            setFromFocusChange: false,
-          );
+      ref
+          .read(idOfBlockInFocusProvider.notifier)
+          .update(setFromTraversal: false);
     } else if (gainsFocus) {
       // Acknowledge this block is in focus.
-      ref.read(caretViewModelProvider.notifier).updateCaret(
-            idOfBlockInFocus: state.id,
+      ref.read(idOfBlockInFocusProvider.notifier).update(
+            blockId: databaseProps.id,
           );
     }
   }
@@ -96,8 +98,8 @@ class BlockViewModel extends _$BlockViewModel {
     if (!blockTextEditingController.selection.isValid) return;
 
     // Record new caret position if current block is in focus.
-    if (ref.read(caretViewModelProvider).idOfBlockInFocus == databaseProps.id) {
-      ref.read(caretViewModelProvider.notifier).updateCaret(
+    if (ref.read(idOfBlockInFocusProvider).blockId == databaseProps.id) {
+      ref.read(caretViewModelProvider.notifier).update(
             caretPosition: blockTextEditingController.selection.extentOffset,
           );
     }
@@ -140,12 +142,13 @@ class BlockViewModel extends _$BlockViewModel {
           }
 
           // Move line down.
-          ref.read(caretViewModelProvider.notifier).updateCaret(
+          ref.read(caretViewModelProvider.notifier).update(
                 caretPosition:
                     blockTextEditingController.selection.extentOffset,
-                idOfBlockInFocus:
-                    databaseProps.databaseManager.getIdOfBlockAfter(state),
-                setFromFocusChange: true,
+              );
+          ref.read(idOfBlockInFocusProvider.notifier).update(
+                blockId: databaseProps.databaseManager.getIdOfBlockAfter(state),
+                setFromTraversal: true,
               );
         case LogicalKeyboardKey.arrowUp:
           // Get current line as a TextSelection.
@@ -167,12 +170,14 @@ class BlockViewModel extends _$BlockViewModel {
           }
 
           // Move line up.
-          ref.read(caretViewModelProvider.notifier).updateCaret(
+          ref.read(caretViewModelProvider.notifier).update(
                 caretPosition:
                     blockTextEditingController.selection.extentOffset,
-                idOfBlockInFocus:
+              );
+          ref.read(idOfBlockInFocusProvider.notifier).update(
+                blockId:
                     databaseProps.databaseManager.getIdOfBlockBefore(state),
-                setFromFocusChange: true,
+                setFromTraversal: true,
               );
         case LogicalKeyboardKey.arrowLeft:
           if (blockTextEditingController.selection.extentOffset != 0) {
@@ -186,21 +191,24 @@ class BlockViewModel extends _$BlockViewModel {
           final blockBefore = databaseProps.databaseManager
               .getBlockCollectionById(idOfBlockBefore);
 
-          ref.read(caretViewModelProvider.notifier).updateCaret(
+          ref.read(caretViewModelProvider.notifier).update(
                 caretPosition: blockBefore.text.length,
-                idOfBlockInFocus: idOfBlockBefore,
-                setFromFocusChange: true,
+              );
+          ref.read(idOfBlockInFocusProvider.notifier).update(
+                blockId: idOfBlockBefore,
+                setFromTraversal: true,
               );
         case LogicalKeyboardKey.arrowRight:
           if (blockTextEditingController.selection.extentOffset !=
               blockTextEditingController.text.length) {
             return KeyEventResult.ignored;
           }
-          ref.read(caretViewModelProvider.notifier).updateCaret(
+          ref.read(caretViewModelProvider.notifier).update(
                 caretPosition: 0,
-                idOfBlockInFocus:
-                    databaseProps.databaseManager.getIdOfBlockAfter(state),
-                setFromFocusChange: true,
+              );
+          ref.read(idOfBlockInFocusProvider.notifier).update(
+                blockId: databaseProps.databaseManager.getIdOfBlockAfter(state),
+                setFromTraversal: true,
               );
         case LogicalKeyboardKey.enter || LogicalKeyboardKey.numpadEnter:
         // Split text between current and next Block.
@@ -221,10 +229,12 @@ class BlockViewModel extends _$BlockViewModel {
           // Set cursor to be at the start of the new Block.
           final nextBlockId =
               databaseProps.databaseManager.getIdOfBlockAfter(state);
-          ref.read(caretViewModelProvider.notifier).updateCaret(
+          ref.read(caretViewModelProvider.notifier).update(
                 caretPosition: 0,
-                idOfBlockInFocus: nextBlockId,
-                setFromFocusChange: true,
+              );
+          ref.read(idOfBlockInFocusProvider.notifier).update(
+                blockId: nextBlockId,
+                setFromTraversal: true,
               );
 
           // Record the new text into the Block.
@@ -248,15 +258,17 @@ class BlockViewModel extends _$BlockViewModel {
             text: blockBefore.text + state.text,
           );
 
+          ref.read(caretViewModelProvider.notifier).update(
+                caretPosition: blockBefore.text.length,
+              );
+          ref.read(idOfBlockInFocusProvider.notifier).update(
+                blockId: idOfBlockBefore,
+                setFromTraversal: true,
+              );
+
           // FIXME: consider creating a function that does this in one transaction
           databaseProps.databaseManager.putBlockCollection(updatedBlockBefore);
           databaseProps.databaseManager.deleteBlockCollection(state);
-
-          ref.read(caretViewModelProvider.notifier).updateCaret(
-                caretPosition: blockBefore.text.length,
-                idOfBlockInFocus: idOfBlockBefore,
-                setFromFocusChange: true,
-              );
         case LogicalKeyboardKey.delete:
           if (blockTextEditingController.selection.extentOffset !=
               blockTextEditingController.text.length) {
@@ -286,10 +298,13 @@ class BlockViewModel extends _$BlockViewModel {
           databaseProps.databaseManager.putBlockCollection(updatedBlock);
           databaseProps.databaseManager.deleteBlockCollection(blockAfter);
 
-          ref.read(caretViewModelProvider.notifier).updateCaret(
-              caretPosition: blockTextEditingController.selection.start,
-              idOfBlockInFocus: state.id,
-              setFromFocusChange: true);
+          ref.read(caretViewModelProvider.notifier).update(
+                caretPosition: blockTextEditingController.selection.start,
+              );
+          ref.read(idOfBlockInFocusProvider.notifier).update(
+                blockId: databaseProps.id,
+                setFromTraversal: true,
+              );
 
         default:
           return KeyEventResult.ignored;
