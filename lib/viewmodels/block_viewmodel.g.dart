@@ -6,7 +6,7 @@ part of 'block_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$blockViewModelHash() => r'93ac4209a02af22175bca80fc2039a1f0320adda';
+String _$blockViewModelHash() => r'efaf9927e351f3b4982d9635b3f1b06d050d5f67';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -33,13 +33,11 @@ abstract class _$BlockViewModel
     extends BuildlessAutoDisposeNotifier<BlockCollection> {
   late final ({DatabaseManager databaseManager, int id}) databaseProps;
   late final GlobalKey<State<StatefulWidget>> blockKey;
-  late final dynamic blockFocusNode;
   late final BlockTextEditingController blockTextEditingController;
 
   BlockCollection build({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
     required GlobalKey<State<StatefulWidget>> blockKey,
-    required dynamic blockFocusNode,
     required BlockTextEditingController blockTextEditingController,
   });
 }
@@ -73,13 +71,11 @@ class BlockViewModelFamily extends Family<BlockCollection> {
   BlockViewModelProvider call({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
     required GlobalKey<State<StatefulWidget>> blockKey,
-    required dynamic blockFocusNode,
     required BlockTextEditingController blockTextEditingController,
   }) {
     return BlockViewModelProvider(
       databaseProps: databaseProps,
       blockKey: blockKey,
-      blockFocusNode: blockFocusNode,
       blockTextEditingController: blockTextEditingController,
     );
   }
@@ -91,7 +87,6 @@ class BlockViewModelFamily extends Family<BlockCollection> {
     return call(
       databaseProps: provider.databaseProps,
       blockKey: provider.blockKey,
-      blockFocusNode: provider.blockFocusNode,
       blockTextEditingController: provider.blockTextEditingController,
     );
   }
@@ -126,13 +121,11 @@ class BlockViewModelProvider
   BlockViewModelProvider({
     required this.databaseProps,
     required this.blockKey,
-    required this.blockFocusNode,
     required this.blockTextEditingController,
   }) : super.internal(
           () => BlockViewModel()
             ..databaseProps = databaseProps
             ..blockKey = blockKey
-            ..blockFocusNode = blockFocusNode
             ..blockTextEditingController = blockTextEditingController,
           from: blockViewModelProvider,
           name: r'blockViewModelProvider',
@@ -147,7 +140,6 @@ class BlockViewModelProvider
 
   final ({DatabaseManager databaseManager, int id}) databaseProps;
   final GlobalKey<State<StatefulWidget>> blockKey;
-  final dynamic blockFocusNode;
   final BlockTextEditingController blockTextEditingController;
 
   @override
@@ -155,7 +147,6 @@ class BlockViewModelProvider
     return other is BlockViewModelProvider &&
         other.databaseProps == databaseProps &&
         other.blockKey == blockKey &&
-        other.blockFocusNode == blockFocusNode &&
         other.blockTextEditingController == blockTextEditingController;
   }
 
@@ -164,7 +155,6 @@ class BlockViewModelProvider
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, databaseProps.hashCode);
     hash = _SystemHash.combine(hash, blockKey.hashCode);
-    hash = _SystemHash.combine(hash, blockFocusNode.hashCode);
     hash = _SystemHash.combine(hash, blockTextEditingController.hashCode);
 
     return _SystemHash.finish(hash);
@@ -177,7 +167,6 @@ class BlockViewModelProvider
     return notifier.build(
       databaseProps: databaseProps,
       blockKey: blockKey,
-      blockFocusNode: blockFocusNode,
       blockTextEditingController: blockTextEditingController,
     );
   }

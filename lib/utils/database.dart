@@ -108,7 +108,8 @@ class DatabaseManager {
       final updatedParentCollectionChildIds = parentCollection.childIds.toList()
         ..remove(blockCollection.id);
       _getParentCollectionsOf(blockCollection).putSync(
-          parentCollection.copyWith(childIds: updatedParentCollectionChildIds));
+        parentCollection.copyWith(childIds: updatedParentCollectionChildIds),
+      );
 
       // Delete collection.
       _isar.blockCollections.deleteSync(blockCollection.id);

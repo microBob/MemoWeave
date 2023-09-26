@@ -35,7 +35,6 @@ class BlockViewModel extends _$BlockViewModel {
   BlockCollection build({
     required final DatabaseProps databaseProps,
     required final GlobalKey blockKey,
-    required final blockFocusNode,
     required final BlockTextEditingController blockTextEditingController,
   }) {
     final blockCollection =
@@ -60,23 +59,19 @@ class BlockViewModel extends _$BlockViewModel {
       },
     );
 
-    // Check current block in focus and subscribe to changes in focus.
-    _checkShouldRequestFocus(ref.read(idOfBlockInFocusProvider).blockId);
-    ref.listen(idOfBlockInFocusProvider, (previous, next) {
-      _checkShouldRequestFocus(next.blockId);
-    });
-
     return blockCollection;
   }
 
   void onFocusChanged(bool gainsFocus) {
     final idOfBlockInFocusState = ref.read(idOfBlockInFocusProvider);
-    final caretState = ref.read(caretViewModelProvider);
     if (gainsFocus && idOfBlockInFocusState.setFromTraversal) {
       // Set caret position as instructed from origin.
       blockTextEditingController.selection = TextSelection.collapsed(
-          offset: min(caretState.caretPosition,
-              blockTextEditingController.text.length));
+        offset: min(
+          ref.read(caretViewModelProvider).caretPosition,
+          blockTextEditingController.text.length,
+        ),
+      );
 
       // Acknowledged caret position is set.
       ref
@@ -84,9 +79,9 @@ class BlockViewModel extends _$BlockViewModel {
           .update(setFromTraversal: false);
     } else if (gainsFocus) {
       // Acknowledge this block is in focus.
-      ref.read(idOfBlockInFocusProvider.notifier).update(
-            blockId: databaseProps.id,
-          );
+      ref
+          .read(idOfBlockInFocusProvider.notifier)
+          .update(blockId: databaseProps.id);
     }
   }
 
@@ -97,8 +92,10 @@ class BlockViewModel extends _$BlockViewModel {
   void handleInput() {
     if (!blockTextEditingController.selection.isValid) return;
 
-    // Record new caret position if current block is in focus.
-    if (ref.read(idOfBlockInFocusProvider).blockId == databaseProps.id) {
+    // Record new caret position if current block is in focus and if there was a change.
+    if (ref.read(idOfBlockInFocusProvider).blockId == databaseProps.id &&
+        ref.read(caretViewModelProvider).caretPosition !=
+            blockTextEditingController.selection.extentOffset) {
       ref.read(caretViewModelProvider.notifier).update(
             caretPosition: blockTextEditingController.selection.extentOffset,
           );
@@ -312,13 +309,6 @@ class BlockViewModel extends _$BlockViewModel {
       return KeyEventResult.handled;
     }
     return KeyEventResult.ignored;
-  }
-
-  /// Request focus if the provided [idOfBlockInFocus] matches this Block's ID.
-  void _checkShouldRequestFocus(int idOfBlockInFocus) {
-    if (idOfBlockInFocus == databaseProps.id) {
-      blockFocusNode.requestFocus();
-    }
   }
 
   /// Search through widget tree to find [RenderEditable].
