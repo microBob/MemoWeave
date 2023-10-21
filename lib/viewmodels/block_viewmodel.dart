@@ -62,26 +62,31 @@ class BlockViewModel extends _$BlockViewModel {
     return blockCollection;
   }
 
+  /// Handle when this block's main TextField gains or loses focus.
+  ///
+  /// Updates focus providers and apply selection requests.
   void onFocusChanged(bool gainsFocus) {
-    final idOfBlockInFocusState = ref.read(idOfBlockInFocusProvider);
-    if (gainsFocus && idOfBlockInFocusState.setFromTraversal) {
-      // Set caret position as instructed from origin.
-      blockTextEditingController.selection = TextSelection.collapsed(
-        offset: min(
-          ref.read(caretViewModelProvider).caretPosition,
-          blockTextEditingController.text.length,
-        ),
-      );
+    if (gainsFocus) {
+      final idOfBlockInFocusState = ref.read(idOfBlockInFocusProvider);
+      if (idOfBlockInFocusState.setFromTraversal) {
+        // Set caret position as instructed from origin.
+        blockTextEditingController.selection = TextSelection.collapsed(
+          offset: min(
+            ref.read(caretViewModelProvider).caretPosition,
+            blockTextEditingController.text.length,
+          ),
+        );
 
-      // Acknowledged caret position is set.
-      ref
-          .read(idOfBlockInFocusProvider.notifier)
-          .update(setFromTraversal: false);
-    } else if (gainsFocus) {
-      // Acknowledge this block is in focus.
-      ref
-          .read(idOfBlockInFocusProvider.notifier)
-          .update(blockId: databaseProps.id);
+        // Acknowledged caret position is set.
+        ref
+            .read(idOfBlockInFocusProvider.notifier)
+            .update(setFromTraversal: false);
+      } else {
+        // Acknowledge this block is in focus.
+        ref
+            .read(idOfBlockInFocusProvider.notifier)
+            .update(blockId: databaseProps.id);
+      }
     }
   }
 
@@ -90,6 +95,7 @@ class BlockViewModel extends _$BlockViewModel {
   /// Update [state]'s rootBlock with text/style and set cursor position.
   /// Throws [FormatException] if unable to find render editable.
   void handleInput() {
+    // Shortcut exit if the selection is invalid.
     if (!blockTextEditingController.selection.isValid) return;
 
     // Record new caret position if current block is in focus and if there was a change.

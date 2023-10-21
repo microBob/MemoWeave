@@ -27,9 +27,14 @@ class BlockView extends HookConsumerWidget {
     final blockKey = GlobalKey();
     final blockFocusNode = useFocusNode();
 
-    if (ref.watch(idOfBlockInFocusProvider).blockId == _databaseProps.id) {
-      blockFocusNode.requestFocus();
-    }
+    // Listen and set focus of this block.
+    ref.listen(idOfBlockInFocusProvider, (previous, next) {
+      // Only request focus if the focus was changed.
+      if (previous?.blockId != next.blockId &&
+          next.blockId == _databaseProps.id) {
+        blockFocusNode.requestFocus();
+      }
+    });
 
     final provider = blockViewModelProvider(
       databaseProps: _databaseProps,
