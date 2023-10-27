@@ -41,14 +41,14 @@ class BlockView extends HookConsumerWidget {
       blockKey: blockKey,
       blockTextEditingController: blockTextEditingController,
     );
-    final blockState = ref.watch(provider);
+    final viewModelNotifier = ref.watch(provider.notifier);
 
     return ListView.builder(
       itemBuilder: (context, index) {
         if (index == 0) {
           return Focus(
-            onKeyEvent: ref.watch(provider.notifier).handleEditorTraversal,
-            onFocusChange: ref.watch(provider.notifier).onFocusChanged,
+            onKeyEvent: viewModelNotifier.handleEditorTraversal,
+            onFocusChange: viewModelNotifier.onFocusChanged,
             child: TextField(
               key: blockKey,
               controller: blockTextEditingController,
@@ -61,12 +61,12 @@ class BlockView extends HookConsumerWidget {
 
         return BlockView(
           databaseProps: (
-            id: blockState.childIds[index - 1],
+            id: viewModelNotifier.getBlockCollection().childIds[index - 1],
             databaseManager: _databaseProps.databaseManager,
           ),
         );
       },
-      itemCount: blockState.childIds.length + 1,
+      itemCount: viewModelNotifier.getBlockCollection().childIds.length + 1,
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
     );

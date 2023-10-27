@@ -32,13 +32,12 @@ class BlockViewModel extends _$BlockViewModel {
 
   /// Get props and initialize the Block.
   @override
-  BlockCollection build({
+  void build({
     required final DatabaseProps databaseProps,
     required final GlobalKey blockKey,
     required final BlockTextEditingController blockTextEditingController,
   }) {
-    final blockCollection =
-        databaseProps.databaseManager.getBlockCollectionById(databaseProps.id);
+    final blockCollection = getBlockCollection();
 
     // Set initial block values
     blockTextEditingController.blockCollection = blockCollection;
@@ -58,8 +57,6 @@ class BlockViewModel extends _$BlockViewModel {
         }
       },
     );
-
-    return blockCollection;
   }
 
   /// Handle when this block's main TextField gains or loses focus.
@@ -108,18 +105,16 @@ class BlockViewModel extends _$BlockViewModel {
     }
 
     // Shortcut exit if no change to text.
-    if (blockTextEditingController.text == state.text) return;
+    if (blockTextEditingController.text == getBlockCollection().text) return;
 
     // Create updated Block.
     final newBlockCollection =
-        state.copyWith(text: blockTextEditingController.text);
+        getBlockCollection().copyWith(text: blockTextEditingController.text);
 
     blockTextEditingController.blockCollection = newBlockCollection;
 
     // Write into database.
     databaseProps.databaseManager.putBlockCollection(newBlockCollection);
-
-    state = newBlockCollection;
   }
 
   KeyEventResult handleEditorTraversal(FocusNode focusNode, KeyEvent keyEvent) {
@@ -150,7 +145,8 @@ class BlockViewModel extends _$BlockViewModel {
                     blockTextEditingController.selection.extentOffset,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
-                blockId: databaseProps.databaseManager.getIdOfBlockAfter(state),
+                blockId: databaseProps.databaseManager
+                    .getIdOfBlockAfter(getBlockCollection()),
                 setFromTraversal: true,
               );
         case LogicalKeyboardKey.arrowUp:
@@ -178,16 +174,16 @@ class BlockViewModel extends _$BlockViewModel {
                     blockTextEditingController.selection.extentOffset,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
-                blockId:
-                    databaseProps.databaseManager.getIdOfBlockBefore(state),
+                blockId: databaseProps.databaseManager
+                    .getIdOfBlockBefore(getBlockCollection()),
                 setFromTraversal: true,
               );
         case LogicalKeyboardKey.arrowLeft:
           if (blockTextEditingController.selection.extentOffset != 0) {
             return KeyEventResult.ignored;
           }
-          final idOfBlockBefore =
-              databaseProps.databaseManager.getIdOfBlockBefore(state);
+          final idOfBlockBefore = databaseProps.databaseManager
+              .getIdOfBlockBefore(getBlockCollection());
           if (idOfBlockBefore == null) {
             return KeyEventResult.ignored;
           }
@@ -210,13 +206,14 @@ class BlockViewModel extends _$BlockViewModel {
                 caretPosition: 0,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
-                blockId: databaseProps.databaseManager.getIdOfBlockAfter(state),
+                blockId: databaseProps.databaseManager
+                    .getIdOfBlockAfter(getBlockCollection()),
                 setFromTraversal: true,
               );
         case LogicalKeyboardKey.enter || LogicalKeyboardKey.numpadEnter:
         // Split text between current and next Block.
           final nextBlockCollection = BlockCollection(
-            parent: state.parent,
+            parent: getBlockCollection().parent,
             text: blockTextEditingController.selection
                 .textAfter(blockTextEditingController.text),
           );
@@ -225,13 +222,13 @@ class BlockViewModel extends _$BlockViewModel {
 
           // Insert new Block into parent.
           databaseProps.databaseManager.insertBlockAfter(
-            sourceBlockCollection: state,
+            sourceBlockCollection: getBlockCollection(),
             newBlockCollection: nextBlockCollection,
           );
 
           // Set cursor to be at the start of the new Block.
-          final nextBlockId =
-              databaseProps.databaseManager.getIdOfBlockAfter(state);
+          final nextBlockId = databaseProps.databaseManager
+              .getIdOfBlockAfter(getBlockCollection());
           ref.read(caretViewModelProvider.notifier).update(
                 caretPosition: 0,
               );
@@ -239,17 +236,14 @@ class BlockViewModel extends _$BlockViewModel {
                 blockId: nextBlockId,
                 setFromTraversal: true,
               );
-
-          // Record the new text into the Block.
-          state = state.copyWith(text: blockTextEditingController.text);
         case LogicalKeyboardKey.backspace:
           if (blockTextEditingController.selection.extentOffset != 0) {
             return KeyEventResult.ignored;
           }
 
           // Get Block before.
-          final idOfBlockBefore =
-              databaseProps.databaseManager.getIdOfBlockBefore(state);
+          final idOfBlockBefore = databaseProps.databaseManager
+              .getIdOfBlockBefore(getBlockCollection());
           if (idOfBlockBefore == null) {
             return KeyEventResult.ignored;
           }
@@ -257,8 +251,9 @@ class BlockViewModel extends _$BlockViewModel {
               .getBlockCollectionById(idOfBlockBefore);
 
           final updatedBlockBefore = blockBefore.copyWith(
-            childIds: blockBefore.childIds.toList()..addAll(state.childIds),
-            text: blockBefore.text + state.text,
+            childIds: blockBefore.childIds.toList()
+              ..addAll(getBlockCollection().childIds),
+            text: blockBefore.text + getBlockCollection().text,
           );
 
           ref.read(caretViewModelProvider.notifier).update(
@@ -271,7 +266,8 @@ class BlockViewModel extends _$BlockViewModel {
 
           // FIXME: consider creating a function that does this in one transaction
           databaseProps.databaseManager.putBlockCollection(updatedBlockBefore);
-          databaseProps.databaseManager.deleteBlockCollection(state);
+          databaseProps.databaseManager
+              .deleteBlockCollection(getBlockCollection());
         case LogicalKeyboardKey.delete:
           if (blockTextEditingController.selection.extentOffset !=
               blockTextEditingController.text.length) {
@@ -279,8 +275,8 @@ class BlockViewModel extends _$BlockViewModel {
           }
 
           // Get Block after.
-          final idOfBlockAfter =
-              databaseProps.databaseManager.getIdOfBlockAfter(state);
+          final idOfBlockAfter = databaseProps.databaseManager
+              .getIdOfBlockAfter(getBlockCollection());
           if (idOfBlockAfter == null) {
             return KeyEventResult.ignored;
           }
@@ -289,12 +285,13 @@ class BlockViewModel extends _$BlockViewModel {
 
           blockTextEditingController.value =
               blockTextEditingController.value.copyWith(
-            text: state.text + blockAfter.text,
+            text: getBlockCollection().text + blockAfter.text,
             selection: blockTextEditingController.selection,
           );
 
-          final updatedBlock = state.copyWith(
-            childIds: state.childIds.toList()..addAll(blockAfter.childIds),
+          final updatedBlock = getBlockCollection().copyWith(
+            childIds: getBlockCollection().childIds.toList()
+              ..addAll(blockAfter.childIds),
             text: blockTextEditingController.text,
           );
 
@@ -315,6 +312,11 @@ class BlockViewModel extends _$BlockViewModel {
       return KeyEventResult.handled;
     }
     return KeyEventResult.ignored;
+  }
+
+  BlockCollection getBlockCollection() {
+    return databaseProps.databaseManager
+        .getBlockCollectionById(databaseProps.id);
   }
 
   /// Search through widget tree to find [RenderEditable].
