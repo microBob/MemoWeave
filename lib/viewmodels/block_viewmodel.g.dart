@@ -6,7 +6,7 @@ part of 'block_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$blockViewModelHash() => r'be6a4c24a4772737742f2a1a593627b067ced15a';
+String _$blockViewModelHash() => r'a8dd1f44a9cceb5cccbe88221592e3b6ffc7c0e5';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,19 +31,23 @@ class _SystemHash {
 
 abstract class _$BlockViewModel extends BuildlessAutoDisposeNotifier<void> {
   late final ({DatabaseManager databaseManager, int id}) databaseProps;
-  late final GlobalKey<State<StatefulWidget>> blockKey;
   late final BlockTextEditingController blockTextEditingController;
+  late final GlobalKey<State<StatefulWidget>> blockKey;
+  late final FocusNode blockFocusNode;
 
   void build({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
-    required GlobalKey<State<StatefulWidget>> blockKey,
     required BlockTextEditingController blockTextEditingController,
+    required GlobalKey<State<StatefulWidget>> blockKey,
+    required FocusNode blockFocusNode,
   });
 }
 
 /// Block logic.
 ///
 /// ViewModel for [BlockWidget].
+/// TextField hold it's own state, so this VM is for syncing
+/// the text field's state with the database.
 ///
 /// Copied from [BlockViewModel].
 @ProviderFor(BlockViewModel)
@@ -52,12 +56,16 @@ const blockViewModelProvider = BlockViewModelFamily();
 /// Block logic.
 ///
 /// ViewModel for [BlockWidget].
+/// TextField hold it's own state, so this VM is for syncing
+/// the text field's state with the database.
 ///
 /// Copied from [BlockViewModel].
 class BlockViewModelFamily extends Family<void> {
   /// Block logic.
   ///
   /// ViewModel for [BlockWidget].
+  /// TextField hold it's own state, so this VM is for syncing
+  /// the text field's state with the database.
   ///
   /// Copied from [BlockViewModel].
   const BlockViewModelFamily();
@@ -65,17 +73,21 @@ class BlockViewModelFamily extends Family<void> {
   /// Block logic.
   ///
   /// ViewModel for [BlockWidget].
+  /// TextField hold it's own state, so this VM is for syncing
+  /// the text field's state with the database.
   ///
   /// Copied from [BlockViewModel].
   BlockViewModelProvider call({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
-    required GlobalKey<State<StatefulWidget>> blockKey,
     required BlockTextEditingController blockTextEditingController,
+    required GlobalKey<State<StatefulWidget>> blockKey,
+    required FocusNode blockFocusNode,
   }) {
     return BlockViewModelProvider(
       databaseProps: databaseProps,
-      blockKey: blockKey,
       blockTextEditingController: blockTextEditingController,
+      blockKey: blockKey,
+      blockFocusNode: blockFocusNode,
     );
   }
 
@@ -85,8 +97,9 @@ class BlockViewModelFamily extends Family<void> {
   ) {
     return call(
       databaseProps: provider.databaseProps,
-      blockKey: provider.blockKey,
       blockTextEditingController: provider.blockTextEditingController,
+      blockKey: provider.blockKey,
+      blockFocusNode: provider.blockFocusNode,
     );
   }
 
@@ -108,6 +121,8 @@ class BlockViewModelFamily extends Family<void> {
 /// Block logic.
 ///
 /// ViewModel for [BlockWidget].
+/// TextField hold it's own state, so this VM is for syncing
+/// the text field's state with the database.
 ///
 /// Copied from [BlockViewModel].
 class BlockViewModelProvider
@@ -115,17 +130,21 @@ class BlockViewModelProvider
   /// Block logic.
   ///
   /// ViewModel for [BlockWidget].
+  /// TextField hold it's own state, so this VM is for syncing
+  /// the text field's state with the database.
   ///
   /// Copied from [BlockViewModel].
   BlockViewModelProvider({
     required this.databaseProps,
-    required this.blockKey,
     required this.blockTextEditingController,
+    required this.blockKey,
+    required this.blockFocusNode,
   }) : super.internal(
           () => BlockViewModel()
             ..databaseProps = databaseProps
+            ..blockTextEditingController = blockTextEditingController
             ..blockKey = blockKey
-            ..blockTextEditingController = blockTextEditingController,
+            ..blockFocusNode = blockFocusNode,
           from: blockViewModelProvider,
           name: r'blockViewModelProvider',
           debugGetCreateSourceHash:
@@ -138,23 +157,26 @@ class BlockViewModelProvider
         );
 
   final ({DatabaseManager databaseManager, int id}) databaseProps;
-  final GlobalKey<State<StatefulWidget>> blockKey;
   final BlockTextEditingController blockTextEditingController;
+  final GlobalKey<State<StatefulWidget>> blockKey;
+  final FocusNode blockFocusNode;
 
   @override
   bool operator ==(Object other) {
     return other is BlockViewModelProvider &&
         other.databaseProps == databaseProps &&
+        other.blockTextEditingController == blockTextEditingController &&
         other.blockKey == blockKey &&
-        other.blockTextEditingController == blockTextEditingController;
+        other.blockFocusNode == blockFocusNode;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, databaseProps.hashCode);
-    hash = _SystemHash.combine(hash, blockKey.hashCode);
     hash = _SystemHash.combine(hash, blockTextEditingController.hashCode);
+    hash = _SystemHash.combine(hash, blockKey.hashCode);
+    hash = _SystemHash.combine(hash, blockFocusNode.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -165,8 +187,9 @@ class BlockViewModelProvider
   ) {
     return notifier.build(
       databaseProps: databaseProps,
-      blockKey: blockKey,
       blockTextEditingController: blockTextEditingController,
+      blockKey: blockKey,
+      blockFocusNode: blockFocusNode,
     );
   }
 }

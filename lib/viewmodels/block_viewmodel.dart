@@ -16,10 +16,15 @@ part 'block_viewmodel.g.dart';
 /// Block logic.
 ///
 /// ViewModel for [BlockWidget].
+/// TextField hold it's own state, so this VM is for syncing
+/// the text field's state with the database.
 @riverpod
 class BlockViewModel extends _$BlockViewModel {
+  // Local cached copies of components.
   RenderEditable? _blockRenderEditableCache;
+  BlockCollection? _blockCollectionCache;
 
+  /// Cache loader for [RenderEditable].
   RenderEditable get _blockRenderEditable {
     _findRenderEditable();
 
@@ -30,26 +35,47 @@ class BlockViewModel extends _$BlockViewModel {
     return _blockRenderEditableCache!;
   }
 
+  /// Cache loader for [BlockCollection].
+  BlockCollection get _blockCollection {
+    // Load from database if needed.
+    _blockCollectionCache ??=
+        databaseProps.databaseManager.getBlockCollectionById(databaseProps.id);
+
+    // Return cached copy.
+    return _blockCollectionCache!;
+  }
+
   /// Get props and initialize the Block.
   @override
   void build({
     required final DatabaseProps databaseProps,
-    required final GlobalKey blockKey,
     required final BlockTextEditingController blockTextEditingController,
+    required final GlobalKey blockKey,
+    required final FocusNode blockFocusNode,
   }) {
-    final blockCollection = getBlockCollection();
+    // Set initial block values.
+    blockTextEditingController.blockCollection = _blockCollection;
+    blockTextEditingController.text = _blockCollection.text;
 
-    // Set initial block values
-    blockTextEditingController.blockCollection = blockCollection;
-    blockTextEditingController.text = blockCollection.text;
+    // Listen and set focus for this block.
+    ref.listen(idOfBlockInFocusProvider, (previous, next) {
+      // Only request focus if the focus was changed.
+      if (previous?.blockId != next.blockId &&
+          next.blockId == databaseProps.id) {
+        blockFocusNode.requestFocus();
+      }
+    });
 
-    // Listen for changes
+    // Listen for text changes.
     blockTextEditingController.addListener(handleInput);
 
-    // Subscribe to changes and update state
+    // Subscribe to changes with the database.
     databaseProps.databaseManager.onBlockChanged(databaseProps.id).listen(
       (blockCollection) {
         if (blockCollection == null) return;
+
+        // Update local cache.
+        _blockCollectionCache = blockCollection;
 
         // Handle text updates not originating from TextEditingController.
         if (blockTextEditingController.text != blockCollection.text) {
@@ -105,11 +131,11 @@ class BlockViewModel extends _$BlockViewModel {
     }
 
     // Shortcut exit if no change to text.
-    if (blockTextEditingController.text == getBlockCollection().text) return;
+    if (blockTextEditingController.text == _blockCollection.text) return;
 
     // Create updated Block.
     final newBlockCollection =
-        getBlockCollection().copyWith(text: blockTextEditingController.text);
+        _blockCollection.copyWith(text: blockTextEditingController.text);
 
     blockTextEditingController.blockCollection = newBlockCollection;
 
@@ -145,8 +171,8 @@ class BlockViewModel extends _$BlockViewModel {
                     blockTextEditingController.selection.extentOffset,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
-                blockId: databaseProps.databaseManager
-                    .getIdOfBlockAfter(getBlockCollection()),
+            blockId: databaseProps.databaseManager
+                    .getIdOfBlockAfter(_blockCollection),
                 setFromTraversal: true,
               );
         case LogicalKeyboardKey.arrowUp:
@@ -174,8 +200,8 @@ class BlockViewModel extends _$BlockViewModel {
                     blockTextEditingController.selection.extentOffset,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
-                blockId: databaseProps.databaseManager
-                    .getIdOfBlockBefore(getBlockCollection()),
+            blockId: databaseProps.databaseManager
+                    .getIdOfBlockBefore(_blockCollection),
                 setFromTraversal: true,
               );
         case LogicalKeyboardKey.arrowLeft:
@@ -183,7 +209,7 @@ class BlockViewModel extends _$BlockViewModel {
             return KeyEventResult.ignored;
           }
           final idOfBlockBefore = databaseProps.databaseManager
-              .getIdOfBlockBefore(getBlockCollection());
+              .getIdOfBlockBefore(_blockCollection);
           if (idOfBlockBefore == null) {
             return KeyEventResult.ignored;
           }
@@ -206,14 +232,14 @@ class BlockViewModel extends _$BlockViewModel {
                 caretPosition: 0,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
-                blockId: databaseProps.databaseManager
-                    .getIdOfBlockAfter(getBlockCollection()),
+            blockId: databaseProps.databaseManager
+                    .getIdOfBlockAfter(_blockCollection),
                 setFromTraversal: true,
               );
         case LogicalKeyboardKey.enter || LogicalKeyboardKey.numpadEnter:
         // Split text between current and next Block.
           final nextBlockCollection = BlockCollection(
-            parent: getBlockCollection().parent,
+            parent: _blockCollection.parent,
             text: blockTextEditingController.selection
                 .textAfter(blockTextEditingController.text),
           );
@@ -222,13 +248,13 @@ class BlockViewModel extends _$BlockViewModel {
 
           // Insert new Block into parent.
           databaseProps.databaseManager.insertBlockAfter(
-            sourceBlockCollection: getBlockCollection(),
+            sourceBlockCollection: _blockCollection,
             newBlockCollection: nextBlockCollection,
           );
 
           // Set cursor to be at the start of the new Block.
-          final nextBlockId = databaseProps.databaseManager
-              .getIdOfBlockAfter(getBlockCollection());
+          final nextBlockId =
+              databaseProps.databaseManager.getIdOfBlockAfter(_blockCollection);
           ref.read(caretViewModelProvider.notifier).update(
                 caretPosition: 0,
               );
@@ -243,7 +269,7 @@ class BlockViewModel extends _$BlockViewModel {
 
           // Get Block before.
           final idOfBlockBefore = databaseProps.databaseManager
-              .getIdOfBlockBefore(getBlockCollection());
+              .getIdOfBlockBefore(_blockCollection);
           if (idOfBlockBefore == null) {
             return KeyEventResult.ignored;
           }
@@ -252,8 +278,8 @@ class BlockViewModel extends _$BlockViewModel {
 
           final updatedBlockBefore = blockBefore.copyWith(
             childIds: blockBefore.childIds.toList()
-              ..addAll(getBlockCollection().childIds),
-            text: blockBefore.text + getBlockCollection().text,
+              ..addAll(_blockCollection.childIds),
+            text: blockBefore.text + _blockCollection.text,
           );
 
           ref.read(caretViewModelProvider.notifier).update(
@@ -266,8 +292,7 @@ class BlockViewModel extends _$BlockViewModel {
 
           // FIXME: consider creating a function that does this in one transaction
           databaseProps.databaseManager.putBlockCollection(updatedBlockBefore);
-          databaseProps.databaseManager
-              .deleteBlockCollection(getBlockCollection());
+          databaseProps.databaseManager.deleteBlockCollection(_blockCollection);
         case LogicalKeyboardKey.delete:
           if (blockTextEditingController.selection.extentOffset !=
               blockTextEditingController.text.length) {
@@ -275,8 +300,8 @@ class BlockViewModel extends _$BlockViewModel {
           }
 
           // Get Block after.
-          final idOfBlockAfter = databaseProps.databaseManager
-              .getIdOfBlockAfter(getBlockCollection());
+          final idOfBlockAfter =
+              databaseProps.databaseManager.getIdOfBlockAfter(_blockCollection);
           if (idOfBlockAfter == null) {
             return KeyEventResult.ignored;
           }
@@ -285,12 +310,12 @@ class BlockViewModel extends _$BlockViewModel {
 
           blockTextEditingController.value =
               blockTextEditingController.value.copyWith(
-            text: getBlockCollection().text + blockAfter.text,
+            text: _blockCollection.text + blockAfter.text,
             selection: blockTextEditingController.selection,
           );
 
-          final updatedBlock = getBlockCollection().copyWith(
-            childIds: getBlockCollection().childIds.toList()
+          final updatedBlock = _blockCollection.copyWith(
+            childIds: _blockCollection.childIds.toList()
               ..addAll(blockAfter.childIds),
             text: blockTextEditingController.text,
           );
@@ -314,9 +339,9 @@ class BlockViewModel extends _$BlockViewModel {
     return KeyEventResult.ignored;
   }
 
+  /// Public getter to the [BlockCollection] this VM is managing.
   BlockCollection getBlockCollection() {
-    return databaseProps.databaseManager
-        .getBlockCollectionById(databaseProps.id);
+    return _blockCollection;
   }
 
   /// Search through widget tree to find [RenderEditable].

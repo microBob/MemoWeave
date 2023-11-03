@@ -17,7 +17,6 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$CaretState {
   int get caretPosition => throw _privateConstructorUsedError;
-
   Rect get caretRect => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -30,7 +29,6 @@ abstract class $CaretStateCopyWith<$Res> {
   factory $CaretStateCopyWith(
           CaretState value, $Res Function(CaretState) then) =
       _$CaretStateCopyWithImpl<$Res, CaretState>;
-
   @useResult
   $Res call({int caretPosition, Rect caretRect});
 }
@@ -42,7 +40,6 @@ class _$CaretStateCopyWithImpl<$Res, $Val extends CaretState>
 
   // ignore: unused_field
   final $Val _value;
-
   // ignore: unused_field
   final $Res Function($Val) _then;
 
@@ -71,7 +68,6 @@ abstract class _$$_CaretStateCopyWith<$Res>
   factory _$$_CaretStateCopyWith(
           _$_CaretState value, $Res Function(_$_CaretState) then) =
       __$$_CaretStateCopyWithImpl<$Res>;
-
   @override
   @useResult
   $Res call({int caretPosition, Rect caretRect});
@@ -147,10 +143,8 @@ abstract class _CaretState implements CaretState {
 
   @override
   int get caretPosition;
-
   @override
   Rect get caretRect;
-
   @override
   @JsonKey(ignore: true)
   _$$_CaretStateCopyWith<_$_CaretState> get copyWith =>

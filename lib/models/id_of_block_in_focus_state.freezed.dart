@@ -17,7 +17,6 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$IdOfBlockInFocusState {
   int get blockId => throw _privateConstructorUsedError;
-
   bool get setFromTraversal => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -30,7 +29,6 @@ abstract class $IdOfBlockInFocusStateCopyWith<$Res> {
   factory $IdOfBlockInFocusStateCopyWith(IdOfBlockInFocusState value,
           $Res Function(IdOfBlockInFocusState) then) =
       _$IdOfBlockInFocusStateCopyWithImpl<$Res, IdOfBlockInFocusState>;
-
   @useResult
   $Res call({int blockId, bool setFromTraversal});
 }
@@ -43,7 +41,6 @@ class _$IdOfBlockInFocusStateCopyWithImpl<$Res,
 
   // ignore: unused_field
   final $Val _value;
-
   // ignore: unused_field
   final $Res Function($Val) _then;
 
@@ -72,7 +69,6 @@ abstract class _$$_IdOfBlockInFocusStateCopyWith<$Res>
   factory _$$_IdOfBlockInFocusStateCopyWith(_$_IdOfBlockInFocusState value,
           $Res Function(_$_IdOfBlockInFocusState) then) =
       __$$_IdOfBlockInFocusStateCopyWithImpl<$Res>;
-
   @override
   @useResult
   $Res call({int blockId, bool setFromTraversal});
@@ -149,10 +145,8 @@ abstract class _IdOfBlockInFocusState implements IdOfBlockInFocusState {
 
   @override
   int get blockId;
-
   @override
   bool get setFromTraversal;
-
   @override
   @JsonKey(ignore: true)
   _$$_IdOfBlockInFocusStateCopyWith<_$_IdOfBlockInFocusState> get copyWith =>

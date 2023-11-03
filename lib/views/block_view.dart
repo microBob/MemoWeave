@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:memoweave/models/database_props.dart';
-import 'package:memoweave/utils/id_of_block_in_focus.dart';
 import 'package:memoweave/utils/use_block_texteditingcontroller.dart';
 import 'package:memoweave/viewmodels/block_viewmodel.dart';
 
@@ -27,19 +26,11 @@ class BlockView extends HookConsumerWidget {
     final blockKey = GlobalKey();
     final blockFocusNode = useFocusNode();
 
-    // Listen and set focus of this block.
-    ref.listen(idOfBlockInFocusProvider, (previous, next) {
-      // Only request focus if the focus was changed.
-      if (previous?.blockId != next.blockId &&
-          next.blockId == _databaseProps.id) {
-        blockFocusNode.requestFocus();
-      }
-    });
-
     final provider = blockViewModelProvider(
       databaseProps: _databaseProps,
-      blockKey: blockKey,
       blockTextEditingController: blockTextEditingController,
+      blockKey: blockKey,
+      blockFocusNode: blockFocusNode,
     );
     final viewModelNotifier = ref.watch(provider.notifier);
 
