@@ -57,6 +57,11 @@ class BlockViewModel extends _$BlockViewModel {
     blockTextEditingController.blockCollection = _blockCollection;
     blockTextEditingController.text = _blockCollection.text;
 
+    // Give this block focus if requested
+    ref.read(idOfBlockInFocusProvider).blockId == databaseProps.id
+        ? blockFocusNode.requestFocus()
+        : blockFocusNode.unfocus();
+
     // Listen and set focus for this block.
     ref.listen(idOfBlockInFocusProvider, (previous, next) {
       // Only request focus if the focus was changed.
@@ -121,7 +126,8 @@ class BlockViewModel extends _$BlockViewModel {
     // Shortcut exit if the selection is invalid.
     if (!blockTextEditingController.selection.isValid) return;
 
-    // Record new caret position if current block is in focus and if there was a change.
+    // Record new caret position if current block is in focus
+    // and if there was a change.
     if (ref.read(idOfBlockInFocusProvider).blockId == databaseProps.id &&
         ref.read(caretViewModelProvider).caretPosition !=
             blockTextEditingController.selection.extentOffset) {
@@ -137,6 +143,7 @@ class BlockViewModel extends _$BlockViewModel {
     final newBlockCollection =
         _blockCollection.copyWith(text: blockTextEditingController.text);
 
+    // Update text controller with new block collection.
     blockTextEditingController.blockCollection = newBlockCollection;
 
     // Write into database.
