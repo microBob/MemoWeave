@@ -178,7 +178,7 @@ class BlockViewModel extends _$BlockViewModel {
                     blockTextEditingController.selection.extentOffset,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
-            blockId: databaseProps.databaseManager
+                blockId: databaseProps.databaseManager
                     .getIdOfBlockAfter(_blockCollection),
                 setFromTraversal: true,
               );
