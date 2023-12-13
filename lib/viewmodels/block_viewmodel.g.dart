@@ -6,7 +6,7 @@ part of 'block_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$blockViewModelHash() => r'a08ad081c053794894955f3fc6647a2189a71746';
+String _$blockViewModelHash() => r'579c8238a950b0c2b2fb8a063da640b1d2b1aa29';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -135,11 +135,11 @@ class BlockViewModelProvider
   ///
   /// Copied from [BlockViewModel].
   BlockViewModelProvider({
-    required this.databaseProps,
-    required this.blockTextEditingController,
-    required this.blockKey,
-    required this.blockFocusNode,
-  }) : super.internal(
+    required ({DatabaseManager databaseManager, int id}) databaseProps,
+    required BlockTextEditingController blockTextEditingController,
+    required GlobalKey<State<StatefulWidget>> blockKey,
+    required FocusNode blockFocusNode,
+  }) : this._internal(
           () => BlockViewModel()
             ..databaseProps = databaseProps
             ..blockTextEditingController = blockTextEditingController
@@ -154,12 +154,69 @@ class BlockViewModelProvider
           dependencies: BlockViewModelFamily._dependencies,
           allTransitiveDependencies:
               BlockViewModelFamily._allTransitiveDependencies,
+          databaseProps: databaseProps,
+          blockTextEditingController: blockTextEditingController,
+          blockKey: blockKey,
+          blockFocusNode: blockFocusNode,
         );
+
+  BlockViewModelProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.databaseProps,
+    required this.blockTextEditingController,
+    required this.blockKey,
+    required this.blockFocusNode,
+  }) : super.internal();
 
   final ({DatabaseManager databaseManager, int id}) databaseProps;
   final BlockTextEditingController blockTextEditingController;
   final GlobalKey<State<StatefulWidget>> blockKey;
   final FocusNode blockFocusNode;
+
+  @override
+  void runNotifierBuild(
+    covariant BlockViewModel notifier,
+  ) {
+    return notifier.build(
+      databaseProps: databaseProps,
+      blockTextEditingController: blockTextEditingController,
+      blockKey: blockKey,
+      blockFocusNode: blockFocusNode,
+    );
+  }
+
+  @override
+  Override overrideWith(BlockViewModel Function() create) {
+    return ProviderOverride(
+      origin: this,
+      override: BlockViewModelProvider._internal(
+        () => create()
+          ..databaseProps = databaseProps
+          ..blockTextEditingController = blockTextEditingController
+          ..blockKey = blockKey
+          ..blockFocusNode = blockFocusNode,
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        databaseProps: databaseProps,
+        blockTextEditingController: blockTextEditingController,
+        blockKey: blockKey,
+        blockFocusNode: blockFocusNode,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeNotifierProviderElement<BlockViewModel, void> createElement() {
+    return _BlockViewModelProviderElement(this);
+  }
 
   @override
   bool operator ==(Object other) {
@@ -180,18 +237,42 @@ class BlockViewModelProvider
 
     return _SystemHash.finish(hash);
   }
+}
+
+mixin BlockViewModelRef on AutoDisposeNotifierProviderRef<void> {
+  /// The parameter `databaseProps` of this provider.
+  ({DatabaseManager databaseManager, int id}) get databaseProps;
+
+  /// The parameter `blockTextEditingController` of this provider.
+  BlockTextEditingController get blockTextEditingController;
+
+  /// The parameter `blockKey` of this provider.
+  GlobalKey<State<StatefulWidget>> get blockKey;
+
+  /// The parameter `blockFocusNode` of this provider.
+  FocusNode get blockFocusNode;
+}
+
+class _BlockViewModelProviderElement
+    extends AutoDisposeNotifierProviderElement<BlockViewModel, void>
+    with BlockViewModelRef {
+  _BlockViewModelProviderElement(super.provider);
 
   @override
-  void runNotifierBuild(
-    covariant BlockViewModel notifier,
-  ) {
-    return notifier.build(
-      databaseProps: databaseProps,
-      blockTextEditingController: blockTextEditingController,
-      blockKey: blockKey,
-      blockFocusNode: blockFocusNode,
-    );
-  }
+  ({DatabaseManager databaseManager, int id}) get databaseProps =>
+      (origin as BlockViewModelProvider).databaseProps;
+
+  @override
+  BlockTextEditingController get blockTextEditingController =>
+      (origin as BlockViewModelProvider).blockTextEditingController;
+
+  @override
+  GlobalKey<State<StatefulWidget>> get blockKey =>
+      (origin as BlockViewModelProvider).blockKey;
+
+  @override
+  FocusNode get blockFocusNode =>
+      (origin as BlockViewModelProvider).blockFocusNode;
 }
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

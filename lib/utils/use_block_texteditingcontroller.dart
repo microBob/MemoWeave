@@ -8,7 +8,7 @@ BlockTextEditingController useBlockTextEditingController(
 }
 
 class _BlockTextEditingController extends Hook<BlockTextEditingController> {
-  const _BlockTextEditingController({List<Object?>? keys}) : super(keys: keys);
+  const _BlockTextEditingController({super.keys});
 
   @override
   _BlockTextEditingControllerState createState() =>

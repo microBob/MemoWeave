@@ -17,7 +17,7 @@ enum BlockStyle {
 
 /// Collection definition for a text block.
 @collection
-class BlockCollection extends ContainerModel {
+class BlockCollection extends ParentModel {
   final int parent;
   final bool hasThreadAsParent;
 

@@ -8,7 +8,7 @@
 PRODUCT_NAME = memoweave
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.mu.memoweave
+PRODUCT_BUNDLE_IDENTIFIER = com.example.memoweave
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.mu. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 com.example. All rights reserved.

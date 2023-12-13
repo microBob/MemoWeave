@@ -176,14 +176,14 @@ class DatabaseManager {
     });
   }
 
-  IsarCollection<ContainerModel> _getParentCollectionsOf(
+  IsarCollection<ParentModel> _getParentCollectionsOf(
       BlockCollection blockCollection) {
     return blockCollection.hasThreadAsParent
         ? _isar.threadCollections
         : _isar.blockCollections;
   }
 
-  ContainerModel _getParentCollectionOf(BlockCollection blockCollection) {
+  ParentModel _getParentCollectionOf(BlockCollection blockCollection) {
     final parentCollection = _getParentCollectionsOf(blockCollection)
         .getSync(blockCollection.parent);
     if (parentCollection == null) {

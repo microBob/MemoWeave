@@ -299,7 +299,7 @@ class BlockViewModel extends _$BlockViewModel {
 
           // FIXME: consider creating a function that does this in one transaction
           databaseProps.databaseManager.putBlockCollection(updatedBlockBefore);
-          databaseProps.databaseManager.deleteBlockCollection(_blockCollection);
+          // databaseProps.databaseManager.deleteBlockCollection(_blockCollection);
         case LogicalKeyboardKey.delete:
           if (blockTextEditingController.selection.extentOffset !=
               blockTextEditingController.text.length) {

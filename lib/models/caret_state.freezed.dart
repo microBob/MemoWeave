@@ -63,22 +63,23 @@ class _$CaretStateCopyWithImpl<$Res, $Val extends CaretState>
 }
 
 /// @nodoc
-abstract class _$$_CaretStateCopyWith<$Res>
+abstract class _$$CaretStateImplCopyWith<$Res>
     implements $CaretStateCopyWith<$Res> {
-  factory _$$_CaretStateCopyWith(
-          _$_CaretState value, $Res Function(_$_CaretState) then) =
-      __$$_CaretStateCopyWithImpl<$Res>;
+  factory _$$CaretStateImplCopyWith(
+          _$CaretStateImpl value, $Res Function(_$CaretStateImpl) then) =
+      __$$CaretStateImplCopyWithImpl<$Res>;
+
   @override
   @useResult
   $Res call({int caretPosition, Rect caretRect});
 }
 
 /// @nodoc
-class __$$_CaretStateCopyWithImpl<$Res>
-    extends _$CaretStateCopyWithImpl<$Res, _$_CaretState>
-    implements _$$_CaretStateCopyWith<$Res> {
-  __$$_CaretStateCopyWithImpl(
-      _$_CaretState _value, $Res Function(_$_CaretState) _then)
+class __$$CaretStateImplCopyWithImpl<$Res>
+    extends _$CaretStateCopyWithImpl<$Res, _$CaretStateImpl>
+    implements _$$CaretStateImplCopyWith<$Res> {
+  __$$CaretStateImplCopyWithImpl(
+      _$CaretStateImpl _value, $Res Function(_$CaretStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -87,7 +88,7 @@ class __$$_CaretStateCopyWithImpl<$Res>
     Object? caretPosition = null,
     Object? caretRect = null,
   }) {
-    return _then(_$_CaretState(
+    return _then(_$CaretStateImpl(
       caretPosition: null == caretPosition
           ? _value.caretPosition
           : caretPosition // ignore: cast_nullable_to_non_nullable
@@ -102,8 +103,9 @@ class __$$_CaretStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_CaretState implements _CaretState {
-  const _$_CaretState({required this.caretPosition, required this.caretRect});
+class _$CaretStateImpl implements _CaretState {
+  const _$CaretStateImpl(
+      {required this.caretPosition, required this.caretRect});
 
   @override
   final int caretPosition;
@@ -119,7 +121,7 @@ class _$_CaretState implements _CaretState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CaretState &&
+            other is _$CaretStateImpl &&
             (identical(other.caretPosition, caretPosition) ||
                 other.caretPosition == caretPosition) &&
             (identical(other.caretRect, caretRect) ||
@@ -132,21 +134,23 @@ class _$_CaretState implements _CaretState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CaretStateCopyWith<_$_CaretState> get copyWith =>
-      __$$_CaretStateCopyWithImpl<_$_CaretState>(this, _$identity);
+  _$$CaretStateImplCopyWith<_$CaretStateImpl> get copyWith =>
+      __$$CaretStateImplCopyWithImpl<_$CaretStateImpl>(this, _$identity);
 }
 
 abstract class _CaretState implements CaretState {
   const factory _CaretState(
       {required final int caretPosition,
-      required final Rect caretRect}) = _$_CaretState;
+      required final Rect caretRect}) = _$CaretStateImpl;
 
   @override
   int get caretPosition;
+
   @override
   Rect get caretRect;
+
   @override
   @JsonKey(ignore: true)
-  _$$_CaretStateCopyWith<_$_CaretState> get copyWith =>
+  _$$CaretStateImplCopyWith<_$CaretStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

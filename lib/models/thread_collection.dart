@@ -7,7 +7,7 @@ part 'thread_collection.g.dart';
 
 /// Collection definition for a thread.
 @collection
-class ThreadCollection extends ContainerModel {
+class ThreadCollection extends ParentModel {
   /// The spool this thread is part of.
   final String spool;
 
@@ -17,8 +17,6 @@ class ThreadCollection extends ContainerModel {
   final String subject;
 
   /// [DateTime] for this thread.
-  ///
-  /// Will default to the current [DateTime] at creation.
   final DateTime dateTime;
 
   /// Default constructor.

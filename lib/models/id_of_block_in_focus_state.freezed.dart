@@ -64,22 +64,25 @@ class _$IdOfBlockInFocusStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_IdOfBlockInFocusStateCopyWith<$Res>
+abstract class _$$IdOfBlockInFocusStateImplCopyWith<$Res>
     implements $IdOfBlockInFocusStateCopyWith<$Res> {
-  factory _$$_IdOfBlockInFocusStateCopyWith(_$_IdOfBlockInFocusState value,
-          $Res Function(_$_IdOfBlockInFocusState) then) =
-      __$$_IdOfBlockInFocusStateCopyWithImpl<$Res>;
+  factory _$$IdOfBlockInFocusStateImplCopyWith(
+          _$IdOfBlockInFocusStateImpl value,
+          $Res Function(_$IdOfBlockInFocusStateImpl) then) =
+      __$$IdOfBlockInFocusStateImplCopyWithImpl<$Res>;
+
   @override
   @useResult
   $Res call({int blockId, bool setFromTraversal});
 }
 
 /// @nodoc
-class __$$_IdOfBlockInFocusStateCopyWithImpl<$Res>
-    extends _$IdOfBlockInFocusStateCopyWithImpl<$Res, _$_IdOfBlockInFocusState>
-    implements _$$_IdOfBlockInFocusStateCopyWith<$Res> {
-  __$$_IdOfBlockInFocusStateCopyWithImpl(_$_IdOfBlockInFocusState _value,
-      $Res Function(_$_IdOfBlockInFocusState) _then)
+class __$$IdOfBlockInFocusStateImplCopyWithImpl<$Res>
+    extends _$IdOfBlockInFocusStateCopyWithImpl<$Res,
+        _$IdOfBlockInFocusStateImpl>
+    implements _$$IdOfBlockInFocusStateImplCopyWith<$Res> {
+  __$$IdOfBlockInFocusStateImplCopyWithImpl(_$IdOfBlockInFocusStateImpl _value,
+      $Res Function(_$IdOfBlockInFocusStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -88,7 +91,7 @@ class __$$_IdOfBlockInFocusStateCopyWithImpl<$Res>
     Object? blockId = null,
     Object? setFromTraversal = null,
   }) {
-    return _then(_$_IdOfBlockInFocusState(
+    return _then(_$IdOfBlockInFocusStateImpl(
       blockId: null == blockId
           ? _value.blockId
           : blockId // ignore: cast_nullable_to_non_nullable
@@ -103,8 +106,8 @@ class __$$_IdOfBlockInFocusStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_IdOfBlockInFocusState implements _IdOfBlockInFocusState {
-  const _$_IdOfBlockInFocusState(
+class _$IdOfBlockInFocusStateImpl implements _IdOfBlockInFocusState {
+  const _$IdOfBlockInFocusStateImpl(
       {required this.blockId, required this.setFromTraversal});
 
   @override
@@ -121,7 +124,7 @@ class _$_IdOfBlockInFocusState implements _IdOfBlockInFocusState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_IdOfBlockInFocusState &&
+            other is _$IdOfBlockInFocusStateImpl &&
             (identical(other.blockId, blockId) || other.blockId == blockId) &&
             (identical(other.setFromTraversal, setFromTraversal) ||
                 other.setFromTraversal == setFromTraversal));
@@ -133,22 +136,24 @@ class _$_IdOfBlockInFocusState implements _IdOfBlockInFocusState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_IdOfBlockInFocusStateCopyWith<_$_IdOfBlockInFocusState> get copyWith =>
-      __$$_IdOfBlockInFocusStateCopyWithImpl<_$_IdOfBlockInFocusState>(
-          this, _$identity);
+  _$$IdOfBlockInFocusStateImplCopyWith<_$IdOfBlockInFocusStateImpl>
+      get copyWith => __$$IdOfBlockInFocusStateImplCopyWithImpl<
+          _$IdOfBlockInFocusStateImpl>(this, _$identity);
 }
 
 abstract class _IdOfBlockInFocusState implements IdOfBlockInFocusState {
   const factory _IdOfBlockInFocusState(
       {required final int blockId,
-      required final bool setFromTraversal}) = _$_IdOfBlockInFocusState;
+      required final bool setFromTraversal}) = _$IdOfBlockInFocusStateImpl;
 
   @override
   int get blockId;
+
   @override
   bool get setFromTraversal;
+
   @override
   @JsonKey(ignore: true)
-  _$$_IdOfBlockInFocusStateCopyWith<_$_IdOfBlockInFocusState> get copyWith =>
-      throw _privateConstructorUsedError;
+  _$$IdOfBlockInFocusStateImplCopyWith<_$IdOfBlockInFocusStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
