@@ -215,7 +215,6 @@ class _ThreadViewModelProviderElement
   @override
   ({DatabaseManager databaseManager, int id}) get databaseProps =>
       (origin as ThreadViewModelProvider).databaseProps;
-
   @override
   TextEditingController get spoolTextEditingController =>
       (origin as ThreadViewModelProvider).spoolTextEditingController;

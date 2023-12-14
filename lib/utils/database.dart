@@ -117,7 +117,7 @@ class DatabaseManager {
   }
 
   Id? getIdOfBlockAfter(BlockCollection sourceBlockCollection) {
-    // TODO: handle looking at child blocks
+    // TODO: handle looking at child blocks first if it has any
     final parentCollection = _getParentCollectionOf(sourceBlockCollection);
 
     final sourceBlockIndex =

@@ -261,15 +261,12 @@ class _BlockViewModelProviderElement
   @override
   ({DatabaseManager databaseManager, int id}) get databaseProps =>
       (origin as BlockViewModelProvider).databaseProps;
-
   @override
   BlockTextEditingController get blockTextEditingController =>
       (origin as BlockViewModelProvider).blockTextEditingController;
-
   @override
   GlobalKey<State<StatefulWidget>> get blockKey =>
       (origin as BlockViewModelProvider).blockKey;
-
   @override
   FocusNode get blockFocusNode =>
       (origin as BlockViewModelProvider).blockFocusNode;

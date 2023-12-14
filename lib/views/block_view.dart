@@ -42,6 +42,7 @@ class BlockView extends HookConsumerWidget {
             onFocusChange: viewModelNotifier.onFocusChanged,
             child: TextField(
               key: blockKey,
+              autofocus: false,
               controller: blockTextEditingController,
               focusNode: blockFocusNode,
               textInputAction: TextInputAction.newline,
