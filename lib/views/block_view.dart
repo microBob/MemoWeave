@@ -1,48 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:memoweave/models/database_props.dart';
+import 'package:memoweave/models/block_props.dart';
 import 'package:memoweave/utils/use_block_texteditingcontroller.dart';
 import 'package:memoweave/viewmodels/block_viewmodel.dart';
 
 /// Text editor interface.
 ///
 /// Renders text and handles input.
-class BlockView extends HookConsumerWidget {
+class BlockView extends HookWidget {
   /// Properties for this Block.
-  final DatabaseProps _databaseProps;
+  final BlockProps _blockProps;
 
-  /// Constructor that passes [_props].
+  /// Generative constructor.
   const BlockView({
     super.key,
-    required final DatabaseProps databaseProps,
-  }) : _databaseProps = databaseProps;
+    required final BlockProps blockProps,
+  }) : _blockProps = blockProps;
 
   /// Attach to [BlockViewModel] and build UI.
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final blockTextEditingController =
-        useBlockTextEditingController(keys: [_databaseProps]);
+  Widget build(BuildContext context) {
+    final blockTextEditingController = useBlockTextEditingController(
+        blockCollection: _blockProps.blockCollectionTreeNode.blockCollection);
     final blockKey = GlobalKey();
     final blockFocusNode = useFocusNode();
 
-    final provider = blockViewModelProvider(
-      databaseProps: _databaseProps,
-      blockTextEditingController: blockTextEditingController,
-      blockKey: blockKey,
-      blockFocusNode: blockFocusNode,
-    );
-    final viewModelNotifier = ref.watch(provider.notifier);
-
     return ListView.builder(
       itemBuilder: (context, index) {
+        // Start with this block
         if (index == 0) {
           return Focus(
-            onKeyEvent: viewModelNotifier.handleEditorTraversal,
-            onFocusChange: viewModelNotifier.onFocusChanged,
+            onKeyEvent: _blockProps.onEditorTraversalCallback,
             child: TextField(
               key: blockKey,
-              autofocus: false,
+              autofocus:
+                  _blockProps.blockCollectionTreeNode.blockCollection.id ==
+                      _blockProps.idOfBlockInFocus,
               controller: blockTextEditingController,
               focusNode: blockFocusNode,
               textInputAction: TextInputAction.newline,
@@ -51,14 +44,15 @@ class BlockView extends HookConsumerWidget {
           );
         }
 
+        // Then build the rest of the children.
         return BlockView(
-          databaseProps: (
-            id: viewModelNotifier.getBlockCollection().childIds[index - 1],
-            databaseManager: _databaseProps.databaseManager,
+          blockProps: _blockProps.copyWith(
+            blockCollectionTreeNode:
+                _blockProps.blockCollectionTreeNode.childBlocks[index - 1],
           ),
         );
       },
-      itemCount: viewModelNotifier.getBlockCollection().childIds.length + 1,
+      itemCount: _blockProps.blockCollectionTreeNode.childBlocks.length + 1,
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
     );
