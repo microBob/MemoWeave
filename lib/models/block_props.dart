@@ -15,7 +15,7 @@ class BlockProps with _$BlockProps {
     required Id idOfBlockInFocus,
     required KeyEventResult Function(
             FocusNode, KeyEvent, Id, RenderEditable, BlockTextEditingController)
-        onEditorTraversalCallback,
+        onKeyEventCallback,
     required Function(bool, Id) onFocusChangedCallback,
     required Function(BlockTextEditingController, Id)
         onBlockTextEditingControllerChangedCallback,

@@ -40,7 +40,7 @@ class BlockView extends HookWidget {
         // Start with this block
         if (index == 0) {
           return Focus(
-            onKeyEvent: (node, event) => _blockProps.onEditorTraversalCallback(
+            onKeyEvent: (node, event) => _blockProps.onKeyEventCallback(
               node,
               event,
               _blockProps.blockCollectionTreeNode.blockCollection.id,

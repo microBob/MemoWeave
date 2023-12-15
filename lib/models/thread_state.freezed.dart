@@ -17,11 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ThreadState {
   int get idOfBlockInFocus => throw _privateConstructorUsedError;
-
   int get caretPosition => throw _privateConstructorUsedError;
-
   DateTime get dateTime => throw _privateConstructorUsedError;
-
   List<BlockCollectionTreeNode> get blockCollectionTreeNodes =>
       throw _privateConstructorUsedError;
 
@@ -35,7 +32,6 @@ abstract class $ThreadStateCopyWith<$Res> {
   factory $ThreadStateCopyWith(
           ThreadState value, $Res Function(ThreadState) then) =
       _$ThreadStateCopyWithImpl<$Res, ThreadState>;
-
   @useResult
   $Res call(
       {int idOfBlockInFocus,
@@ -51,7 +47,6 @@ class _$ThreadStateCopyWithImpl<$Res, $Val extends ThreadState>
 
   // ignore: unused_field
   final $Val _value;
-
   // ignore: unused_field
   final $Res Function($Val) _then;
 
@@ -90,7 +85,6 @@ abstract class _$$ThreadStateImplCopyWith<$Res>
   factory _$$ThreadStateImplCopyWith(
           _$ThreadStateImpl value, $Res Function(_$ThreadStateImpl) then) =
       __$$ThreadStateImplCopyWithImpl<$Res>;
-
   @override
   @useResult
   $Res call(
@@ -154,7 +148,6 @@ class _$ThreadStateImpl implements _ThreadState {
   @override
   final DateTime dateTime;
   final List<BlockCollectionTreeNode> _blockCollectionTreeNodes;
-
   @override
   List<BlockCollectionTreeNode> get blockCollectionTreeNodes {
     if (_blockCollectionTreeNodes is EqualUnmodifiableListView)
@@ -204,16 +197,12 @@ abstract class _ThreadState implements ThreadState {
 
   @override
   int get idOfBlockInFocus;
-
   @override
   int get caretPosition;
-
   @override
   DateTime get dateTime;
-
   @override
   List<BlockCollectionTreeNode> get blockCollectionTreeNodes;
-
   @override
   @JsonKey(ignore: true)
   _$$ThreadStateImplCopyWith<_$ThreadStateImpl> get copyWith =>

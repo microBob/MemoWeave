@@ -20,6 +20,9 @@ class ThreadViewModel extends _$ThreadViewModel {
   /// Local cache of the Thread Collection data.
   late ThreadCollection _threadCollectionCache;
 
+  /// Ordered list of blocks by ID.
+  List<Id> _blocksInThreadById = [];
+
   @override
   ThreadState build({
     required final DatabaseProps databaseProps,
@@ -52,9 +55,8 @@ class ThreadViewModel extends _$ThreadViewModel {
             threadCollection.childIds != _threadCollectionCache.childIds) {
           state = state.copyWith(
             dateTime: threadCollection.dateTime,
-            blockCollectionTreeNodes: threadCollection.childIds
-                .map((childIds) => _createBlockCollectionTree(childIds))
-                .toList(),
+            blockCollectionTreeNodes:
+                _createBlockCollectionTreeNodes(threadCollection),
           );
         }
 
@@ -68,9 +70,8 @@ class ThreadViewModel extends _$ThreadViewModel {
       idOfBlockInFocus: _threadCollectionCache.childIds.first,
       caretPosition: 0,
       dateTime: _threadCollectionCache.dateTime,
-      blockCollectionTreeNodes: _threadCollectionCache.childIds
-          .map((childIds) => _createBlockCollectionTree(childIds))
-          .toList(),
+      blockCollectionTreeNodes:
+          _createBlockCollectionTreeNodes(_threadCollectionCache),
     );
   }
 
@@ -105,7 +106,7 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Handle traversal keystrokes on blocks.
-  KeyEventResult onEditorTraversalCallback(
+  KeyEventResult onKeyEventCallback(
     FocusNode focusNode,
     KeyEvent keyEvent,
     Id blockId,
@@ -125,9 +126,16 @@ class ThreadViewModel extends _$ThreadViewModel {
             return KeyEventResult.ignored;
           }
 
+          // Shortcut exit if block is first in thread.
+          if (_blocksInThreadById.first == blockId) {
+            return KeyEventResult.ignored;
+          }
+
           // Otherwise, move focus to previous block.
           state = state.copyWith(
-              idOfBlockInFocus: _threadCollectionCache.childIds.first);
+            idOfBlockInFocus:
+                _blocksInThreadById[_blocksInThreadById.indexOf(blockId) - 1],
+          );
       }
     }
     return KeyEventResult.ignored;
@@ -171,14 +179,33 @@ class ThreadViewModel extends _$ThreadViewModel {
     }
   }
 
+  /// Build the list of [BlockCollectionTreeNode] for
+  /// a given [threadCollection].
+  List<BlockCollectionTreeNode> _createBlockCollectionTreeNodes(
+      ThreadCollection threadCollection) {
+    // Reset list thread's list of block IDs.
+    _blocksInThreadById = [];
+
+    // Create the list of trees.
+    return threadCollection.childIds
+        .map((childId) => _createBlockCollectionTree(childId))
+        .toList();
+  }
+
   /// Create the [BlockCollectionTreeNode] for a given [blockId].
   BlockCollectionTreeNode _createBlockCollectionTree(Id blockId) {
+    // Add Id to the list of Block IDs.
+    _blocksInThreadById.add(blockId);
+
+    // Get current Block's Collection
     final currentBlock =
         databaseProps.databaseManager.getBlockCollectionById(blockId);
+
+    // Return the BlockCollectionTreeNode and recurse on children.
     return BlockCollectionTreeNode(
       blockCollection: currentBlock,
       childBlocks: currentBlock.childIds
-          .map((childIds) => _createBlockCollectionTree(childIds))
+          .map((childId) => _createBlockCollectionTree(childId))
           .toList(),
     );
   }
