@@ -9,6 +9,7 @@ part 'thread_state.freezed.dart';
 class ThreadState with _$ThreadState {
   const factory ThreadState({
     required Id idOfBlockInFocus,
+    required bool traversingBlocks,
     required int caretPosition,
     required DateTime dateTime,
     required List<BlockCollectionTreeNode> blockCollectionTreeNodes,

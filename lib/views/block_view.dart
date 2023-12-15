@@ -50,6 +50,7 @@ class BlockView extends HookWidget {
             onFocusChange: (hasFocus) => _blockProps.onFocusChangedCallback(
               hasFocus,
               _blockProps.blockCollectionTreeNode.blockCollection.id,
+              blockTextEditingController,
             ),
             child: TextField(
               key: blockKey,

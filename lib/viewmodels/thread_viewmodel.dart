@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -46,7 +48,7 @@ class ThreadViewModel extends _$ThreadViewModel {
 
     // Subscribe to changes on the Thread collection and update state
     databaseProps.databaseManager.onThreadChanged(databaseProps.id).listen(
-      (threadCollection) {
+          (threadCollection) {
         // Shortcut exit if null.
         if (threadCollection == null) return;
 
@@ -56,7 +58,7 @@ class ThreadViewModel extends _$ThreadViewModel {
           state = state.copyWith(
             dateTime: threadCollection.dateTime,
             blockCollectionTreeNodes:
-                _createBlockCollectionTreeNodes(threadCollection),
+            _createBlockCollectionTreeNodes(threadCollection),
           );
         }
 
@@ -68,7 +70,8 @@ class ThreadViewModel extends _$ThreadViewModel {
     // Return state.
     return ThreadState(
       idOfBlockInFocus: _threadCollectionCache.childIds.first,
-      caretPosition: 0,
+      traversingBlocks: false,
+      caretPosition: 200,
       dateTime: _threadCollectionCache.dateTime,
       blockCollectionTreeNodes:
           _createBlockCollectionTreeNodes(_threadCollectionCache),
@@ -106,17 +109,15 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Handle traversal keystrokes on blocks.
-  KeyEventResult onKeyEventCallback(
-    FocusNode focusNode,
-    KeyEvent keyEvent,
-    Id blockId,
-    RenderEditable blockRenderEditable,
-    BlockTextEditingController blockTextEditingController,
-  ) {
+  KeyEventResult onKeyEventCallback(FocusNode focusNode,
+      KeyEvent keyEvent,
+      Id blockId,
+      RenderEditable blockRenderEditable,
+      BlockTextEditingController blockTextEditingController,) {
     if (keyEvent is KeyDownEvent || keyEvent is KeyRepeatEvent) {
       switch (keyEvent.logicalKey) {
         case LogicalKeyboardKey.arrowUp:
-          // Compute position above.
+        // Compute position above.
           final positionAbove = blockRenderEditable.getTextPositionAbove(
               blockTextEditingController.selection.extent);
 
@@ -135,29 +136,44 @@ class ThreadViewModel extends _$ThreadViewModel {
           state = state.copyWith(
             idOfBlockInFocus:
                 _blocksInThreadById[_blocksInThreadById.indexOf(blockId) - 1],
+            traversingBlocks: true,
+            caretPosition: positionAbove.offset,
           );
+
+          // Mark event as handled.
+          return KeyEventResult.handled;
       }
     }
+
+    // Otherwise, mark event as ignored.
     return KeyEventResult.ignored;
   }
 
   /// Handle block gaining focus.
-  void onFocusChangedCallback(bool gainsFocus, Id blockId) {
+  void onFocusChangedCallback(bool gainsFocus, Id blockId,
+      BlockTextEditingController blockTextEditingController) {
     // Shortcut exit if losing focus.
     if (!gainsFocus) return;
 
-    // Shortcut exit if block is already marked as in focus.
-    if (state.idOfBlockInFocus == blockId) return;
+    // Handle traversing blocks.
+    if (state.idOfBlockInFocus == blockId && state.traversingBlocks) {
+      // Update caret position.
+      blockTextEditingController.selection = TextSelection.collapsed(
+        offset:
+            min(state.caretPosition, blockTextEditingController.text.length),
+      );
 
-    // Update state.
-    state = state.copyWith(idOfBlockInFocus: blockId);
+      // Acknowledge traversal.
+      state = state.copyWith(traversingBlocks: false);
+    } else if (state.idOfBlockInFocus != blockId) {
+      // If we got here from a different block, update state.
+      state = state.copyWith(idOfBlockInFocus: blockId);
+    }
   }
 
   /// Handle saving new input in a block.
-  void onBlockTextEditingControllerChangedCallback(
-    BlockTextEditingController blockTextEditingController,
-    Id blockId,
-  ) {
+  void onBlockTextEditingControllerChangedCallback(BlockTextEditingController blockTextEditingController,
+      Id blockId,) {
     // Get block from database.
     final block = databaseProps.databaseManager.getBlockCollectionById(blockId);
 
@@ -172,7 +188,7 @@ class ThreadViewModel extends _$ThreadViewModel {
 
     // Update caret position if valid and changed.
     if (blockTextEditingController.selection.isValid &&
-        blockTextEditingController.selection.baseOffset !=
+        blockTextEditingController.selection.extentOffset !=
             state.caretPosition) {
       state = state.copyWith(
           caretPosition: blockTextEditingController.selection.extentOffset);
@@ -181,32 +197,31 @@ class ThreadViewModel extends _$ThreadViewModel {
 
   /// Build the list of [BlockCollectionTreeNode] for
   /// a given [threadCollection].
-  List<BlockCollectionTreeNode> _createBlockCollectionTreeNodes(
-      ThreadCollection threadCollection) {
+  List<BlockCollectionTreeNode> _createBlockCollectionTreeNodes(ThreadCollection threadCollection) {
     // Reset list thread's list of block IDs.
     _blocksInThreadById = [];
 
+    // Create the [BlockCollectionTreeNode] for a given [blockId].
+    BlockCollectionTreeNode createBlockCollectionTree(Id blockId) {
+      // Add Id to the list of Block IDs.
+      _blocksInThreadById.add(blockId);
+
+      // Get current Block's Collection
+      final currentBlock =
+          databaseProps.databaseManager.getBlockCollectionById(blockId);
+
+      // Return the BlockCollectionTreeNode and recurse on children.
+      return BlockCollectionTreeNode(
+        blockCollection: currentBlock,
+        childBlocks: currentBlock.childIds
+            .map((childId) => createBlockCollectionTree(childId))
+            .toList(),
+      );
+    }
+
     // Create the list of trees.
     return threadCollection.childIds
-        .map((childId) => _createBlockCollectionTree(childId))
+        .map((childId) => createBlockCollectionTree(childId))
         .toList();
-  }
-
-  /// Create the [BlockCollectionTreeNode] for a given [blockId].
-  BlockCollectionTreeNode _createBlockCollectionTree(Id blockId) {
-    // Add Id to the list of Block IDs.
-    _blocksInThreadById.add(blockId);
-
-    // Get current Block's Collection
-    final currentBlock =
-        databaseProps.databaseManager.getBlockCollectionById(blockId);
-
-    // Return the BlockCollectionTreeNode and recurse on children.
-    return BlockCollectionTreeNode(
-      blockCollection: currentBlock,
-      childBlocks: currentBlock.childIds
-          .map((childId) => _createBlockCollectionTree(childId))
-          .toList(),
-    );
   }
 }
