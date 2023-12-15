@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/block_collection_tree_node.dart';
 import 'package:memoweave/models/database_props.dart';
@@ -107,8 +108,28 @@ class ThreadViewModel extends _$ThreadViewModel {
   KeyEventResult onEditorTraversalCallback(
     FocusNode focusNode,
     KeyEvent keyEvent,
-    RenderEditable renderEditable,
+    Id blockId,
+    RenderEditable blockRenderEditable,
+    BlockTextEditingController blockTextEditingController,
   ) {
+    if (keyEvent is KeyDownEvent || keyEvent is KeyRepeatEvent) {
+      switch (keyEvent.logicalKey) {
+        case LogicalKeyboardKey.arrowUp:
+          // Compute position above.
+          final positionAbove = blockRenderEditable.getTextPositionAbove(
+              blockTextEditingController.selection.extent);
+
+          // Shortcut exit if not on first line.
+          if (positionAbove.offset !=
+              blockTextEditingController.selection.extentOffset) {
+            return KeyEventResult.ignored;
+          }
+
+          // Otherwise, move focus to previous block.
+          state = state.copyWith(
+              idOfBlockInFocus: _threadCollectionCache.childIds.first);
+      }
+    }
     return KeyEventResult.ignored;
   }
 

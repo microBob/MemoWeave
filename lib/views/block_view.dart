@@ -43,7 +43,9 @@ class BlockView extends HookWidget {
             onKeyEvent: (node, event) => _blockProps.onEditorTraversalCallback(
               node,
               event,
+              _blockProps.blockCollectionTreeNode.blockCollection.id,
               _findRenderEditableFromBlockKey(blockKey),
+              blockTextEditingController,
             ),
             onFocusChange: (hasFocus) => _blockProps.onFocusChangedCallback(
               hasFocus,

@@ -21,7 +21,8 @@ mixin _$BlockProps {
 
   int get idOfBlockInFocus => throw _privateConstructorUsedError;
 
-  KeyEventResult Function(FocusNode, KeyEvent, RenderEditable)
+  KeyEventResult Function(
+          FocusNode, KeyEvent, int, RenderEditable, BlockTextEditingController)
       get onEditorTraversalCallback => throw _privateConstructorUsedError;
 
   dynamic Function(bool, int) get onFocusChangedCallback =>
@@ -45,7 +46,8 @@ abstract class $BlockPropsCopyWith<$Res> {
   $Res call(
       {BlockCollectionTreeNode blockCollectionTreeNode,
       int idOfBlockInFocus,
-      KeyEventResult Function(FocusNode, KeyEvent, RenderEditable)
+      KeyEventResult Function(FocusNode, KeyEvent, int, RenderEditable,
+              BlockTextEditingController)
           onEditorTraversalCallback,
       dynamic Function(bool, int) onFocusChangedCallback,
       dynamic Function(BlockTextEditingController, int)
@@ -85,7 +87,8 @@ class _$BlockPropsCopyWithImpl<$Res, $Val extends BlockProps>
       onEditorTraversalCallback: null == onEditorTraversalCallback
           ? _value.onEditorTraversalCallback
           : onEditorTraversalCallback // ignore: cast_nullable_to_non_nullable
-              as KeyEventResult Function(FocusNode, KeyEvent, RenderEditable),
+              as KeyEventResult Function(FocusNode, KeyEvent, int,
+                  RenderEditable, BlockTextEditingController),
       onFocusChangedCallback: null == onFocusChangedCallback
           ? _value.onFocusChangedCallback
           : onFocusChangedCallback // ignore: cast_nullable_to_non_nullable
@@ -119,7 +122,8 @@ abstract class _$$BlockPropsImplCopyWith<$Res>
   $Res call(
       {BlockCollectionTreeNode blockCollectionTreeNode,
       int idOfBlockInFocus,
-      KeyEventResult Function(FocusNode, KeyEvent, RenderEditable)
+      KeyEventResult Function(FocusNode, KeyEvent, int, RenderEditable,
+              BlockTextEditingController)
           onEditorTraversalCallback,
       dynamic Function(bool, int) onFocusChangedCallback,
       dynamic Function(BlockTextEditingController, int)
@@ -158,7 +162,8 @@ class __$$BlockPropsImplCopyWithImpl<$Res>
       onEditorTraversalCallback: null == onEditorTraversalCallback
           ? _value.onEditorTraversalCallback
           : onEditorTraversalCallback // ignore: cast_nullable_to_non_nullable
-              as KeyEventResult Function(FocusNode, KeyEvent, RenderEditable),
+              as KeyEventResult Function(FocusNode, KeyEvent, int,
+                  RenderEditable, BlockTextEditingController),
       onFocusChangedCallback: null == onFocusChangedCallback
           ? _value.onFocusChangedCallback
           : onFocusChangedCallback // ignore: cast_nullable_to_non_nullable
@@ -187,7 +192,8 @@ class _$BlockPropsImpl implements _BlockProps {
   @override
   final int idOfBlockInFocus;
   @override
-  final KeyEventResult Function(FocusNode, KeyEvent, RenderEditable)
+  final KeyEventResult Function(
+          FocusNode, KeyEvent, int, RenderEditable, BlockTextEditingController)
       onEditorTraversalCallback;
   @override
   final dynamic Function(bool, int) onFocusChangedCallback;
@@ -241,8 +247,8 @@ abstract class _BlockProps implements BlockProps {
   const factory _BlockProps(
       {required final BlockCollectionTreeNode blockCollectionTreeNode,
       required final int idOfBlockInFocus,
-      required final KeyEventResult Function(
-              FocusNode, KeyEvent, RenderEditable)
+      required final KeyEventResult Function(FocusNode, KeyEvent, int,
+              RenderEditable, BlockTextEditingController)
           onEditorTraversalCallback,
       required final dynamic Function(bool, int) onFocusChangedCallback,
       required final dynamic Function(BlockTextEditingController, int)
@@ -255,7 +261,8 @@ abstract class _BlockProps implements BlockProps {
   int get idOfBlockInFocus;
 
   @override
-  KeyEventResult Function(FocusNode, KeyEvent, RenderEditable)
+  KeyEventResult Function(
+          FocusNode, KeyEvent, int, RenderEditable, BlockTextEditingController)
       get onEditorTraversalCallback;
 
   @override

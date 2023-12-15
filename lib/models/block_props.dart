@@ -13,7 +13,8 @@ class BlockProps with _$BlockProps {
   const factory BlockProps({
     required BlockCollectionTreeNode blockCollectionTreeNode,
     required Id idOfBlockInFocus,
-    required KeyEventResult Function(FocusNode, KeyEvent, RenderEditable)
+    required KeyEventResult Function(
+            FocusNode, KeyEvent, Id, RenderEditable, BlockTextEditingController)
         onEditorTraversalCallback,
     required Function(bool, Id) onFocusChangedCallback,
     required Function(BlockTextEditingController, Id)
