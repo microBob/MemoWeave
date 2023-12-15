@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:memoweave/models/block_props.dart';
 import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/viewmodels/thread_viewmodel.dart';
 import 'package:memoweave/views/block_view.dart';
@@ -16,11 +18,13 @@ class ThreadView extends HookConsumerWidget {
     // Header TextEditingControllers.
     final spoolTextEditingController =
         useTextEditingController(keys: [_databaseProps]);
+    final subjectTextEditingController = useTextEditingController();
 
     // Provider with props.
     final provider = threadViewModelProvider(
       databaseProps: _databaseProps,
       spoolTextEditingController: spoolTextEditingController,
+      subjectTextEditingController: subjectTextEditingController,
     );
 
     final threadState = ref.watch(provider);
@@ -41,26 +45,34 @@ class ThreadView extends HookConsumerWidget {
             // Thread subject line.
             IntrinsicWidth(
               child: TextFormField(
-                initialValue: threadState.subject,
+                // Placeholder with current date.
                 decoration: InputDecoration(
-                  hintText: threadState.dateTimeAsDate(),
+                  hintText:
+                      DateFormat.yMMMMEEEEd().format(threadState.dateTime),
                 ),
-                onChanged: ref.watch(provider.notifier).subjectChanged,
+                controller: subjectTextEditingController,
               ),
             ),
             const Spacer(),
-            // Time stamp.
-            Text(threadState.dateTimeAsTime(context)),
+            // Time stamp (use 24-hour preference).
+            Text(
+              MediaQuery.of(context).alwaysUse24HourFormat
+                  ? DateFormat.Hm().format(threadState.dateTime)
+                  : DateFormat.jm().format(threadState.dateTime),
+            )
           ],
         ),
         ListView.builder(
           itemBuilder: (context, index) => BlockView(
-            databaseProps: (
-              id: threadState.childIds[index],
-              databaseManager: _databaseProps.databaseManager
+            blockProps: BlockProps(
+              blockCollectionTreeNode:
+                  threadState.blockCollectionTreeNodes[index],
+              idOfBlockInFocus: threadState.idOfBlockInFocus,
+              onEditorTraversalCallback:
+                  ref.watch(provider.notifier).onEditorTraversalCallback,
             ),
           ),
-          itemCount: threadState.childIds.length,
+          itemCount: threadState.blockCollectionTreeNodes.length,
           shrinkWrap: true,
           physics: const ClampingScrollPhysics(),
         ),

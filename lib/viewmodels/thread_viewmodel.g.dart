@@ -6,7 +6,7 @@ part of 'thread_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$threadViewModelHash() => r'242fb7964e1738954b46b04ec5222a6cdbac0dfd';
+String _$threadViewModelHash() => r'feaed946eefc6db4f2ccb0824d55fc230fc619df';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,13 +30,15 @@ class _SystemHash {
 }
 
 abstract class _$ThreadViewModel
-    extends BuildlessAutoDisposeNotifier<ThreadCollection> {
+    extends BuildlessAutoDisposeNotifier<ThreadState> {
   late final ({DatabaseManager databaseManager, int id}) databaseProps;
   late final TextEditingController spoolTextEditingController;
+  late final TextEditingController subjectTextEditingController;
 
-  ThreadCollection build({
+  ThreadState build({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
     required TextEditingController spoolTextEditingController,
+    required TextEditingController subjectTextEditingController,
   });
 }
 
@@ -53,7 +55,7 @@ const threadViewModelProvider = ThreadViewModelFamily();
 /// Used by [ThreadView].
 ///
 /// Copied from [ThreadViewModel].
-class ThreadViewModelFamily extends Family<ThreadCollection> {
+class ThreadViewModelFamily extends Family<ThreadState> {
   /// ViewModel for a Thread.
   ///
   /// Used by [ThreadView].
@@ -69,10 +71,12 @@ class ThreadViewModelFamily extends Family<ThreadCollection> {
   ThreadViewModelProvider call({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
     required TextEditingController spoolTextEditingController,
+    required TextEditingController subjectTextEditingController,
   }) {
     return ThreadViewModelProvider(
       databaseProps: databaseProps,
       spoolTextEditingController: spoolTextEditingController,
+      subjectTextEditingController: subjectTextEditingController,
     );
   }
 
@@ -83,6 +87,7 @@ class ThreadViewModelFamily extends Family<ThreadCollection> {
     return call(
       databaseProps: provider.databaseProps,
       spoolTextEditingController: provider.spoolTextEditingController,
+      subjectTextEditingController: provider.subjectTextEditingController,
     );
   }
 
@@ -107,7 +112,7 @@ class ThreadViewModelFamily extends Family<ThreadCollection> {
 ///
 /// Copied from [ThreadViewModel].
 class ThreadViewModelProvider
-    extends AutoDisposeNotifierProviderImpl<ThreadViewModel, ThreadCollection> {
+    extends AutoDisposeNotifierProviderImpl<ThreadViewModel, ThreadState> {
   /// ViewModel for a Thread.
   ///
   /// Used by [ThreadView].
@@ -116,10 +121,12 @@ class ThreadViewModelProvider
   ThreadViewModelProvider({
     required ({DatabaseManager databaseManager, int id}) databaseProps,
     required TextEditingController spoolTextEditingController,
+    required TextEditingController subjectTextEditingController,
   }) : this._internal(
           () => ThreadViewModel()
             ..databaseProps = databaseProps
-            ..spoolTextEditingController = spoolTextEditingController,
+            ..spoolTextEditingController = spoolTextEditingController
+            ..subjectTextEditingController = subjectTextEditingController,
           from: threadViewModelProvider,
           name: r'threadViewModelProvider',
           debugGetCreateSourceHash:
@@ -131,6 +138,7 @@ class ThreadViewModelProvider
               ThreadViewModelFamily._allTransitiveDependencies,
           databaseProps: databaseProps,
           spoolTextEditingController: spoolTextEditingController,
+          subjectTextEditingController: subjectTextEditingController,
         );
 
   ThreadViewModelProvider._internal(
@@ -142,18 +150,21 @@ class ThreadViewModelProvider
     required super.from,
     required this.databaseProps,
     required this.spoolTextEditingController,
+    required this.subjectTextEditingController,
   }) : super.internal();
 
   final ({DatabaseManager databaseManager, int id}) databaseProps;
   final TextEditingController spoolTextEditingController;
+  final TextEditingController subjectTextEditingController;
 
   @override
-  ThreadCollection runNotifierBuild(
+  ThreadState runNotifierBuild(
     covariant ThreadViewModel notifier,
   ) {
     return notifier.build(
       databaseProps: databaseProps,
       spoolTextEditingController: spoolTextEditingController,
+      subjectTextEditingController: subjectTextEditingController,
     );
   }
 
@@ -164,7 +175,8 @@ class ThreadViewModelProvider
       override: ThreadViewModelProvider._internal(
         () => create()
           ..databaseProps = databaseProps
-          ..spoolTextEditingController = spoolTextEditingController,
+          ..spoolTextEditingController = spoolTextEditingController
+          ..subjectTextEditingController = subjectTextEditingController,
         from: from,
         name: null,
         dependencies: null,
@@ -172,12 +184,13 @@ class ThreadViewModelProvider
         debugGetCreateSourceHash: null,
         databaseProps: databaseProps,
         spoolTextEditingController: spoolTextEditingController,
+        subjectTextEditingController: subjectTextEditingController,
       ),
     );
   }
 
   @override
-  AutoDisposeNotifierProviderElement<ThreadViewModel, ThreadCollection>
+  AutoDisposeNotifierProviderElement<ThreadViewModel, ThreadState>
       createElement() {
     return _ThreadViewModelProviderElement(this);
   }
@@ -186,7 +199,8 @@ class ThreadViewModelProvider
   bool operator ==(Object other) {
     return other is ThreadViewModelProvider &&
         other.databaseProps == databaseProps &&
-        other.spoolTextEditingController == spoolTextEditingController;
+        other.spoolTextEditingController == spoolTextEditingController &&
+        other.subjectTextEditingController == subjectTextEditingController;
   }
 
   @override
@@ -194,22 +208,26 @@ class ThreadViewModelProvider
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, databaseProps.hashCode);
     hash = _SystemHash.combine(hash, spoolTextEditingController.hashCode);
+    hash = _SystemHash.combine(hash, subjectTextEditingController.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin ThreadViewModelRef on AutoDisposeNotifierProviderRef<ThreadCollection> {
+mixin ThreadViewModelRef on AutoDisposeNotifierProviderRef<ThreadState> {
   /// The parameter `databaseProps` of this provider.
   ({DatabaseManager databaseManager, int id}) get databaseProps;
 
   /// The parameter `spoolTextEditingController` of this provider.
   TextEditingController get spoolTextEditingController;
+
+  /// The parameter `subjectTextEditingController` of this provider.
+  TextEditingController get subjectTextEditingController;
 }
 
 class _ThreadViewModelProviderElement
-    extends AutoDisposeNotifierProviderElement<ThreadViewModel,
-        ThreadCollection> with ThreadViewModelRef {
+    extends AutoDisposeNotifierProviderElement<ThreadViewModel, ThreadState>
+    with ThreadViewModelRef {
   _ThreadViewModelProviderElement(super.provider);
 
   @override
@@ -218,6 +236,9 @@ class _ThreadViewModelProviderElement
   @override
   TextEditingController get spoolTextEditingController =>
       (origin as ThreadViewModelProvider).spoolTextEditingController;
+  @override
+  TextEditingController get subjectTextEditingController =>
+      (origin as ThreadViewModelProvider).subjectTextEditingController;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

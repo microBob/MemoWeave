@@ -1,26 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:memoweave/models/thread_collection.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:isar/isar.dart';
 
-class ThreadState {
-  final ThreadCollection threadCollection;
-  final Rect cursorRect;
-  final TextSelection cursorExtentOffset;
+import 'block_collection_tree_node.dart';
 
-  ThreadState({
-    required this.threadCollection,
-    required this.cursorRect,
-    required this.cursorExtentOffset,
-  });
+part 'thread_state.freezed.dart';
 
-  ThreadState copyWith({
-    ThreadCollection? threadCollection,
-    Rect? cursorRect,
-    TextSelection? cursorExtentOffset,
-  }) {
-    return ThreadState(
-      threadCollection: threadCollection ?? this.threadCollection,
-      cursorRect: cursorRect ?? this.cursorRect,
-      cursorExtentOffset: cursorExtentOffset ?? this.cursorExtentOffset,
-    );
-  }
+@freezed
+class ThreadState with _$ThreadState {
+  const factory ThreadState({
+    required Id idOfBlockInFocus,
+    required int caretPosition,
+    required DateTime dateTime,
+    required List<BlockCollectionTreeNode> blockCollectionTreeNodes,
+  }) = _ThreadState;
 }

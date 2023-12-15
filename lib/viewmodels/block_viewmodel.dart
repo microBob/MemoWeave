@@ -54,7 +54,7 @@ class BlockViewModel extends _$BlockViewModel {
     required final FocusNode blockFocusNode,
   }) {
     // Set initial block values.
-    blockTextEditingController.blockCollection = _blockCollection;
+    // blockTextEditingController.blockCollection = _blockCollection;
     blockTextEditingController.text = _blockCollection.text;
 
     // Give this block focus if requested
@@ -144,7 +144,7 @@ class BlockViewModel extends _$BlockViewModel {
         _blockCollection.copyWith(text: blockTextEditingController.text);
 
     // Update text controller with new block collection.
-    blockTextEditingController.blockCollection = newBlockCollection;
+    // blockTextEditingController.blockCollection = newBlockCollection;
 
     // Write into database.
     databaseProps.databaseManager.putBlockCollection(newBlockCollection);

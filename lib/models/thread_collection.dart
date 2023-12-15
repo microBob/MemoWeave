@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/container_model.dart';
 
@@ -52,12 +50,6 @@ class ThreadCollection extends ParentModel {
     );
   }
 
-  String dateTimeAsDate() => DateFormat.yMMMMEEEEd().format(dateTime);
-
-  String dateTimeAsTime(BuildContext context) =>
-      MediaQuery.of(context).alwaysUse24HourFormat
-          ? DateFormat.Hm().format(dateTime)
-          : DateFormat.jm().format(dateTime);
 
   @override
   String toString() {
