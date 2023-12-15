@@ -20,10 +20,19 @@ class BlockView extends HookWidget {
   /// Attach to [BlockViewModel] and build UI.
   @override
   Widget build(BuildContext context) {
+    // Components.
     final blockTextEditingController = useBlockTextEditingController(
-        blockCollection: _blockProps.blockCollectionTreeNode.blockCollection);
+      blockCollection: _blockProps.blockCollectionTreeNode.blockCollection,
+    );
     final blockKey = GlobalKey();
-    final blockFocusNode = useFocusNode();
+
+    // Subscribe to changes on the BlockTextEditingController
+    blockTextEditingController.addListener(() {
+      _blockProps.onBlockTextEditingControllerChangedCallback(
+        blockTextEditingController,
+        _blockProps.blockCollectionTreeNode.blockCollection.id,
+      );
+    });
 
     return ListView.builder(
       itemBuilder: (context, index) {
@@ -31,13 +40,16 @@ class BlockView extends HookWidget {
         if (index == 0) {
           return Focus(
             onKeyEvent: _blockProps.onEditorTraversalCallback,
+            onFocusChange: (hasFocus) => _blockProps.onFocusChangedCallback(
+              hasFocus,
+              _blockProps.blockCollectionTreeNode.blockCollection.id,
+            ),
             child: TextField(
               key: blockKey,
               autofocus:
                   _blockProps.blockCollectionTreeNode.blockCollection.id ==
                       _blockProps.idOfBlockInFocus,
               controller: blockTextEditingController,
-              focusNode: blockFocusNode,
               textInputAction: TextInputAction.newline,
               maxLines: null,
             ),

@@ -10,7 +10,10 @@ class BlockTextEditingController extends TextEditingController {
 
   /// Generative constructor.
   BlockTextEditingController({required BlockCollection blockCollection})
-      : _blockCollection = blockCollection;
+      : _blockCollection = blockCollection {
+    // Set initial text.
+    text = _blockCollection.text;
+  }
 
   /// Apply styling to [TextField]'s text.
   @override

@@ -5,6 +5,7 @@ import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/models/thread_collection.dart';
 import 'package:memoweave/models/thread_state.dart';
 import 'package:memoweave/utils/database.dart';
+import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'thread_viewmodel.g.dart';
@@ -82,19 +83,20 @@ class ThreadViewModel extends _$ThreadViewModel {
   void spoolSelectionChanged() {
     if (!spoolTextEditingController.selection.isValid) return;
     // Create new Thread.
-    _threadCollectionCache =
-        _threadCollectionCache.copyWith(spool: spoolTextEditingController.text);
+    _threadCollectionCache = _threadCollectionCache.copyWith(
+      spool: spoolTextEditingController.text,
+    );
 
     // Write to database.
     databaseProps.databaseManager.putThreadCollection(_threadCollectionCache);
   }
 
   /// Handle updating Thread collection when subject changes.
-
   void subjectChanged() {
     // Create new Thread
     _threadCollectionCache = _threadCollectionCache.copyWith(
-        subject: subjectTextEditingController.text);
+      subject: subjectTextEditingController.text,
+    );
 
     // Write to database
     databaseProps.databaseManager.putThreadCollection(_threadCollectionCache);
@@ -102,8 +104,48 @@ class ThreadViewModel extends _$ThreadViewModel {
 
   /// Handle traversal keystrokes on blocks.
   KeyEventResult onEditorTraversalCallback(
-      FocusNode focusNode, KeyEvent event) {
+    FocusNode focusNode,
+    KeyEvent keyEvent,
+  ) {
     return KeyEventResult.ignored;
+  }
+
+  /// Handle block gaining focus.
+  void onFocusChangedCallback(bool gainsFocus, Id blockId) {
+    // Shortcut exit if losing focus.
+    if (!gainsFocus) return;
+
+    // Shortcut exit if block is already marked as in focus.
+    if (state.idOfBlockInFocus == blockId) return;
+
+    // Update state.
+    state = state.copyWith(idOfBlockInFocus: blockId);
+  }
+
+  /// Handle saving new input in a block.
+  void onBlockTextEditingControllerChangedCallback(
+    BlockTextEditingController blockTextEditingController,
+    Id blockId,
+  ) {
+    // Get block from database.
+    final block = databaseProps.databaseManager.getBlockCollectionById(blockId);
+
+    // Update block if changed.
+    if (blockTextEditingController.text != block.text) {
+      // Create new block.
+      final newBlock = block.copyWith(text: blockTextEditingController.text);
+
+      // Write to database.
+      databaseProps.databaseManager.putBlockCollection(newBlock);
+    }
+
+    // Update caret position if valid and changed.
+    if (blockTextEditingController.selection.isValid &&
+        blockTextEditingController.selection.baseOffset !=
+            state.caretPosition) {
+      state = state.copyWith(
+          caretPosition: blockTextEditingController.selection.extentOffset);
+    }
   }
 
   /// Create the [BlockCollectionTreeNode] for a given [blockId].

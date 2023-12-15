@@ -70,6 +70,11 @@ class ThreadView extends HookConsumerWidget {
               idOfBlockInFocus: threadState.idOfBlockInFocus,
               onEditorTraversalCallback:
                   ref.watch(provider.notifier).onEditorTraversalCallback,
+              onFocusChangedCallback:
+                  ref.watch(provider.notifier).onFocusChangedCallback,
+              onBlockTextEditingControllerChangedCallback: ref
+                  .watch(provider.notifier)
+                  .onBlockTextEditingControllerChangedCallback,
             ),
           ),
           itemCount: threadState.blockCollectionTreeNodes.length,
