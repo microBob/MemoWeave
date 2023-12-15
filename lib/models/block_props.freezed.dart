@@ -18,16 +18,12 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$BlockProps {
   BlockCollectionTreeNode get blockCollectionTreeNode =>
       throw _privateConstructorUsedError;
-
   int get idOfBlockInFocus => throw _privateConstructorUsedError;
-
   KeyEventResult Function(
           FocusNode, KeyEvent, int, RenderEditable, BlockTextEditingController)
       get onKeyEventCallback => throw _privateConstructorUsedError;
-
   dynamic Function(bool, int, BlockTextEditingController)
       get onFocusChangedCallback => throw _privateConstructorUsedError;
-
   dynamic Function(BlockTextEditingController, int)
       get onBlockTextEditingControllerChangedCallback =>
           throw _privateConstructorUsedError;
@@ -261,16 +257,13 @@ abstract class _BlockProps implements BlockProps {
   BlockCollectionTreeNode get blockCollectionTreeNode;
   @override
   int get idOfBlockInFocus;
-
   @override
   KeyEventResult Function(
           FocusNode, KeyEvent, int, RenderEditable, BlockTextEditingController)
       get onKeyEventCallback;
-
   @override
   dynamic Function(bool, int, BlockTextEditingController)
       get onFocusChangedCallback;
-
   @override
   dynamic Function(BlockTextEditingController, int)
       get onBlockTextEditingControllerChangedCallback;
