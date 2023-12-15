@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/block_collection_tree_node.dart';
 import 'package:memoweave/models/database_props.dart';
@@ -106,6 +107,7 @@ class ThreadViewModel extends _$ThreadViewModel {
   KeyEventResult onEditorTraversalCallback(
     FocusNode focusNode,
     KeyEvent keyEvent,
+    RenderEditable renderEditable,
   ) {
     return KeyEventResult.ignored;
   }

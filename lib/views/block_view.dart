@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:memoweave/models/block_props.dart';
 import 'package:memoweave/utils/use_block_texteditingcontroller.dart';
@@ -39,7 +40,11 @@ class BlockView extends HookWidget {
         // Start with this block
         if (index == 0) {
           return Focus(
-            onKeyEvent: _blockProps.onEditorTraversalCallback,
+            onKeyEvent: (node, event) => _blockProps.onEditorTraversalCallback(
+              node,
+              event,
+              _findRenderEditableFromBlockKey(blockKey),
+            ),
             onFocusChange: (hasFocus) => _blockProps.onFocusChangedCallback(
               hasFocus,
               _blockProps.blockCollectionTreeNode.blockCollection.id,
@@ -68,5 +73,56 @@ class BlockView extends HookWidget {
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
     );
+  }
+
+  RenderEditable _findRenderEditableFromBlockKey(GlobalKey blockKey) {
+    // Search for RenderEditable in child elements.
+    RenderEditable? output;
+    blockKey.currentContext?.visitChildElements((childElement) {
+      // Shortcut exit if RenderEditable already found.
+      if (output != null) return;
+
+      // Search for RenderEditable in child element.
+      final potentialRenderEditable =
+          _findRenderEditableFromElement(childElement);
+
+      // There should only be 1, so as soon as we find it,
+      if (potentialRenderEditable != null) {
+        output = potentialRenderEditable;
+      }
+    });
+
+    // Throw error if no RenderEditable found.
+    if (output == null) {
+      throw FormatException(
+          'Unable to find RenderEditable from key: $blockKey');
+    }
+
+    // Otherwise return RenderEditable.
+    return output!;
+  }
+
+  RenderEditable? _findRenderEditableFromElement(Element element) {
+    var renderObject = element.renderObject;
+    if (renderObject is RenderEditable) {
+      return renderObject;
+    } else {
+      RenderEditable? output;
+      element.visitChildElements((childElement) {
+        // Shortcut exit if RenderEditable already found.
+        if (output != null) return;
+
+        // Search for RenderEditable in child element.
+        final potentialRenderEditable =
+            _findRenderEditableFromElement(childElement);
+
+        // There should only be 1, so as soon as we find it,
+        if (potentialRenderEditable != null) {
+          output = potentialRenderEditable;
+        }
+      });
+
+      return output;
+    }
   }
 }
