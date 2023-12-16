@@ -22,7 +22,6 @@ mixin _$BlockProps {
   KeyEventResult Function(
           FocusNode, KeyEvent, int, BlockTextEditingController, RenderEditable)
       get onKeyEventCallback => throw _privateConstructorUsedError;
-
   dynamic Function(bool, int, BlockTextEditingController, RenderEditable)
       get onFocusChangedCallback => throw _privateConstructorUsedError;
   dynamic Function(BlockTextEditingController, int)

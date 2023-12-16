@@ -142,6 +142,32 @@ class ThreadViewModel extends _$ThreadViewModel {
 
           // Mark event as handled.
           return KeyEventResult.handled;
+        case LogicalKeyboardKey.arrowDown:
+          // Compute position below.
+          final positionBelow = blockRenderEditable.getTextPositionBelow(
+              blockTextEditingController.selection.extent);
+
+          // Shortcut exit if not on last line.
+          if (positionBelow.offset !=
+              blockTextEditingController.selection.extentOffset) {
+            return KeyEventResult.ignored;
+          }
+
+          // Shortcut exit if block is last in thread.
+          if (_blocksInThreadById.last == blockId) {
+            return KeyEventResult.ignored;
+          }
+
+          // Otherwise, move focus to next block.
+          state = state.copyWith(
+            idOfBlockInFocus:
+                _blocksInThreadById[_blocksInThreadById.indexOf(blockId) + 1],
+            traversingBlocks: TraverseDirection.fromTop,
+            caretPosition: positionBelow.offset,
+          );
+
+          // Mark event as handled.
+          return KeyEventResult.handled;
       }
     }
 
@@ -177,8 +203,13 @@ class ThreadViewModel extends _$ThreadViewModel {
           } while (targetCaretPosition != proposedCaretPosition);
         case TraverseDirection.fromTop:
           // Need to find this offset on the first line.
-          renderEditable
-              .getTextPositionAbove(TextPosition(offset: state.caretPosition));
+          var proposedCaretPosition = targetCaretPosition;
+          do {
+            targetCaretPosition = proposedCaretPosition;
+            proposedCaretPosition = renderEditable
+                .getTextPositionAbove(TextPosition(offset: targetCaretPosition))
+                .offset;
+          } while (targetCaretPosition != proposedCaretPosition);
         case TraverseDirection.none:
         default:
           throw FormatException(
