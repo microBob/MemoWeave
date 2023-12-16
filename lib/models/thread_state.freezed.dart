@@ -17,12 +17,17 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ThreadState {
   int get idOfBlockInFocus => throw _privateConstructorUsedError;
-  TraverseDirection get traversingBlocks => throw _privateConstructorUsedError;
+
+  bool get traversingBlocks => throw _privateConstructorUsedError;
+
   int get caretPosition => throw _privateConstructorUsedError;
 
-  Rect get caretRect => throw _privateConstructorUsedError;
+  Rect get caretLocalRect => throw _privateConstructorUsedError;
+
+  Offset get caretGlobalPosition => throw _privateConstructorUsedError;
 
   DateTime get dateTime => throw _privateConstructorUsedError;
+
   List<BlockCollectionTreeNode> get blockCollectionTreeNodes =>
       throw _privateConstructorUsedError;
 
@@ -39,9 +44,10 @@ abstract class $ThreadStateCopyWith<$Res> {
   @useResult
   $Res call(
       {int idOfBlockInFocus,
-      TraverseDirection traversingBlocks,
+      bool traversingBlocks,
       int caretPosition,
-      Rect caretRect,
+      Rect caretLocalRect,
+      Offset caretGlobalPosition,
       DateTime dateTime,
       List<BlockCollectionTreeNode> blockCollectionTreeNodes});
 }
@@ -62,7 +68,8 @@ class _$ThreadStateCopyWithImpl<$Res, $Val extends ThreadState>
     Object? idOfBlockInFocus = null,
     Object? traversingBlocks = null,
     Object? caretPosition = null,
-    Object? caretRect = null,
+    Object? caretLocalRect = null,
+    Object? caretGlobalPosition = null,
     Object? dateTime = null,
     Object? blockCollectionTreeNodes = null,
   }) {
@@ -74,15 +81,19 @@ class _$ThreadStateCopyWithImpl<$Res, $Val extends ThreadState>
       traversingBlocks: null == traversingBlocks
           ? _value.traversingBlocks
           : traversingBlocks // ignore: cast_nullable_to_non_nullable
-              as TraverseDirection,
+              as bool,
       caretPosition: null == caretPosition
           ? _value.caretPosition
           : caretPosition // ignore: cast_nullable_to_non_nullable
               as int,
-      caretRect: null == caretRect
-          ? _value.caretRect
-          : caretRect // ignore: cast_nullable_to_non_nullable
+      caretLocalRect: null == caretLocalRect
+          ? _value.caretLocalRect
+          : caretLocalRect // ignore: cast_nullable_to_non_nullable
               as Rect,
+      caretGlobalPosition: null == caretGlobalPosition
+          ? _value.caretGlobalPosition
+          : caretGlobalPosition // ignore: cast_nullable_to_non_nullable
+              as Offset,
       dateTime: null == dateTime
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
@@ -105,9 +116,10 @@ abstract class _$$ThreadStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {int idOfBlockInFocus,
-      TraverseDirection traversingBlocks,
+      bool traversingBlocks,
       int caretPosition,
-      Rect caretRect,
+      Rect caretLocalRect,
+      Offset caretGlobalPosition,
       DateTime dateTime,
       List<BlockCollectionTreeNode> blockCollectionTreeNodes});
 }
@@ -126,7 +138,8 @@ class __$$ThreadStateImplCopyWithImpl<$Res>
     Object? idOfBlockInFocus = null,
     Object? traversingBlocks = null,
     Object? caretPosition = null,
-    Object? caretRect = null,
+    Object? caretLocalRect = null,
+    Object? caretGlobalPosition = null,
     Object? dateTime = null,
     Object? blockCollectionTreeNodes = null,
   }) {
@@ -138,15 +151,19 @@ class __$$ThreadStateImplCopyWithImpl<$Res>
       traversingBlocks: null == traversingBlocks
           ? _value.traversingBlocks
           : traversingBlocks // ignore: cast_nullable_to_non_nullable
-              as TraverseDirection,
+              as bool,
       caretPosition: null == caretPosition
           ? _value.caretPosition
           : caretPosition // ignore: cast_nullable_to_non_nullable
               as int,
-      caretRect: null == caretRect
-          ? _value.caretRect
-          : caretRect // ignore: cast_nullable_to_non_nullable
+      caretLocalRect: null == caretLocalRect
+          ? _value.caretLocalRect
+          : caretLocalRect // ignore: cast_nullable_to_non_nullable
               as Rect,
+      caretGlobalPosition: null == caretGlobalPosition
+          ? _value.caretGlobalPosition
+          : caretGlobalPosition // ignore: cast_nullable_to_non_nullable
+              as Offset,
       dateTime: null == dateTime
           ? _value.dateTime
           : dateTime // ignore: cast_nullable_to_non_nullable
@@ -166,7 +183,8 @@ class _$ThreadStateImpl implements _ThreadState {
       {required this.idOfBlockInFocus,
       required this.traversingBlocks,
       required this.caretPosition,
-      required this.caretRect,
+      required this.caretLocalRect,
+      required this.caretGlobalPosition,
       required this.dateTime,
       required final List<BlockCollectionTreeNode> blockCollectionTreeNodes})
       : _blockCollectionTreeNodes = blockCollectionTreeNodes;
@@ -174,11 +192,13 @@ class _$ThreadStateImpl implements _ThreadState {
   @override
   final int idOfBlockInFocus;
   @override
-  final TraverseDirection traversingBlocks;
+  final bool traversingBlocks;
   @override
   final int caretPosition;
   @override
-  final Rect caretRect;
+  final Rect caretLocalRect;
+  @override
+  final Offset caretGlobalPosition;
   @override
   final DateTime dateTime;
   final List<BlockCollectionTreeNode> _blockCollectionTreeNodes;
@@ -193,7 +213,7 @@ class _$ThreadStateImpl implements _ThreadState {
 
   @override
   String toString() {
-    return 'ThreadState(idOfBlockInFocus: $idOfBlockInFocus, traversingBlocks: $traversingBlocks, caretPosition: $caretPosition, caretRect: $caretRect, dateTime: $dateTime, blockCollectionTreeNodes: $blockCollectionTreeNodes)';
+    return 'ThreadState(idOfBlockInFocus: $idOfBlockInFocus, traversingBlocks: $traversingBlocks, caretPosition: $caretPosition, caretLocalRect: $caretLocalRect, caretGlobalPosition: $caretGlobalPosition, dateTime: $dateTime, blockCollectionTreeNodes: $blockCollectionTreeNodes)';
   }
 
   @override
@@ -207,8 +227,10 @@ class _$ThreadStateImpl implements _ThreadState {
                 other.traversingBlocks == traversingBlocks) &&
             (identical(other.caretPosition, caretPosition) ||
                 other.caretPosition == caretPosition) &&
-            (identical(other.caretRect, caretRect) ||
-                other.caretRect == caretRect) &&
+            (identical(other.caretLocalRect, caretLocalRect) ||
+                other.caretLocalRect == caretLocalRect) &&
+            (identical(other.caretGlobalPosition, caretGlobalPosition) ||
+                other.caretGlobalPosition == caretGlobalPosition) &&
             (identical(other.dateTime, dateTime) ||
                 other.dateTime == dateTime) &&
             const DeepCollectionEquality().equals(
@@ -221,7 +243,8 @@ class _$ThreadStateImpl implements _ThreadState {
       idOfBlockInFocus,
       traversingBlocks,
       caretPosition,
-      caretRect,
+      caretLocalRect,
+      caretGlobalPosition,
       dateTime,
       const DeepCollectionEquality().hash(_blockCollectionTreeNodes));
 
@@ -235,9 +258,10 @@ class _$ThreadStateImpl implements _ThreadState {
 abstract class _ThreadState implements ThreadState {
   const factory _ThreadState(
       {required final int idOfBlockInFocus,
-      required final TraverseDirection traversingBlocks,
+      required final bool traversingBlocks,
       required final int caretPosition,
-      required final Rect caretRect,
+      required final Rect caretLocalRect,
+      required final Offset caretGlobalPosition,
       required final DateTime dateTime,
       required final List<BlockCollectionTreeNode>
           blockCollectionTreeNodes}) = _$ThreadStateImpl;
@@ -246,13 +270,16 @@ abstract class _ThreadState implements ThreadState {
   int get idOfBlockInFocus;
 
   @override
-  TraverseDirection get traversingBlocks;
+  bool get traversingBlocks;
 
   @override
   int get caretPosition;
 
   @override
-  Rect get caretRect;
+  Rect get caretLocalRect;
+
+  @override
+  Offset get caretGlobalPosition;
 
   @override
   DateTime get dateTime;

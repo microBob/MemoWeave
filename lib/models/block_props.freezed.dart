@@ -47,7 +47,7 @@ abstract class $BlockPropsCopyWith<$Res> {
           onKeyEventCallback,
       dynamic Function(bool, int, BlockTextEditingController, RenderEditable)
           onFocusChangedCallback,
-        dynamic Function(int, BlockTextEditingController)
+      dynamic Function(int, BlockTextEditingController)
           onBlockTextEditingControllerChangedCallback});
 
   $BlockCollectionTreeNodeCopyWith<$Res> get blockCollectionTreeNode;

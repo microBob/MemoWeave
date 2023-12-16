@@ -68,9 +68,10 @@ class ThreadViewModel extends _$ThreadViewModel {
     // Return state.
     return ThreadState(
       idOfBlockInFocus: _threadCollectionCache.childIds.first,
-      traversingBlocks: TraverseDirection.none,
+      traversingBlocks: false,
       caretPosition: 0,
-      caretRect: Rect.zero,
+      caretLocalRect: Rect.zero,
+      caretGlobalPosition: Offset.zero,
       dateTime: _threadCollectionCache.dateTime,
       blockCollectionTreeNodes:
           _createBlockCollectionTreeNodes(_threadCollectionCache),
@@ -133,12 +134,20 @@ class ThreadViewModel extends _$ThreadViewModel {
             return KeyEventResult.ignored;
           }
 
+          // Compute caret rect and global position
+          final caretLocalRect =
+              blockRenderEditable.getLocalRectForCaret(positionAbove);
+          final caretGlobalPosition =
+              blockRenderEditable.localToGlobal(caretLocalRect.center);
+
           // Otherwise, move focus to previous block.
           state = state.copyWith(
             idOfBlockInFocus:
                 _blocksInThreadById[_blocksInThreadById.indexOf(blockId) - 1],
-            traversingBlocks: TraverseDirection.fromBottom,
+            traversingBlocks: true,
             caretPosition: positionAbove.offset,
+            caretLocalRect: caretLocalRect,
+            caretGlobalPosition: caretGlobalPosition,
           );
 
           // Mark event as handled.
@@ -159,11 +168,20 @@ class ThreadViewModel extends _$ThreadViewModel {
             return KeyEventResult.ignored;
           }
 
+          // Compute caret rect and global position
+          final caretLocalRect =
+              blockRenderEditable.getLocalRectForCaret(positionBelow);
+          final caretGlobalPosition =
+              blockRenderEditable.localToGlobal(caretLocalRect.center);
+
           // Otherwise, move focus to next block.
           state = state.copyWith(
             idOfBlockInFocus:
                 _blocksInThreadById[_blocksInThreadById.indexOf(blockId) + 1],
-            traversingBlocks: TraverseDirection.fromTop,
+            traversingBlocks: true,
+            caretPosition: positionBelow.offset,
+            caretLocalRect: caretLocalRect,
+            caretGlobalPosition: caretGlobalPosition,
           );
 
           // Mark event as handled.
@@ -180,49 +198,20 @@ class ThreadViewModel extends _$ThreadViewModel {
     bool gainsFocus,
     Id blockId,
     BlockTextEditingController blockTextEditingController,
-    RenderEditable renderEditable,
+    RenderEditable blockRenderEditable,
   ) {
     // Shortcut exit if losing focus.
     if (!gainsFocus) return;
 
     // Handle traversing blocks.
-    if (state.idOfBlockInFocus == blockId &&
-        state.traversingBlocks != TraverseDirection.none) {
-      var targetCaretPosition = state.caretPosition;
-
-      // Update caret position based on direction.
-      switch (state.traversingBlocks) {
-        case TraverseDirection.fromBottom:
-          // Need to find this position on the last line.
-          var proposedCaretPosition = targetCaretPosition;
-          do {
-            targetCaretPosition = proposedCaretPosition;
-            proposedCaretPosition = renderEditable
-                .getTextPositionBelow(TextPosition(offset: targetCaretPosition))
-                .offset;
-          } while (targetCaretPosition != proposedCaretPosition);
-        case TraverseDirection.fromTop:
-          // Need to find this offset on the first line.
-          var proposedCaretPosition = targetCaretPosition;
-          do {
-            targetCaretPosition = proposedCaretPosition;
-            proposedCaretPosition = renderEditable
-                .getTextPositionAbove(TextPosition(offset: targetCaretPosition))
-                .offset;
-          } while (targetCaretPosition != proposedCaretPosition);
-        case TraverseDirection.none:
-        default:
-          throw FormatException(
-              'Unexpected TraverseDirection: ${state.traversingBlocks}');
-      }
-
-      // Update caret position.
-      blockTextEditingController.selection = TextSelection.collapsed(
-        offset: targetCaretPosition,
+    if (state.idOfBlockInFocus == blockId && state.traversingBlocks) {
+      // Convert caret global position to local TextPosition
+      blockTextEditingController.selection = TextSelection.fromPosition(
+        blockRenderEditable.getPositionForPoint(state.caretGlobalPosition),
       );
 
       // Acknowledge traversal.
-      state = state.copyWith(traversingBlocks: TraverseDirection.none);
+      state = state.copyWith(traversingBlocks: false);
     } else if (state.idOfBlockInFocus != blockId) {
       // If we got here from a different block, update state.
       state = state.copyWith(idOfBlockInFocus: blockId);

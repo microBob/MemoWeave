@@ -7,19 +7,14 @@ import 'block_collection_tree_node.dart';
 
 part 'thread_state.freezed.dart';
 
-enum TraverseDirection {
-  none,
-  fromBottom,
-  fromTop,
-}
-
 @freezed
 class ThreadState with _$ThreadState {
   const factory ThreadState({
     required Id idOfBlockInFocus,
-    required TraverseDirection traversingBlocks,
+    required bool traversingBlocks,
     required int caretPosition,
-    required Rect caretRect,
+    required Rect caretLocalRect,
+    required Offset caretGlobalPosition,
     required DateTime dateTime,
     required List<BlockCollectionTreeNode> blockCollectionTreeNodes,
   }) = _ThreadState;
