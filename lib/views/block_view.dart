@@ -22,13 +22,18 @@ class BlockView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     // Components.
-    final blockKey = GlobalKey();
     final blockTextEditingController = useBlockTextEditingController(
       blockCollection: _blockProps.blockCollectionTreeNode.blockCollection,
-      onBlockTextEditingControllerChangedCallback:
-          _blockProps.onBlockTextEditingControllerChangedCallback,
-      blockKey: blockKey,
     );
+    final blockKey = GlobalKey();
+
+    // Subscribe to changes on the BlockTextEditingController
+    blockTextEditingController.addListener(() {
+      _blockProps.onBlockTextEditingControllerChangedCallback(
+        _blockProps.blockCollectionTreeNode.blockCollection.id,
+        blockTextEditingController,
+      );
+    });
 
     return ListView.builder(
       itemBuilder: (context, index) {
@@ -40,19 +45,19 @@ class BlockView extends HookWidget {
               event,
               _blockProps.blockCollectionTreeNode.blockCollection.id,
               blockTextEditingController,
-              findRenderEditableFromBlockKey(blockKey),
+              _findRenderEditableFromBlockKey(blockKey),
             ),
             onFocusChange: (hasFocus) => _blockProps.onFocusChangedCallback(
               hasFocus,
               _blockProps.blockCollectionTreeNode.blockCollection.id,
               blockTextEditingController,
-              findRenderEditableFromBlockKey(blockKey),
+              _findRenderEditableFromBlockKey(blockKey),
             ),
             child: TextField(
               key: blockKey,
               autofocus:
-              _blockProps.blockCollectionTreeNode.blockCollection.id ==
-                  _blockProps.idOfBlockInFocus,
+                  _blockProps.blockCollectionTreeNode.blockCollection.id ==
+                      _blockProps.idOfBlockInFocus,
               controller: blockTextEditingController,
               textInputAction: TextInputAction.newline,
               maxLines: null,
@@ -64,7 +69,7 @@ class BlockView extends HookWidget {
         return BlockView(
           blockProps: _blockProps.copyWith(
             blockCollectionTreeNode:
-            _blockProps.blockCollectionTreeNode.childBlocks[index - 1],
+                _blockProps.blockCollectionTreeNode.childBlocks[index - 1],
           ),
         );
       },
@@ -74,7 +79,7 @@ class BlockView extends HookWidget {
     );
   }
 
-  static RenderEditable findRenderEditableFromBlockKey(GlobalKey blockKey) {
+  RenderEditable _findRenderEditableFromBlockKey(GlobalKey blockKey) {
     // Search for RenderEditable in child elements.
     RenderEditable? output;
     blockKey.currentContext?.visitChildElements((childElement) {
@@ -101,7 +106,7 @@ class BlockView extends HookWidget {
     return output!;
   }
 
-  static RenderEditable? _findRenderEditableFromElement(Element element) {
+  RenderEditable? _findRenderEditableFromElement(Element element) {
     var renderObject = element.renderObject;
     if (renderObject is RenderEditable) {
       return renderObject;
