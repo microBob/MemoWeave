@@ -133,7 +133,8 @@ class ThreadViewModel extends _$ThreadViewModel {
             return KeyEventResult.ignored;
           }
 
-          // Otherwise, move focus to previous block.
+          // Otherwise, move focus to previous block and update caret global
+          // location.
           state = state.copyWith(
             idOfBlockInFocus:
                 _blocksInThreadById[_blocksInThreadById.indexOf(blockId) - 1],
@@ -161,15 +162,58 @@ class ThreadViewModel extends _$ThreadViewModel {
             return KeyEventResult.ignored;
           }
 
+          // Otherwise, move focus to next block and update caret global
+          // location.
+          state = state.copyWith(
+            idOfBlockInFocus:
+                _blocksInThreadById[_blocksInThreadById.indexOf(blockId) + 1],
+            traversingBlocks: true,
+            caretGlobalPosition: blockRenderEditable.localToGlobal(
+              blockRenderEditable.getLocalRectForCaret(positionBelow).center,
+            ),
+          );
+
+          // Mark event as handled.
+          return KeyEventResult.handled;
+        case LogicalKeyboardKey.arrowLeft:
+          // Shortcut exit if not at beginning of line.
+          if (blockTextEditingController.selection.extentOffset != 0) {
+            return KeyEventResult.ignored;
+          }
+
+          // Shortcut exit if block is first in thread.
+          if (_blocksInThreadById.first == blockId) {
+            return KeyEventResult.ignored;
+          }
+
+          // Otherwise, move focus to previous block.
+          state = state.copyWith(
+            idOfBlockInFocus:
+                _blocksInThreadById[_blocksInThreadById.indexOf(blockId) - 1],
+            traversingBlocks: true,
+            caretTextOffset: -1,
+          );
+
+          // Mark event as handled.
+          return KeyEventResult.handled;
+        case LogicalKeyboardKey.arrowRight:
+          // Shortcut exit if not at end of line.
+          if (blockTextEditingController.selection.extentOffset !=
+              blockTextEditingController.text.length) {
+            return KeyEventResult.ignored;
+          }
+
+          // Shortcut exit if block is last in thread.
+          if (_blocksInThreadById.last == blockId) {
+            return KeyEventResult.ignored;
+          }
+
           // Otherwise, move focus to next block.
           state = state.copyWith(
             idOfBlockInFocus:
                 _blocksInThreadById[_blocksInThreadById.indexOf(blockId) + 1],
             traversingBlocks: true,
-            caretTextOffset: positionBelow.offset,
-            caretGlobalPosition: blockRenderEditable.localToGlobal(
-              blockRenderEditable.getLocalRectForCaret(positionBelow).center,
-            ),
+            caretTextOffset: 0,
           );
 
           // Mark event as handled.
@@ -193,15 +237,37 @@ class ThreadViewModel extends _$ThreadViewModel {
 
     // Handle traversing blocks.
     if (state.idOfBlockInFocus == blockId && state.traversingBlocks) {
-      // Convert caret global position to local TextPosition
-      blockTextEditingController.selection = TextSelection.fromPosition(
-        blockRenderEditable.getPositionForPoint(state.caretGlobalPosition),
-      );
+      // Set selection based on state.
+      if (state.caretTextOffset == 0) {
+        // A zero value indicates the beginning of the text.
+        blockTextEditingController.selection = TextSelection.fromPosition(
+          const TextPosition(offset: 0),
+        );
+      } else if (state.caretTextOffset < 0) {
+        // A negative values indicates some value from the end of the text.
+        blockTextEditingController.selection = TextSelection.fromPosition(
+          TextPosition(
+            offset: blockTextEditingController.text.length +
+                state.caretTextOffset +
+                1,
+          ),
+        );
+      } else {
+        // Otherwise, set from the the caret's global position.
+        blockTextEditingController.selection = TextSelection.fromPosition(
+          blockRenderEditable.getPositionForPoint(state.caretGlobalPosition),
+        );
+      }
 
-      // Acknowledge traversal.
+      // Acknowledge traversal and update caret state info.
       state = state.copyWith(
         traversingBlocks: false,
         caretTextOffset: blockTextEditingController.selection.extentOffset,
+        caretGlobalPosition: blockRenderEditable.localToGlobal(
+          blockRenderEditable
+              .getLocalRectForCaret(blockTextEditingController.selection.extent)
+              .center,
+        ),
       );
     } else if (state.idOfBlockInFocus != blockId) {
       // If we got here from a different block, update state.

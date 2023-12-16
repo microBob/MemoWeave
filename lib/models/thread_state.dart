@@ -7,6 +7,15 @@ import 'block_collection_tree_node.dart';
 
 part 'thread_state.freezed.dart';
 
+/// Thread state.
+///
+/// Records the Block ID of the Block in focus [idOfBlockInFocus],
+/// whether the user is traversing Blocks [traversingBlocks],
+/// the caret text offset [caretTextOffset] (negative values wrap from end),
+/// global screen position of the caret [caretGlobalPosition],
+/// the Thread's date and time [dateTime],
+/// and the child Blocks as with their children
+/// in a tree [blockCollectionTreeNodes].
 @freezed
 class ThreadState with _$ThreadState {
   const factory ThreadState({

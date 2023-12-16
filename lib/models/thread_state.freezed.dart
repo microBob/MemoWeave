@@ -18,9 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ThreadState {
   int get idOfBlockInFocus => throw _privateConstructorUsedError;
   bool get traversingBlocks => throw _privateConstructorUsedError;
-
   int get caretTextOffset => throw _privateConstructorUsedError;
-
   Offset get caretGlobalPosition => throw _privateConstructorUsedError;
   DateTime get dateTime => throw _privateConstructorUsedError;
   List<BlockCollectionTreeNode> get blockCollectionTreeNodes =>
@@ -182,7 +180,6 @@ class _$ThreadStateImpl implements _ThreadState {
   @override
   final DateTime dateTime;
   final List<BlockCollectionTreeNode> _blockCollectionTreeNodes;
-
   @override
   List<BlockCollectionTreeNode> get blockCollectionTreeNodes {
     if (_blockCollectionTreeNodes is EqualUnmodifiableListView)
@@ -244,13 +241,10 @@ abstract class _ThreadState implements ThreadState {
 
   @override
   int get idOfBlockInFocus;
-
   @override
   bool get traversingBlocks;
-
   @override
   int get caretTextOffset;
-
   @override
   Offset get caretGlobalPosition;
   @override
