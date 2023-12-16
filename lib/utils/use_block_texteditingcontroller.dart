@@ -1,40 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:memoweave/models/block_collection.dart';
+import 'package:memoweave/models/block_texteditingcontroller_props.dart';
 import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
 
 /// Hook function for [BlockTextEditingController].
 BlockTextEditingController useBlockTextEditingController(
-    {required BlockCollection blockCollection}) {
-  return use(_BlockTextEditingController(blockCollection: blockCollection));
+    {required BlockTextEditingControllerProps
+        blockTextEditingControllerProps}) {
+  return use(
+    _BlockTextEditingController(
+      blockTextEditingControllerProps: blockTextEditingControllerProps,
+    ),
+  );
 }
 
 /// Hook for [BlockTextEditingController].
 class _BlockTextEditingController extends Hook<BlockTextEditingController> {
-  final BlockCollection _blockCollection;
+  final BlockTextEditingControllerProps _blockTextEditingControllerProps;
 
-  const _BlockTextEditingController({required BlockCollection blockCollection})
-      : _blockCollection = blockCollection;
+  const _BlockTextEditingController({
+    required BlockTextEditingControllerProps blockTextEditingControllerProps,
+  }) : _blockTextEditingControllerProps = blockTextEditingControllerProps;
 
   @override
   _BlockTextEditingControllerState createState() =>
-      _BlockTextEditingControllerState(blockCollection: _blockCollection);
+      _BlockTextEditingControllerState(
+          blockTextEditingControllerProps: _blockTextEditingControllerProps);
 }
 
 /// State for [BlockTextEditingController] hook.
 class _BlockTextEditingControllerState
     extends HookState<BlockTextEditingController, _BlockTextEditingController> {
-  final BlockCollection _blockCollection;
+  final BlockTextEditingControllerProps _blockTextEditingControllerProps;
   late final BlockTextEditingController _blockTextEditingController;
 
-  _BlockTextEditingControllerState({required BlockCollection blockCollection})
-      : _blockCollection = blockCollection;
+  _BlockTextEditingControllerState({
+    required BlockTextEditingControllerProps blockTextEditingControllerProps,
+  }) : _blockTextEditingControllerProps = blockTextEditingControllerProps;
 
   @override
   void initHook() {
     super.initHook();
-    _blockTextEditingController =
-        BlockTextEditingController(blockCollection: _blockCollection);
+    _blockTextEditingController = BlockTextEditingController(
+      blockCollection: _blockTextEditingControllerProps.blockCollection,
+    );
+
+    // Subscribe to changes in the text editing controller.
+    _blockTextEditingController.addListener(() {
+      _blockTextEditingControllerProps
+          .onBlockTextEditingControllerChangedCallback(
+        _blockTextEditingControllerProps.blockCollection.id,
+        _blockTextEditingController,
+      );
+    });
   }
 
   @override

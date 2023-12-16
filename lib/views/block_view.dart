@@ -5,6 +5,8 @@ import 'package:memoweave/models/block_props.dart';
 import 'package:memoweave/utils/use_block_texteditingcontroller.dart';
 import 'package:memoweave/viewmodels/block_viewmodel.dart';
 
+import '../models/block_texteditingcontroller_props.dart';
+
 /// Text editor interface.
 ///
 /// Renders text and handles input.
@@ -22,18 +24,14 @@ class BlockView extends HookWidget {
   @override
   Widget build(BuildContext context) {
     // Components.
-    final blockTextEditingController = useBlockTextEditingController(
-      blockCollection: _blockProps.blockCollectionTreeNode.blockCollection,
-    );
     final blockKey = GlobalKey();
-
-    // Subscribe to changes on the BlockTextEditingController
-    blockTextEditingController.addListener(() {
-      _blockProps.onBlockTextEditingControllerChangedCallback(
-        _blockProps.blockCollectionTreeNode.blockCollection.id,
-        blockTextEditingController,
-      );
-    });
+    final blockTextEditingController = useBlockTextEditingController(
+      blockTextEditingControllerProps: BlockTextEditingControllerProps(
+        blockCollection: _blockProps.blockCollectionTreeNode.blockCollection,
+        onBlockTextEditingControllerChangedCallback:
+            _blockProps.onBlockTextEditingControllerChangedCallback,
+      ),
+    );
 
     return ListView.builder(
       itemBuilder: (context, index) {
@@ -56,8 +54,8 @@ class BlockView extends HookWidget {
             child: TextField(
               key: blockKey,
               autofocus:
-                  _blockProps.blockCollectionTreeNode.blockCollection.id ==
-                      _blockProps.idOfBlockInFocus,
+              _blockProps.blockCollectionTreeNode.blockCollection.id ==
+                  _blockProps.idOfBlockInFocus,
               controller: blockTextEditingController,
               textInputAction: TextInputAction.newline,
               maxLines: null,
@@ -69,7 +67,7 @@ class BlockView extends HookWidget {
         return BlockView(
           blockProps: _blockProps.copyWith(
             blockCollectionTreeNode:
-                _blockProps.blockCollectionTreeNode.childBlocks[index - 1],
+            _blockProps.blockCollectionTreeNode.childBlocks[index - 1],
           ),
         );
       },
@@ -82,13 +80,38 @@ class BlockView extends HookWidget {
   RenderEditable _findRenderEditableFromBlockKey(GlobalKey blockKey) {
     // Search for RenderEditable in child elements.
     RenderEditable? output;
+
+    RenderEditable? findRenderEditableFromElement(Element element) {
+      var renderObject = element.renderObject;
+      if (renderObject is RenderEditable) {
+        return renderObject;
+      } else {
+        RenderEditable? output;
+        element.visitChildElements((childElement) {
+          // Shortcut exit if RenderEditable already found.
+          if (output != null) return;
+
+          // Search for RenderEditable in child element.
+          final potentialRenderEditable =
+              findRenderEditableFromElement(childElement);
+
+          // There should only be 1, so as soon as we find it,
+          if (potentialRenderEditable != null) {
+            output = potentialRenderEditable;
+          }
+        });
+
+        return output;
+      }
+    }
+
     blockKey.currentContext?.visitChildElements((childElement) {
       // Shortcut exit if RenderEditable already found.
       if (output != null) return;
 
       // Search for RenderEditable in child element.
       final potentialRenderEditable =
-          _findRenderEditableFromElement(childElement);
+          findRenderEditableFromElement(childElement);
 
       // There should only be 1, so as soon as we find it,
       if (potentialRenderEditable != null) {
@@ -104,29 +127,5 @@ class BlockView extends HookWidget {
 
     // Otherwise return RenderEditable.
     return output!;
-  }
-
-  RenderEditable? _findRenderEditableFromElement(Element element) {
-    var renderObject = element.renderObject;
-    if (renderObject is RenderEditable) {
-      return renderObject;
-    } else {
-      RenderEditable? output;
-      element.visitChildElements((childElement) {
-        // Shortcut exit if RenderEditable already found.
-        if (output != null) return;
-
-        // Search for RenderEditable in child element.
-        final potentialRenderEditable =
-            _findRenderEditableFromElement(childElement);
-
-        // There should only be 1, so as soon as we find it,
-        if (potentialRenderEditable != null) {
-          output = potentialRenderEditable;
-        }
-      });
-
-      return output;
-    }
   }
 }

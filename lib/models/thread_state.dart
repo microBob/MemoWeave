@@ -12,8 +12,7 @@ class ThreadState with _$ThreadState {
   const factory ThreadState({
     required Id idOfBlockInFocus,
     required bool traversingBlocks,
-    required int caretPosition,
-    required Rect caretLocalRect,
+    required int caretTextOffset,
     required Offset caretGlobalPosition,
     required DateTime dateTime,
     required List<BlockCollectionTreeNode> blockCollectionTreeNodes,

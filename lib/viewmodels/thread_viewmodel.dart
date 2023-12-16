@@ -69,8 +69,7 @@ class ThreadViewModel extends _$ThreadViewModel {
     return ThreadState(
       idOfBlockInFocus: _threadCollectionCache.childIds.first,
       traversingBlocks: false,
-      caretPosition: 0,
-      caretLocalRect: Rect.zero,
+      caretTextOffset: 0,
       caretGlobalPosition: Offset.zero,
       dateTime: _threadCollectionCache.dateTime,
       blockCollectionTreeNodes:
@@ -134,20 +133,14 @@ class ThreadViewModel extends _$ThreadViewModel {
             return KeyEventResult.ignored;
           }
 
-          // Compute caret rect and global position
-          final caretLocalRect =
-              blockRenderEditable.getLocalRectForCaret(positionAbove);
-          final caretGlobalPosition =
-              blockRenderEditable.localToGlobal(caretLocalRect.center);
-
           // Otherwise, move focus to previous block.
           state = state.copyWith(
             idOfBlockInFocus:
                 _blocksInThreadById[_blocksInThreadById.indexOf(blockId) - 1],
             traversingBlocks: true,
-            caretPosition: positionAbove.offset,
-            caretLocalRect: caretLocalRect,
-            caretGlobalPosition: caretGlobalPosition,
+            caretGlobalPosition: blockRenderEditable.localToGlobal(
+              blockRenderEditable.getLocalRectForCaret(positionAbove).center,
+            ),
           );
 
           // Mark event as handled.
@@ -168,20 +161,15 @@ class ThreadViewModel extends _$ThreadViewModel {
             return KeyEventResult.ignored;
           }
 
-          // Compute caret rect and global position
-          final caretLocalRect =
-              blockRenderEditable.getLocalRectForCaret(positionBelow);
-          final caretGlobalPosition =
-              blockRenderEditable.localToGlobal(caretLocalRect.center);
-
           // Otherwise, move focus to next block.
           state = state.copyWith(
             idOfBlockInFocus:
                 _blocksInThreadById[_blocksInThreadById.indexOf(blockId) + 1],
             traversingBlocks: true,
-            caretPosition: positionBelow.offset,
-            caretLocalRect: caretLocalRect,
-            caretGlobalPosition: caretGlobalPosition,
+            caretTextOffset: positionBelow.offset,
+            caretGlobalPosition: blockRenderEditable.localToGlobal(
+              blockRenderEditable.getLocalRectForCaret(positionBelow).center,
+            ),
           );
 
           // Mark event as handled.
@@ -211,7 +199,10 @@ class ThreadViewModel extends _$ThreadViewModel {
       );
 
       // Acknowledge traversal.
-      state = state.copyWith(traversingBlocks: false);
+      state = state.copyWith(
+        traversingBlocks: false,
+        caretTextOffset: blockTextEditingController.selection.extentOffset,
+      );
     } else if (state.idOfBlockInFocus != blockId) {
       // If we got here from a different block, update state.
       state = state.copyWith(idOfBlockInFocus: blockId);
@@ -238,9 +229,9 @@ class ThreadViewModel extends _$ThreadViewModel {
     // Update caret position if valid and changed.
     if (blockTextEditingController.selection.isValid &&
         blockTextEditingController.selection.extentOffset !=
-            state.caretPosition) {
+            state.caretTextOffset) {
       state = state.copyWith(
-        caretPosition: blockTextEditingController.selection.extentOffset,
+        caretTextOffset: blockTextEditingController.selection.extentOffset,
       );
     }
   }
