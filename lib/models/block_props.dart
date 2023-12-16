@@ -14,11 +14,21 @@ class BlockProps with _$BlockProps {
     required BlockCollectionTreeNode blockCollectionTreeNode,
     required Id idOfBlockInFocus,
     required KeyEventResult Function(
-            FocusNode, KeyEvent, Id, RenderEditable, BlockTextEditingController)
-        onKeyEventCallback,
-    required Function(bool, Id, BlockTextEditingController)
-        onFocusChangedCallback,
-    required Function(BlockTextEditingController, Id)
-        onBlockTextEditingControllerChangedCallback,
+      FocusNode,
+      KeyEvent,
+      Id,
+      BlockTextEditingController,
+      RenderEditable,
+    ) onKeyEventCallback,
+    required Function(
+      bool,
+      Id,
+      BlockTextEditingController,
+      RenderEditable,
+    ) onFocusChangedCallback,
+    required Function(
+      BlockTextEditingController,
+      Id,
+    ) onBlockTextEditingControllerChangedCallback,
   }) = _BlockProps;
 }

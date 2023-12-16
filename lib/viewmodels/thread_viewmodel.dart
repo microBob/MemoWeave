@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -48,7 +46,7 @@ class ThreadViewModel extends _$ThreadViewModel {
 
     // Subscribe to changes on the Thread collection and update state
     databaseProps.databaseManager.onThreadChanged(databaseProps.id).listen(
-          (threadCollection) {
+      (threadCollection) {
         // Shortcut exit if null.
         if (threadCollection == null) return;
 
@@ -58,7 +56,7 @@ class ThreadViewModel extends _$ThreadViewModel {
           state = state.copyWith(
             dateTime: threadCollection.dateTime,
             blockCollectionTreeNodes:
-            _createBlockCollectionTreeNodes(threadCollection),
+                _createBlockCollectionTreeNodes(threadCollection),
           );
         }
 
@@ -70,7 +68,7 @@ class ThreadViewModel extends _$ThreadViewModel {
     // Return state.
     return ThreadState(
       idOfBlockInFocus: _threadCollectionCache.childIds.first,
-      traversingBlocks: false,
+      traversingBlocks: TraverseDirection.none,
       caretPosition: 200,
       dateTime: _threadCollectionCache.dateTime,
       blockCollectionTreeNodes:
@@ -109,15 +107,17 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Handle traversal keystrokes on blocks.
-  KeyEventResult onKeyEventCallback(FocusNode focusNode,
-      KeyEvent keyEvent,
-      Id blockId,
-      RenderEditable blockRenderEditable,
-      BlockTextEditingController blockTextEditingController,) {
+  KeyEventResult onKeyEventCallback(
+    FocusNode focusNode,
+    KeyEvent keyEvent,
+    Id blockId,
+    BlockTextEditingController blockTextEditingController,
+    RenderEditable blockRenderEditable,
+  ) {
     if (keyEvent is KeyDownEvent || keyEvent is KeyRepeatEvent) {
       switch (keyEvent.logicalKey) {
         case LogicalKeyboardKey.arrowUp:
-        // Compute position above.
+          // Compute position above.
           final positionAbove = blockRenderEditable.getTextPositionAbove(
               blockTextEditingController.selection.extent);
 
@@ -136,7 +136,7 @@ class ThreadViewModel extends _$ThreadViewModel {
           state = state.copyWith(
             idOfBlockInFocus:
                 _blocksInThreadById[_blocksInThreadById.indexOf(blockId) - 1],
-            traversingBlocks: true,
+            traversingBlocks: TraverseDirection.fromBottom,
             caretPosition: positionAbove.offset,
           );
 
@@ -150,21 +150,48 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Handle block gaining focus.
-  void onFocusChangedCallback(bool gainsFocus, Id blockId,
-      BlockTextEditingController blockTextEditingController) {
+  void onFocusChangedCallback(
+    bool gainsFocus,
+    Id blockId,
+    BlockTextEditingController blockTextEditingController,
+    RenderEditable renderEditable,
+  ) {
     // Shortcut exit if losing focus.
     if (!gainsFocus) return;
 
     // Handle traversing blocks.
-    if (state.idOfBlockInFocus == blockId && state.traversingBlocks) {
+    if (state.idOfBlockInFocus == blockId &&
+        state.traversingBlocks != TraverseDirection.none) {
+      var targetCaretPosition = state.caretPosition;
+
+      // Update caret position based on direction.
+      switch (state.traversingBlocks) {
+        case TraverseDirection.fromBottom:
+          // Need to find this position on the last line.
+          var proposedCaretPosition = targetCaretPosition;
+          do {
+            targetCaretPosition = proposedCaretPosition;
+            proposedCaretPosition = renderEditable
+                .getTextPositionBelow(TextPosition(offset: targetCaretPosition))
+                .offset;
+          } while (targetCaretPosition != proposedCaretPosition);
+        case TraverseDirection.fromTop:
+          // Need to find this offset on the first line.
+          renderEditable
+              .getTextPositionAbove(TextPosition(offset: state.caretPosition));
+        case TraverseDirection.none:
+        default:
+          throw FormatException(
+              'Unexpected TraverseDirection: ${state.traversingBlocks}');
+      }
+
       // Update caret position.
       blockTextEditingController.selection = TextSelection.collapsed(
-        offset:
-            min(state.caretPosition, blockTextEditingController.text.length),
+        offset: targetCaretPosition,
       );
 
       // Acknowledge traversal.
-      state = state.copyWith(traversingBlocks: false);
+      state = state.copyWith(traversingBlocks: TraverseDirection.none);
     } else if (state.idOfBlockInFocus != blockId) {
       // If we got here from a different block, update state.
       state = state.copyWith(idOfBlockInFocus: blockId);
@@ -172,8 +199,10 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Handle saving new input in a block.
-  void onBlockTextEditingControllerChangedCallback(BlockTextEditingController blockTextEditingController,
-      Id blockId,) {
+  void onBlockTextEditingControllerChangedCallback(
+    BlockTextEditingController blockTextEditingController,
+    Id blockId,
+  ) {
     // Get block from database.
     final block = databaseProps.databaseManager.getBlockCollectionById(blockId);
 
@@ -197,7 +226,8 @@ class ThreadViewModel extends _$ThreadViewModel {
 
   /// Build the list of [BlockCollectionTreeNode] for
   /// a given [threadCollection].
-  List<BlockCollectionTreeNode> _createBlockCollectionTreeNodes(ThreadCollection threadCollection) {
+  List<BlockCollectionTreeNode> _createBlockCollectionTreeNodes(
+      ThreadCollection threadCollection) {
     // Reset list thread's list of block IDs.
     _blocksInThreadById = [];
 

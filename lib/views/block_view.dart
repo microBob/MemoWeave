@@ -44,13 +44,14 @@ class BlockView extends HookWidget {
               node,
               event,
               _blockProps.blockCollectionTreeNode.blockCollection.id,
-              _findRenderEditableFromBlockKey(blockKey),
               blockTextEditingController,
+              _findRenderEditableFromBlockKey(blockKey),
             ),
             onFocusChange: (hasFocus) => _blockProps.onFocusChangedCallback(
               hasFocus,
               _blockProps.blockCollectionTreeNode.blockCollection.id,
               blockTextEditingController,
+              _findRenderEditableFromBlockKey(blockKey),
             ),
             child: TextField(
               key: blockKey,
