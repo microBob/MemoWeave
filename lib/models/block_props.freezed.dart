@@ -24,7 +24,7 @@ mixin _$BlockProps {
       get onKeyEventCallback => throw _privateConstructorUsedError;
   dynamic Function(bool, int, BlockTextEditingController, RenderEditable)
       get onFocusChangedCallback => throw _privateConstructorUsedError;
-  dynamic Function(BlockTextEditingController, int)
+  dynamic Function(int, BlockTextEditingController)
       get onBlockTextEditingControllerChangedCallback =>
           throw _privateConstructorUsedError;
 
@@ -47,7 +47,7 @@ abstract class $BlockPropsCopyWith<$Res> {
           onKeyEventCallback,
       dynamic Function(bool, int, BlockTextEditingController, RenderEditable)
           onFocusChangedCallback,
-      dynamic Function(BlockTextEditingController, int)
+        dynamic Function(int, BlockTextEditingController)
           onBlockTextEditingControllerChangedCallback});
 
   $BlockCollectionTreeNodeCopyWith<$Res> get blockCollectionTreeNode;
@@ -95,7 +95,7 @@ class _$BlockPropsCopyWithImpl<$Res, $Val extends BlockProps>
               onBlockTextEditingControllerChangedCallback
           ? _value.onBlockTextEditingControllerChangedCallback
           : onBlockTextEditingControllerChangedCallback // ignore: cast_nullable_to_non_nullable
-              as dynamic Function(BlockTextEditingController, int),
+              as dynamic Function(int, BlockTextEditingController),
     ) as $Val);
   }
 
@@ -125,7 +125,7 @@ abstract class _$$BlockPropsImplCopyWith<$Res>
           onKeyEventCallback,
       dynamic Function(bool, int, BlockTextEditingController, RenderEditable)
           onFocusChangedCallback,
-      dynamic Function(BlockTextEditingController, int)
+        dynamic Function(int, BlockTextEditingController)
           onBlockTextEditingControllerChangedCallback});
 
   @override
@@ -172,7 +172,7 @@ class __$$BlockPropsImplCopyWithImpl<$Res>
               onBlockTextEditingControllerChangedCallback
           ? _value.onBlockTextEditingControllerChangedCallback
           : onBlockTextEditingControllerChangedCallback // ignore: cast_nullable_to_non_nullable
-              as dynamic Function(BlockTextEditingController, int),
+              as dynamic Function(int, BlockTextEditingController),
     ));
   }
 }
@@ -199,7 +199,7 @@ class _$BlockPropsImpl implements _BlockProps {
   final dynamic Function(bool, int, BlockTextEditingController, RenderEditable)
       onFocusChangedCallback;
   @override
-  final dynamic Function(BlockTextEditingController, int)
+  final dynamic Function(int, BlockTextEditingController)
       onBlockTextEditingControllerChangedCallback;
 
   @override
@@ -253,7 +253,7 @@ abstract class _BlockProps implements BlockProps {
       required final dynamic Function(
               bool, int, BlockTextEditingController, RenderEditable)
           onFocusChangedCallback,
-      required final dynamic Function(BlockTextEditingController, int)
+        required final dynamic Function(int, BlockTextEditingController)
           onBlockTextEditingControllerChangedCallback}) = _$BlockPropsImpl;
 
   @override
@@ -268,7 +268,7 @@ abstract class _BlockProps implements BlockProps {
   dynamic Function(bool, int, BlockTextEditingController, RenderEditable)
       get onFocusChangedCallback;
   @override
-  dynamic Function(BlockTextEditingController, int)
+  dynamic Function(int, BlockTextEditingController)
       get onBlockTextEditingControllerChangedCallback;
   @override
   @JsonKey(ignore: true)

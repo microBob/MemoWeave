@@ -69,7 +69,8 @@ class ThreadViewModel extends _$ThreadViewModel {
     return ThreadState(
       idOfBlockInFocus: _threadCollectionCache.childIds.first,
       traversingBlocks: TraverseDirection.none,
-      caretPosition: 200,
+      caretPosition: 0,
+      caretRect: Rect.zero,
       dateTime: _threadCollectionCache.dateTime,
       blockCollectionTreeNodes:
           _createBlockCollectionTreeNodes(_threadCollectionCache),
@@ -163,7 +164,6 @@ class ThreadViewModel extends _$ThreadViewModel {
             idOfBlockInFocus:
                 _blocksInThreadById[_blocksInThreadById.indexOf(blockId) + 1],
             traversingBlocks: TraverseDirection.fromTop,
-            caretPosition: positionBelow.offset,
           );
 
           // Mark event as handled.
@@ -231,8 +231,8 @@ class ThreadViewModel extends _$ThreadViewModel {
 
   /// Handle saving new input in a block.
   void onBlockTextEditingControllerChangedCallback(
-    BlockTextEditingController blockTextEditingController,
     Id blockId,
+    BlockTextEditingController blockTextEditingController,
   ) {
     // Get block from database.
     final block = databaseProps.databaseManager.getBlockCollectionById(blockId);
@@ -251,7 +251,8 @@ class ThreadViewModel extends _$ThreadViewModel {
         blockTextEditingController.selection.extentOffset !=
             state.caretPosition) {
       state = state.copyWith(
-          caretPosition: blockTextEditingController.selection.extentOffset);
+        caretPosition: blockTextEditingController.selection.extentOffset,
+      );
     }
   }
 

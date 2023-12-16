@@ -27,8 +27,8 @@ class BlockProps with _$BlockProps {
       RenderEditable,
     ) onFocusChangedCallback,
     required Function(
-      BlockTextEditingController,
       Id,
+      BlockTextEditingController,
     ) onBlockTextEditingControllerChangedCallback,
   }) = _BlockProps;
 }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 
@@ -17,6 +19,7 @@ class ThreadState with _$ThreadState {
     required Id idOfBlockInFocus,
     required TraverseDirection traversingBlocks,
     required int caretPosition,
+    required Rect caretRect,
     required DateTime dateTime,
     required List<BlockCollectionTreeNode> blockCollectionTreeNodes,
   }) = _ThreadState;

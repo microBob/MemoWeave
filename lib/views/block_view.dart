@@ -30,8 +30,8 @@ class BlockView extends HookWidget {
     // Subscribe to changes on the BlockTextEditingController
     blockTextEditingController.addListener(() {
       _blockProps.onBlockTextEditingControllerChangedCallback(
-        blockTextEditingController,
         _blockProps.blockCollectionTreeNode.blockCollection.id,
+        blockTextEditingController,
       );
     });
 
