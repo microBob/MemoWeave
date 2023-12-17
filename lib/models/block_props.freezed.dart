@@ -18,13 +18,16 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$BlockProps {
   BlockCollectionTreeNode get blockCollectionTreeNode =>
       throw _privateConstructorUsedError;
+
   int get idOfBlockInFocus => throw _privateConstructorUsedError;
-  KeyEventResult Function(
-          FocusNode, KeyEvent, int, BlockTextEditingController, RenderEditable)
+
+  KeyEventResult Function(KeyEvent, BlockCallbackProps)
       get onKeyEventCallback => throw _privateConstructorUsedError;
-  dynamic Function(bool, int, BlockTextEditingController, RenderEditable)
-      get onFocusChangedCallback => throw _privateConstructorUsedError;
-  dynamic Function(int, BlockTextEditingController)
+
+  dynamic Function(bool, BlockCallbackProps) get onFocusChangedCallback =>
+      throw _privateConstructorUsedError;
+
+  dynamic Function(BlockCollection, BlockTextEditingController)
       get onBlockTextEditingControllerChangedCallback =>
           throw _privateConstructorUsedError;
 
@@ -42,12 +45,9 @@ abstract class $BlockPropsCopyWith<$Res> {
   $Res call(
       {BlockCollectionTreeNode blockCollectionTreeNode,
       int idOfBlockInFocus,
-      KeyEventResult Function(FocusNode, KeyEvent, int,
-              BlockTextEditingController, RenderEditable)
-          onKeyEventCallback,
-      dynamic Function(bool, int, BlockTextEditingController, RenderEditable)
-          onFocusChangedCallback,
-      dynamic Function(int, BlockTextEditingController)
+      KeyEventResult Function(KeyEvent, BlockCallbackProps) onKeyEventCallback,
+      dynamic Function(bool, BlockCallbackProps) onFocusChangedCallback,
+      dynamic Function(BlockCollection, BlockTextEditingController)
           onBlockTextEditingControllerChangedCallback});
 
   $BlockCollectionTreeNodeCopyWith<$Res> get blockCollectionTreeNode;
@@ -84,18 +84,16 @@ class _$BlockPropsCopyWithImpl<$Res, $Val extends BlockProps>
       onKeyEventCallback: null == onKeyEventCallback
           ? _value.onKeyEventCallback
           : onKeyEventCallback // ignore: cast_nullable_to_non_nullable
-              as KeyEventResult Function(FocusNode, KeyEvent, int,
-                  BlockTextEditingController, RenderEditable),
+              as KeyEventResult Function(KeyEvent, BlockCallbackProps),
       onFocusChangedCallback: null == onFocusChangedCallback
           ? _value.onFocusChangedCallback
           : onFocusChangedCallback // ignore: cast_nullable_to_non_nullable
-              as dynamic Function(
-                  bool, int, BlockTextEditingController, RenderEditable),
+              as dynamic Function(bool, BlockCallbackProps),
       onBlockTextEditingControllerChangedCallback: null ==
               onBlockTextEditingControllerChangedCallback
           ? _value.onBlockTextEditingControllerChangedCallback
           : onBlockTextEditingControllerChangedCallback // ignore: cast_nullable_to_non_nullable
-              as dynamic Function(int, BlockTextEditingController),
+              as dynamic Function(BlockCollection, BlockTextEditingController),
     ) as $Val);
   }
 
@@ -120,12 +118,9 @@ abstract class _$$BlockPropsImplCopyWith<$Res>
   $Res call(
       {BlockCollectionTreeNode blockCollectionTreeNode,
       int idOfBlockInFocus,
-      KeyEventResult Function(FocusNode, KeyEvent, int,
-              BlockTextEditingController, RenderEditable)
-          onKeyEventCallback,
-      dynamic Function(bool, int, BlockTextEditingController, RenderEditable)
-          onFocusChangedCallback,
-        dynamic Function(int, BlockTextEditingController)
+      KeyEventResult Function(KeyEvent, BlockCallbackProps) onKeyEventCallback,
+      dynamic Function(bool, BlockCallbackProps) onFocusChangedCallback,
+      dynamic Function(BlockCollection, BlockTextEditingController)
           onBlockTextEditingControllerChangedCallback});
 
   @override
@@ -161,18 +156,16 @@ class __$$BlockPropsImplCopyWithImpl<$Res>
       onKeyEventCallback: null == onKeyEventCallback
           ? _value.onKeyEventCallback
           : onKeyEventCallback // ignore: cast_nullable_to_non_nullable
-              as KeyEventResult Function(FocusNode, KeyEvent, int,
-                  BlockTextEditingController, RenderEditable),
+              as KeyEventResult Function(KeyEvent, BlockCallbackProps),
       onFocusChangedCallback: null == onFocusChangedCallback
           ? _value.onFocusChangedCallback
           : onFocusChangedCallback // ignore: cast_nullable_to_non_nullable
-              as dynamic Function(
-                  bool, int, BlockTextEditingController, RenderEditable),
+              as dynamic Function(bool, BlockCallbackProps),
       onBlockTextEditingControllerChangedCallback: null ==
               onBlockTextEditingControllerChangedCallback
           ? _value.onBlockTextEditingControllerChangedCallback
           : onBlockTextEditingControllerChangedCallback // ignore: cast_nullable_to_non_nullable
-              as dynamic Function(int, BlockTextEditingController),
+              as dynamic Function(BlockCollection, BlockTextEditingController),
     ));
   }
 }
@@ -192,14 +185,12 @@ class _$BlockPropsImpl implements _BlockProps {
   @override
   final int idOfBlockInFocus;
   @override
-  final KeyEventResult Function(
-          FocusNode, KeyEvent, int, BlockTextEditingController, RenderEditable)
+  final KeyEventResult Function(KeyEvent, BlockCallbackProps)
       onKeyEventCallback;
   @override
-  final dynamic Function(bool, int, BlockTextEditingController, RenderEditable)
-      onFocusChangedCallback;
+  final dynamic Function(bool, BlockCallbackProps) onFocusChangedCallback;
   @override
-  final dynamic Function(int, BlockTextEditingController)
+  final dynamic Function(BlockCollection, BlockTextEditingController)
       onBlockTextEditingControllerChangedCallback;
 
   @override
@@ -247,28 +238,28 @@ abstract class _BlockProps implements BlockProps {
   const factory _BlockProps(
       {required final BlockCollectionTreeNode blockCollectionTreeNode,
       required final int idOfBlockInFocus,
-      required final KeyEventResult Function(FocusNode, KeyEvent, int,
-              BlockTextEditingController, RenderEditable)
+      required final KeyEventResult Function(KeyEvent, BlockCallbackProps)
           onKeyEventCallback,
-      required final dynamic Function(
-              bool, int, BlockTextEditingController, RenderEditable)
+      required final dynamic Function(bool, BlockCallbackProps)
           onFocusChangedCallback,
-        required final dynamic Function(int, BlockTextEditingController)
+      required final dynamic Function(
+              BlockCollection, BlockTextEditingController)
           onBlockTextEditingControllerChangedCallback}) = _$BlockPropsImpl;
 
   @override
   BlockCollectionTreeNode get blockCollectionTreeNode;
+
   @override
   int get idOfBlockInFocus;
+
   @override
-  KeyEventResult Function(
-          FocusNode, KeyEvent, int, BlockTextEditingController, RenderEditable)
-      get onKeyEventCallback;
+  KeyEventResult Function(KeyEvent, BlockCallbackProps) get onKeyEventCallback;
+
   @override
-  dynamic Function(bool, int, BlockTextEditingController, RenderEditable)
-      get onFocusChangedCallback;
+  dynamic Function(bool, BlockCallbackProps) get onFocusChangedCallback;
+
   @override
-  dynamic Function(int, BlockTextEditingController)
+  dynamic Function(BlockCollection, BlockTextEditingController)
       get onBlockTextEditingControllerChangedCallback;
   @override
   @JsonKey(ignore: true)

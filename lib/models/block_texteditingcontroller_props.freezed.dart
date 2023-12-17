@@ -17,8 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$BlockTextEditingControllerProps {
   BlockCollection get blockCollection => throw _privateConstructorUsedError;
-
-  dynamic Function(int, BlockTextEditingController)
+  dynamic Function(BlockCollection, BlockTextEditingController)
       get onBlockTextEditingControllerChangedCallback =>
           throw _privateConstructorUsedError;
 
@@ -34,11 +33,10 @@ abstract class $BlockTextEditingControllerPropsCopyWith<$Res> {
           $Res Function(BlockTextEditingControllerProps) then) =
       _$BlockTextEditingControllerPropsCopyWithImpl<$Res,
           BlockTextEditingControllerProps>;
-
   @useResult
   $Res call(
       {BlockCollection blockCollection,
-      dynamic Function(int, BlockTextEditingController)
+        dynamic Function(BlockCollection, BlockTextEditingController)
           onBlockTextEditingControllerChangedCallback});
 }
 
@@ -50,7 +48,6 @@ class _$BlockTextEditingControllerPropsCopyWithImpl<$Res,
 
   // ignore: unused_field
   final $Val _value;
-
   // ignore: unused_field
   final $Res Function($Val) _then;
 
@@ -69,7 +66,7 @@ class _$BlockTextEditingControllerPropsCopyWithImpl<$Res,
               onBlockTextEditingControllerChangedCallback
           ? _value.onBlockTextEditingControllerChangedCallback
           : onBlockTextEditingControllerChangedCallback // ignore: cast_nullable_to_non_nullable
-              as dynamic Function(int, BlockTextEditingController),
+              as dynamic Function(BlockCollection, BlockTextEditingController),
     ) as $Val);
   }
 }
@@ -81,12 +78,11 @@ abstract class _$$BlockTextEditingControllerPropsImplCopyWith<$Res>
           _$BlockTextEditingControllerPropsImpl value,
           $Res Function(_$BlockTextEditingControllerPropsImpl) then) =
       __$$BlockTextEditingControllerPropsImplCopyWithImpl<$Res>;
-
   @override
   @useResult
   $Res call(
       {BlockCollection blockCollection,
-      dynamic Function(int, BlockTextEditingController)
+        dynamic Function(BlockCollection, BlockTextEditingController)
           onBlockTextEditingControllerChangedCallback});
 }
 
@@ -115,7 +111,7 @@ class __$$BlockTextEditingControllerPropsImplCopyWithImpl<$Res>
               onBlockTextEditingControllerChangedCallback
           ? _value.onBlockTextEditingControllerChangedCallback
           : onBlockTextEditingControllerChangedCallback // ignore: cast_nullable_to_non_nullable
-              as dynamic Function(int, BlockTextEditingController),
+              as dynamic Function(BlockCollection, BlockTextEditingController),
     ));
   }
 }
@@ -131,7 +127,7 @@ class _$BlockTextEditingControllerPropsImpl
   @override
   final BlockCollection blockCollection;
   @override
-  final dynamic Function(int, BlockTextEditingController)
+  final dynamic Function(BlockCollection, BlockTextEditingController)
       onBlockTextEditingControllerChangedCallback;
 
   @override
@@ -168,18 +164,17 @@ class _$BlockTextEditingControllerPropsImpl
 abstract class _BlockTextEditingControllerProps
     implements BlockTextEditingControllerProps {
   const factory _BlockTextEditingControllerProps(
-          {required final BlockCollection blockCollection,
-          required final dynamic Function(int, BlockTextEditingController)
+      {required final BlockCollection blockCollection,
+          required final dynamic Function(
+                  BlockCollection, BlockTextEditingController)
               onBlockTextEditingControllerChangedCallback}) =
       _$BlockTextEditingControllerPropsImpl;
 
   @override
   BlockCollection get blockCollection;
-
   @override
-  dynamic Function(int, BlockTextEditingController)
+  dynamic Function(BlockCollection, BlockTextEditingController)
       get onBlockTextEditingControllerChangedCallback;
-
   @override
   @JsonKey(ignore: true)
   _$$BlockTextEditingControllerPropsImplCopyWith<

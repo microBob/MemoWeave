@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:memoweave/models/block_callback_props.dart';
 import 'package:memoweave/models/block_props.dart';
 import 'package:memoweave/utils/use_block_texteditingcontroller.dart';
 import 'package:memoweave/viewmodels/block_viewmodel.dart';
@@ -38,24 +39,29 @@ class BlockView extends HookWidget {
         // Start with this block
         if (index == 0) {
           return Focus(
-            onKeyEvent: (node, event) => _blockProps.onKeyEventCallback(
-              node,
+            onKeyEvent: (_, event) => _blockProps.onKeyEventCallback(
               event,
-              _blockProps.blockCollectionTreeNode.blockCollection.id,
-              blockTextEditingController,
-              _findRenderEditableFromBlockKey(blockKey),
+              BlockCallbackProps(
+                blockCollection:
+                    _blockProps.blockCollectionTreeNode.blockCollection,
+                blockTextEditingController: blockTextEditingController,
+                blockRenderEditable: _findRenderEditableFromBlockKey(blockKey),
+              ),
             ),
             onFocusChange: (hasFocus) => _blockProps.onFocusChangedCallback(
               hasFocus,
-              _blockProps.blockCollectionTreeNode.blockCollection.id,
-              blockTextEditingController,
-              _findRenderEditableFromBlockKey(blockKey),
+              BlockCallbackProps(
+                blockCollection:
+                    _blockProps.blockCollectionTreeNode.blockCollection,
+                blockTextEditingController: blockTextEditingController,
+                blockRenderEditable: _findRenderEditableFromBlockKey(blockKey),
+              ),
             ),
             child: TextField(
               key: blockKey,
               autofocus:
-              _blockProps.blockCollectionTreeNode.blockCollection.id ==
-                  _blockProps.idOfBlockInFocus,
+                  _blockProps.blockCollectionTreeNode.blockCollection.id ==
+                      _blockProps.idOfBlockInFocus,
               controller: blockTextEditingController,
               textInputAction: TextInputAction.newline,
               maxLines: null,
@@ -67,7 +73,7 @@ class BlockView extends HookWidget {
         return BlockView(
           blockProps: _blockProps.copyWith(
             blockCollectionTreeNode:
-            _blockProps.blockCollectionTreeNode.childBlocks[index - 1],
+                _blockProps.blockCollectionTreeNode.childBlocks[index - 1],
           ),
         );
       },
