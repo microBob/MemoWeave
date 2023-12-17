@@ -100,7 +100,7 @@ class BlockViewModel extends _$BlockViewModel {
         // Set caret position as instructed from origin.
         blockTextEditingController.selection = TextSelection.collapsed(
           offset: min(
-            ref.read(caretViewModelProvider).caretPosition,
+            ref.read(caretViewModelProvider).caretTextOffset,
             blockTextEditingController.text.length,
           ),
         );
@@ -129,10 +129,10 @@ class BlockViewModel extends _$BlockViewModel {
     // Record new caret position if current block is in focus
     // and if there was a change.
     if (ref.read(idOfBlockInFocusProvider).blockId == databaseProps.id &&
-        ref.read(caretViewModelProvider).caretPosition !=
+        ref.read(caretViewModelProvider).caretTextOffset !=
             blockTextEditingController.selection.extentOffset) {
       ref.read(caretViewModelProvider.notifier).update(
-            caretPosition: blockTextEditingController.selection.extentOffset,
+        caretTextOffset: blockTextEditingController.selection.extentOffset,
           );
     }
 
@@ -174,7 +174,7 @@ class BlockViewModel extends _$BlockViewModel {
 
           // Move line down.
           ref.read(caretViewModelProvider.notifier).update(
-                caretPosition:
+            caretTextOffset:
                     blockTextEditingController.selection.extentOffset,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
@@ -203,7 +203,7 @@ class BlockViewModel extends _$BlockViewModel {
 
           // Move line up.
           ref.read(caretViewModelProvider.notifier).update(
-                caretPosition:
+            caretTextOffset:
                     blockTextEditingController.selection.extentOffset,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
@@ -224,7 +224,7 @@ class BlockViewModel extends _$BlockViewModel {
               .getBlockCollectionById(idOfBlockBefore);
 
           ref.read(caretViewModelProvider.notifier).update(
-                caretPosition: blockBefore.text.length,
+            caretTextOffset: blockBefore.text.length,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
                 blockId: idOfBlockBefore,
@@ -236,7 +236,7 @@ class BlockViewModel extends _$BlockViewModel {
             return KeyEventResult.ignored;
           }
           ref.read(caretViewModelProvider.notifier).update(
-                caretPosition: 0,
+            caretTextOffset: 0,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
             blockId: databaseProps.databaseManager
@@ -263,7 +263,7 @@ class BlockViewModel extends _$BlockViewModel {
           final nextBlockId =
               databaseProps.databaseManager.getIdOfBlockAfter(_blockCollection);
           ref.read(caretViewModelProvider.notifier).update(
-                caretPosition: 0,
+            caretTextOffset: 0,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
                 blockId: nextBlockId,
@@ -290,7 +290,7 @@ class BlockViewModel extends _$BlockViewModel {
           );
 
           ref.read(caretViewModelProvider.notifier).update(
-                caretPosition: blockBefore.text.length,
+            caretTextOffset: blockBefore.text.length,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
                 blockId: idOfBlockBefore,
@@ -331,7 +331,7 @@ class BlockViewModel extends _$BlockViewModel {
           databaseProps.databaseManager.deleteBlockCollection(blockAfter);
 
           ref.read(caretViewModelProvider.notifier).update(
-                caretPosition: blockTextEditingController.selection.start,
+            caretTextOffset: blockTextEditingController.selection.start,
               );
           ref.read(idOfBlockInFocusProvider.notifier).update(
                 blockId: databaseProps.id,

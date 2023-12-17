@@ -16,8 +16,11 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CaretState {
-  int get caretPosition => throw _privateConstructorUsedError;
-  Rect get caretRect => throw _privateConstructorUsedError;
+  int get caretTextOffset => throw _privateConstructorUsedError;
+
+  Rect get caretLocalRect => throw _privateConstructorUsedError;
+
+  Offset get caretGlobalPosition => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CaretStateCopyWith<CaretState> get copyWith =>
@@ -29,8 +32,10 @@ abstract class $CaretStateCopyWith<$Res> {
   factory $CaretStateCopyWith(
           CaretState value, $Res Function(CaretState) then) =
       _$CaretStateCopyWithImpl<$Res, CaretState>;
+
   @useResult
-  $Res call({int caretPosition, Rect caretRect});
+  $Res call(
+      {int caretTextOffset, Rect caretLocalRect, Offset caretGlobalPosition});
 }
 
 /// @nodoc
@@ -46,18 +51,23 @@ class _$CaretStateCopyWithImpl<$Res, $Val extends CaretState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? caretPosition = null,
-    Object? caretRect = null,
+    Object? caretTextOffset = null,
+    Object? caretLocalRect = null,
+    Object? caretGlobalPosition = null,
   }) {
     return _then(_value.copyWith(
-      caretPosition: null == caretPosition
-          ? _value.caretPosition
-          : caretPosition // ignore: cast_nullable_to_non_nullable
+      caretTextOffset: null == caretTextOffset
+          ? _value.caretTextOffset
+          : caretTextOffset // ignore: cast_nullable_to_non_nullable
               as int,
-      caretRect: null == caretRect
-          ? _value.caretRect
-          : caretRect // ignore: cast_nullable_to_non_nullable
+      caretLocalRect: null == caretLocalRect
+          ? _value.caretLocalRect
+          : caretLocalRect // ignore: cast_nullable_to_non_nullable
               as Rect,
+      caretGlobalPosition: null == caretGlobalPosition
+          ? _value.caretGlobalPosition
+          : caretGlobalPosition // ignore: cast_nullable_to_non_nullable
+              as Offset,
     ) as $Val);
   }
 }
@@ -71,7 +81,8 @@ abstract class _$$CaretStateImplCopyWith<$Res>
 
   @override
   @useResult
-  $Res call({int caretPosition, Rect caretRect});
+  $Res call(
+      {int caretTextOffset, Rect caretLocalRect, Offset caretGlobalPosition});
 }
 
 /// @nodoc
@@ -85,18 +96,23 @@ class __$$CaretStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? caretPosition = null,
-    Object? caretRect = null,
+    Object? caretTextOffset = null,
+    Object? caretLocalRect = null,
+    Object? caretGlobalPosition = null,
   }) {
     return _then(_$CaretStateImpl(
-      caretPosition: null == caretPosition
-          ? _value.caretPosition
-          : caretPosition // ignore: cast_nullable_to_non_nullable
+      caretTextOffset: null == caretTextOffset
+          ? _value.caretTextOffset
+          : caretTextOffset // ignore: cast_nullable_to_non_nullable
               as int,
-      caretRect: null == caretRect
-          ? _value.caretRect
-          : caretRect // ignore: cast_nullable_to_non_nullable
+      caretLocalRect: null == caretLocalRect
+          ? _value.caretLocalRect
+          : caretLocalRect // ignore: cast_nullable_to_non_nullable
               as Rect,
+      caretGlobalPosition: null == caretGlobalPosition
+          ? _value.caretGlobalPosition
+          : caretGlobalPosition // ignore: cast_nullable_to_non_nullable
+              as Offset,
     ));
   }
 }
@@ -105,16 +121,20 @@ class __$$CaretStateImplCopyWithImpl<$Res>
 
 class _$CaretStateImpl implements _CaretState {
   const _$CaretStateImpl(
-      {required this.caretPosition, required this.caretRect});
+      {required this.caretTextOffset,
+      required this.caretLocalRect,
+      required this.caretGlobalPosition});
 
   @override
-  final int caretPosition;
+  final int caretTextOffset;
   @override
-  final Rect caretRect;
+  final Rect caretLocalRect;
+  @override
+  final Offset caretGlobalPosition;
 
   @override
   String toString() {
-    return 'CaretState(caretPosition: $caretPosition, caretRect: $caretRect)';
+    return 'CaretState(caretTextOffset: $caretTextOffset, caretLocalRect: $caretLocalRect, caretGlobalPosition: $caretGlobalPosition)';
   }
 
   @override
@@ -122,14 +142,17 @@ class _$CaretStateImpl implements _CaretState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CaretStateImpl &&
-            (identical(other.caretPosition, caretPosition) ||
-                other.caretPosition == caretPosition) &&
-            (identical(other.caretRect, caretRect) ||
-                other.caretRect == caretRect));
+            (identical(other.caretTextOffset, caretTextOffset) ||
+                other.caretTextOffset == caretTextOffset) &&
+            (identical(other.caretLocalRect, caretLocalRect) ||
+                other.caretLocalRect == caretLocalRect) &&
+            (identical(other.caretGlobalPosition, caretGlobalPosition) ||
+                other.caretGlobalPosition == caretGlobalPosition));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, caretPosition, caretRect);
+  int get hashCode => Object.hash(
+      runtimeType, caretTextOffset, caretLocalRect, caretGlobalPosition);
 
   @JsonKey(ignore: true)
   @override
@@ -140,14 +163,18 @@ class _$CaretStateImpl implements _CaretState {
 
 abstract class _CaretState implements CaretState {
   const factory _CaretState(
-      {required final int caretPosition,
-      required final Rect caretRect}) = _$CaretStateImpl;
+      {required final int caretTextOffset,
+      required final Rect caretLocalRect,
+      required final Offset caretGlobalPosition}) = _$CaretStateImpl;
 
   @override
-  int get caretPosition;
+  int get caretTextOffset;
 
   @override
-  Rect get caretRect;
+  Rect get caretLocalRect;
+
+  @override
+  Offset get caretGlobalPosition;
 
   @override
   @JsonKey(ignore: true)

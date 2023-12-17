@@ -9,6 +9,7 @@ import 'package:memoweave/models/thread_collection.dart';
 import 'package:memoweave/models/thread_state.dart';
 import 'package:memoweave/utils/database.dart';
 import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
+import 'package:memoweave/viewmodels/caret_viewmodel.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'thread_viewmodel.g.dart';
@@ -18,9 +19,6 @@ part 'thread_viewmodel.g.dart';
 /// Used by [ThreadView].
 @riverpod
 class ThreadViewModel extends _$ThreadViewModel {
-  /// Local cache of the Thread Collection data.
-  late ThreadCollection _threadCollectionCache;
-
   /// Ordered list of blocks by ID.
   List<Id> _blocksInThreadById = [];
 
@@ -30,51 +28,45 @@ class ThreadViewModel extends _$ThreadViewModel {
     required final TextEditingController spoolTextEditingController,
     required final TextEditingController subjectTextEditingController,
   }) {
-    _threadCollectionCache =
+    final threadCollection =
         databaseProps.databaseManager.getThreadCollectionById(databaseProps.id);
 
-    // Set initial spool.
-    spoolTextEditingController.text = _threadCollectionCache.spool;
-
-    // Add listener to spool changes.
+    // Setup spool TextEditingController
+    spoolTextEditingController.text = threadCollection.spool;
     spoolTextEditingController.addListener(spoolSelectionChanged);
 
-    // Set initial subject.
-    subjectTextEditingController.text = _threadCollectionCache.subject;
-
-    // Add listener to subject changes.
+    // Setup subject TextEditingController
+    subjectTextEditingController.text = threadCollection.subject;
     subjectTextEditingController.addListener(subjectChanged);
 
     // Subscribe to changes on the Thread collection and update state
-    databaseProps.databaseManager.onThreadChanged(databaseProps.id).listen(
-      (threadCollection) {
-        // Shortcut exit if null.
-        if (threadCollection == null) return;
-
-        // Update state if datetime or direct child IDs have changed.
-        if (threadCollection.dateTime != _threadCollectionCache.dateTime ||
-            threadCollection.childIds != _threadCollectionCache.childIds) {
-          state = state.copyWith(
-            dateTime: threadCollection.dateTime,
-            blockCollectionTreeNodes:
-                _createBlockCollectionTreeNodes(threadCollection),
-          );
-        }
-
-        // Update cache.
-        _threadCollectionCache = threadCollection;
-      },
-    );
+    // databaseProps.databaseManager.onThreadChanged(databaseProps.id).listen(
+    //   (threadCollection) {
+    //     // Shortcut exit if null.
+    //     if (threadCollection == null) return;
+    //
+    //     // Update state if datetime or direct child IDs have changed.
+    //     if (threadCollection.dateTime != threadCollection.dateTime ||
+    //         threadCollection.childIds != threadCollection.childIds) {
+    //       state = state.copyWith(
+    //         threadCollection: threadCollection,
+    //         blockCollectionTreeNodes:
+    //             _createBlockCollectionTreeNodes(threadCollection),
+    //       );
+    //     }
+    //
+    //     // Update cache.
+    //     _threadCollectionCache = threadCollection;
+    //   },
+    // );
 
     // Return state.
     return ThreadState(
-      idOfBlockInFocus: _threadCollectionCache.childIds.first,
+      idOfBlockInFocus: threadCollection.childIds.first,
       traversingBlocks: false,
-      caretTextOffset: 0,
-      caretGlobalPosition: Offset.zero,
-      dateTime: _threadCollectionCache.dateTime,
+      threadCollection: threadCollection,
       blockCollectionTreeNodes:
-          _createBlockCollectionTreeNodes(_threadCollectionCache),
+          _createBlockCollectionTreeNodes(threadCollection),
     );
   }
 
@@ -89,23 +81,29 @@ class ThreadViewModel extends _$ThreadViewModel {
   void spoolSelectionChanged() {
     if (!spoolTextEditingController.selection.isValid) return;
     // Create new Thread.
-    _threadCollectionCache = _threadCollectionCache.copyWith(
+    final newThread = state.threadCollection.copyWith(
       spool: spoolTextEditingController.text,
     );
 
     // Write to database.
-    databaseProps.databaseManager.putThreadCollection(_threadCollectionCache);
+    databaseProps.databaseManager.putThreadCollection(newThread);
+
+    // Update provider.
+    ref.invalidateSelf();
   }
 
   /// Handle updating Thread collection when subject changes.
   void subjectChanged() {
     // Create new Thread
-    _threadCollectionCache = _threadCollectionCache.copyWith(
+    final newThread = state.threadCollection.copyWith(
       subject: subjectTextEditingController.text,
     );
 
     // Write to database
-    databaseProps.databaseManager.putThreadCollection(_threadCollectionCache);
+    databaseProps.databaseManager.putThreadCollection(newThread);
+
+    // Update provider.
+    ref.invalidateSelf();
   }
 
   /// Handle traversal keystrokes on blocks.
@@ -134,19 +132,23 @@ class ThreadViewModel extends _$ThreadViewModel {
             return KeyEventResult.ignored;
           }
 
-          // Otherwise, move focus to previous block and update caret global
-          // location.
+          // Otherwise, update caret global location and move focus to
+          // previous block.
+
+          ref.read(caretViewModelProvider.notifier).update(
+                caretGlobalPosition:
+                    blockCallbackProps.blockRenderEditable.localToGlobal(
+                  blockCallbackProps.blockRenderEditable
+                      .getLocalRectForCaret(positionAbove)
+                      .center,
+                ),
+              );
+
           state = state.copyWith(
             idOfBlockInFocus: _blocksInThreadById[_blocksInThreadById
                     .indexOf(blockCallbackProps.blockCollection.id) -
                 1],
             traversingBlocks: true,
-            caretGlobalPosition:
-                blockCallbackProps.blockRenderEditable.localToGlobal(
-              blockCallbackProps.blockRenderEditable
-                  .getLocalRectForCaret(positionAbove)
-                  .center,
-            ),
           );
 
           // Mark event as handled.
@@ -170,19 +172,23 @@ class ThreadViewModel extends _$ThreadViewModel {
             return KeyEventResult.ignored;
           }
 
-          // Otherwise, move focus to next block and update caret global
-          // location.
+          // Otherwise, update caret global location and move focus to
+          // previous block.
+
+          ref.read(caretViewModelProvider.notifier).update(
+                caretGlobalPosition:
+                    blockCallbackProps.blockRenderEditable.localToGlobal(
+                  blockCallbackProps.blockRenderEditable
+                      .getLocalRectForCaret(positionBelow)
+                      .center,
+                ),
+              );
+
           state = state.copyWith(
             idOfBlockInFocus: _blocksInThreadById[_blocksInThreadById
                     .indexOf(blockCallbackProps.blockCollection.id) +
                 1],
             traversingBlocks: true,
-            caretGlobalPosition:
-                blockCallbackProps.blockRenderEditable.localToGlobal(
-              blockCallbackProps.blockRenderEditable
-                  .getLocalRectForCaret(positionBelow)
-                  .center,
-            ),
           );
 
           // Mark event as handled.
@@ -201,13 +207,15 @@ class ThreadViewModel extends _$ThreadViewModel {
             return KeyEventResult.ignored;
           }
 
-          // Otherwise, move focus to previous block.
+          // Otherwise, move focus to last character of previous block.
+
+          ref.read(caretViewModelProvider.notifier).update(caretTextOffset: -1);
+
           state = state.copyWith(
             idOfBlockInFocus: _blocksInThreadById[_blocksInThreadById
                     .indexOf(blockCallbackProps.blockCollection.id) -
                 1],
             traversingBlocks: true,
-            caretTextOffset: -1,
           );
 
           // Mark event as handled.
@@ -226,13 +234,15 @@ class ThreadViewModel extends _$ThreadViewModel {
             return KeyEventResult.ignored;
           }
 
-          // Otherwise, move focus to next block.
+          // Otherwise, move focus to first character of next block.
+
+          ref.read(caretViewModelProvider.notifier).update(caretTextOffset: 0);
+
           state = state.copyWith(
             idOfBlockInFocus: _blocksInThreadById[_blocksInThreadById
                     .indexOf(blockCallbackProps.blockCollection.id) +
                 1],
             traversingBlocks: true,
-            caretTextOffset: 0,
           );
 
           // Mark event as handled.
@@ -257,20 +267,21 @@ class ThreadViewModel extends _$ThreadViewModel {
     // Handle traversing blocks.
     if (state.idOfBlockInFocus == blockCallbackProps.blockCollection.id &&
         state.traversingBlocks) {
+      final caretState = ref.read(caretViewModelProvider);
       // Set selection based on state.
-      if (state.caretTextOffset == 0) {
+      if (caretState.caretTextOffset == 0) {
         // A zero value indicates the beginning of the text.
         blockCallbackProps.blockTextEditingController.selection =
             TextSelection.fromPosition(
           const TextPosition(offset: 0),
         );
-      } else if (state.caretTextOffset < 0) {
+      } else if (caretState.caretTextOffset < 0) {
         // A negative values indicates some value from the end of the text.
         blockCallbackProps.blockTextEditingController.selection =
             TextSelection.fromPosition(
           TextPosition(
             offset: blockCallbackProps.blockTextEditingController.text.length +
-                state.caretTextOffset +
+                caretState.caretTextOffset +
                 1,
           ),
         );
@@ -279,22 +290,26 @@ class ThreadViewModel extends _$ThreadViewModel {
         blockCallbackProps.blockTextEditingController.selection =
             TextSelection.fromPosition(
           blockCallbackProps.blockRenderEditable
-              .getPositionForPoint(state.caretGlobalPosition),
+              .getPositionForPoint(caretState.caretGlobalPosition),
         );
       }
 
-      // Acknowledge traversal and update caret state info.
+      // Update caret state info and acknowledge traversal.
+
+      ref.read(caretViewModelProvider.notifier).update(
+            caretTextOffset: blockCallbackProps
+                .blockTextEditingController.selection.extentOffset,
+            caretGlobalPosition:
+                blockCallbackProps.blockRenderEditable.localToGlobal(
+              blockCallbackProps.blockRenderEditable
+                  .getLocalRectForCaret(blockCallbackProps
+                      .blockTextEditingController.selection.extent)
+                  .center,
+            ),
+          );
+
       state = state.copyWith(
         traversingBlocks: false,
-        caretTextOffset: blockCallbackProps
-            .blockTextEditingController.selection.extentOffset,
-        caretGlobalPosition:
-            blockCallbackProps.blockRenderEditable.localToGlobal(
-          blockCallbackProps.blockRenderEditable
-              .getLocalRectForCaret(blockCallbackProps
-                  .blockTextEditingController.selection.extent)
-              .center,
-        ),
       );
     } else if (state.idOfBlockInFocus !=
         blockCallbackProps.blockCollection.id) {
@@ -323,10 +338,10 @@ class ThreadViewModel extends _$ThreadViewModel {
     // Update caret position if valid and changed.
     if (blockTextEditingController.selection.isValid &&
         blockTextEditingController.selection.extentOffset !=
-            state.caretTextOffset) {
-      state = state.copyWith(
-        caretTextOffset: blockTextEditingController.selection.extentOffset,
-      );
+            ref.read(caretViewModelProvider).caretTextOffset) {
+      ref.read(caretViewModelProvider.notifier).update(
+            caretTextOffset: blockTextEditingController.selection.extentOffset,
+          );
     }
   }
 

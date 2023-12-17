@@ -18,7 +18,8 @@ class ThreadView extends HookConsumerWidget {
     // Header TextEditingControllers.
     final spoolTextEditingController =
         useTextEditingController(keys: [_databaseProps]);
-    final subjectTextEditingController = useTextEditingController();
+    final subjectTextEditingController =
+        useTextEditingController(keys: [_databaseProps]);
 
     // Provider with props.
     final provider = threadViewModelProvider(
@@ -47,8 +48,8 @@ class ThreadView extends HookConsumerWidget {
               child: TextFormField(
                 // Placeholder with current date.
                 decoration: InputDecoration(
-                  hintText:
-                      DateFormat.yMMMMEEEEd().format(threadState.dateTime),
+                  hintText: DateFormat.yMMMMEEEEd()
+                      .format(threadState.threadCollection.dateTime),
                 ),
                 controller: subjectTextEditingController,
               ),
@@ -57,8 +58,10 @@ class ThreadView extends HookConsumerWidget {
             // Time stamp (use 24-hour preference).
             Text(
               MediaQuery.of(context).alwaysUse24HourFormat
-                  ? DateFormat.Hm().format(threadState.dateTime)
-                  : DateFormat.jm().format(threadState.dateTime),
+                  ? DateFormat.Hm()
+                      .format(threadState.threadCollection.dateTime)
+                  : DateFormat.jm()
+                      .format(threadState.threadCollection.dateTime),
             )
           ],
         ),

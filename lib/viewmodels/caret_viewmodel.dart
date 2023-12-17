@@ -10,18 +10,21 @@ class CaretViewModel extends _$CaretViewModel {
   @override
   CaretState build() {
     return const CaretState(
-      caretPosition: 0,
-      caretRect: Rect.zero,
+      caretTextOffset: 0,
+      caretLocalRect: Rect.zero,
+      caretGlobalPosition: Offset.zero,
     );
   }
 
   void update({
-    final int? caretPosition,
-    final Rect? caretRect,
+    final int? caretTextOffset,
+    final Rect? caretLocalRect,
+    final Offset? caretGlobalPosition,
   }) {
     state = state.copyWith(
-      caretPosition: caretPosition ?? state.caretPosition,
-      caretRect: caretRect ?? state.caretRect,
+      caretTextOffset: caretTextOffset ?? state.caretTextOffset,
+      caretLocalRect: caretLocalRect ?? state.caretLocalRect,
+      caretGlobalPosition: caretGlobalPosition ?? state.caretGlobalPosition,
     );
   }
 }

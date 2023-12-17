@@ -18,9 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$ThreadState {
   int get idOfBlockInFocus => throw _privateConstructorUsedError;
   bool get traversingBlocks => throw _privateConstructorUsedError;
-  int get caretTextOffset => throw _privateConstructorUsedError;
-  Offset get caretGlobalPosition => throw _privateConstructorUsedError;
-  DateTime get dateTime => throw _privateConstructorUsedError;
+  ThreadCollection get threadCollection => throw _privateConstructorUsedError;
   List<BlockCollectionTreeNode> get blockCollectionTreeNodes =>
       throw _privateConstructorUsedError;
 
@@ -38,9 +36,7 @@ abstract class $ThreadStateCopyWith<$Res> {
   $Res call(
       {int idOfBlockInFocus,
       bool traversingBlocks,
-      int caretTextOffset,
-      Offset caretGlobalPosition,
-      DateTime dateTime,
+      ThreadCollection threadCollection,
       List<BlockCollectionTreeNode> blockCollectionTreeNodes});
 }
 
@@ -59,9 +55,7 @@ class _$ThreadStateCopyWithImpl<$Res, $Val extends ThreadState>
   $Res call({
     Object? idOfBlockInFocus = null,
     Object? traversingBlocks = null,
-    Object? caretTextOffset = null,
-    Object? caretGlobalPosition = null,
-    Object? dateTime = null,
+    Object? threadCollection = null,
     Object? blockCollectionTreeNodes = null,
   }) {
     return _then(_value.copyWith(
@@ -73,18 +67,10 @@ class _$ThreadStateCopyWithImpl<$Res, $Val extends ThreadState>
           ? _value.traversingBlocks
           : traversingBlocks // ignore: cast_nullable_to_non_nullable
               as bool,
-      caretTextOffset: null == caretTextOffset
-          ? _value.caretTextOffset
-          : caretTextOffset // ignore: cast_nullable_to_non_nullable
-              as int,
-      caretGlobalPosition: null == caretGlobalPosition
-          ? _value.caretGlobalPosition
-          : caretGlobalPosition // ignore: cast_nullable_to_non_nullable
-              as Offset,
-      dateTime: null == dateTime
-          ? _value.dateTime
-          : dateTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+      threadCollection: null == threadCollection
+          ? _value.threadCollection
+          : threadCollection // ignore: cast_nullable_to_non_nullable
+              as ThreadCollection,
       blockCollectionTreeNodes: null == blockCollectionTreeNodes
           ? _value.blockCollectionTreeNodes
           : blockCollectionTreeNodes // ignore: cast_nullable_to_non_nullable
@@ -104,9 +90,7 @@ abstract class _$$ThreadStateImplCopyWith<$Res>
   $Res call(
       {int idOfBlockInFocus,
       bool traversingBlocks,
-      int caretTextOffset,
-      Offset caretGlobalPosition,
-      DateTime dateTime,
+      ThreadCollection threadCollection,
       List<BlockCollectionTreeNode> blockCollectionTreeNodes});
 }
 
@@ -123,9 +107,7 @@ class __$$ThreadStateImplCopyWithImpl<$Res>
   $Res call({
     Object? idOfBlockInFocus = null,
     Object? traversingBlocks = null,
-    Object? caretTextOffset = null,
-    Object? caretGlobalPosition = null,
-    Object? dateTime = null,
+    Object? threadCollection = null,
     Object? blockCollectionTreeNodes = null,
   }) {
     return _then(_$ThreadStateImpl(
@@ -137,18 +119,10 @@ class __$$ThreadStateImplCopyWithImpl<$Res>
           ? _value.traversingBlocks
           : traversingBlocks // ignore: cast_nullable_to_non_nullable
               as bool,
-      caretTextOffset: null == caretTextOffset
-          ? _value.caretTextOffset
-          : caretTextOffset // ignore: cast_nullable_to_non_nullable
-              as int,
-      caretGlobalPosition: null == caretGlobalPosition
-          ? _value.caretGlobalPosition
-          : caretGlobalPosition // ignore: cast_nullable_to_non_nullable
-              as Offset,
-      dateTime: null == dateTime
-          ? _value.dateTime
-          : dateTime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+      threadCollection: null == threadCollection
+          ? _value.threadCollection
+          : threadCollection // ignore: cast_nullable_to_non_nullable
+              as ThreadCollection,
       blockCollectionTreeNodes: null == blockCollectionTreeNodes
           ? _value._blockCollectionTreeNodes
           : blockCollectionTreeNodes // ignore: cast_nullable_to_non_nullable
@@ -163,9 +137,7 @@ class _$ThreadStateImpl implements _ThreadState {
   const _$ThreadStateImpl(
       {required this.idOfBlockInFocus,
       required this.traversingBlocks,
-      required this.caretTextOffset,
-      required this.caretGlobalPosition,
-      required this.dateTime,
+      required this.threadCollection,
       required final List<BlockCollectionTreeNode> blockCollectionTreeNodes})
       : _blockCollectionTreeNodes = blockCollectionTreeNodes;
 
@@ -174,11 +146,7 @@ class _$ThreadStateImpl implements _ThreadState {
   @override
   final bool traversingBlocks;
   @override
-  final int caretTextOffset;
-  @override
-  final Offset caretGlobalPosition;
-  @override
-  final DateTime dateTime;
+  final ThreadCollection threadCollection;
   final List<BlockCollectionTreeNode> _blockCollectionTreeNodes;
   @override
   List<BlockCollectionTreeNode> get blockCollectionTreeNodes {
@@ -190,7 +158,7 @@ class _$ThreadStateImpl implements _ThreadState {
 
   @override
   String toString() {
-    return 'ThreadState(idOfBlockInFocus: $idOfBlockInFocus, traversingBlocks: $traversingBlocks, caretTextOffset: $caretTextOffset, caretGlobalPosition: $caretGlobalPosition, dateTime: $dateTime, blockCollectionTreeNodes: $blockCollectionTreeNodes)';
+    return 'ThreadState(idOfBlockInFocus: $idOfBlockInFocus, traversingBlocks: $traversingBlocks, threadCollection: $threadCollection, blockCollectionTreeNodes: $blockCollectionTreeNodes)';
   }
 
   @override
@@ -202,12 +170,8 @@ class _$ThreadStateImpl implements _ThreadState {
                 other.idOfBlockInFocus == idOfBlockInFocus) &&
             (identical(other.traversingBlocks, traversingBlocks) ||
                 other.traversingBlocks == traversingBlocks) &&
-            (identical(other.caretTextOffset, caretTextOffset) ||
-                other.caretTextOffset == caretTextOffset) &&
-            (identical(other.caretGlobalPosition, caretGlobalPosition) ||
-                other.caretGlobalPosition == caretGlobalPosition) &&
-            (identical(other.dateTime, dateTime) ||
-                other.dateTime == dateTime) &&
+            (identical(other.threadCollection, threadCollection) ||
+                other.threadCollection == threadCollection) &&
             const DeepCollectionEquality().equals(
                 other._blockCollectionTreeNodes, _blockCollectionTreeNodes));
   }
@@ -217,9 +181,7 @@ class _$ThreadStateImpl implements _ThreadState {
       runtimeType,
       idOfBlockInFocus,
       traversingBlocks,
-      caretTextOffset,
-      caretGlobalPosition,
-      dateTime,
+      threadCollection,
       const DeepCollectionEquality().hash(_blockCollectionTreeNodes));
 
   @JsonKey(ignore: true)
@@ -233,9 +195,7 @@ abstract class _ThreadState implements ThreadState {
   const factory _ThreadState(
       {required final int idOfBlockInFocus,
       required final bool traversingBlocks,
-      required final int caretTextOffset,
-      required final Offset caretGlobalPosition,
-      required final DateTime dateTime,
+      required final ThreadCollection threadCollection,
       required final List<BlockCollectionTreeNode>
           blockCollectionTreeNodes}) = _$ThreadStateImpl;
 
@@ -244,11 +204,7 @@ abstract class _ThreadState implements ThreadState {
   @override
   bool get traversingBlocks;
   @override
-  int get caretTextOffset;
-  @override
-  Offset get caretGlobalPosition;
-  @override
-  DateTime get dateTime;
+  ThreadCollection get threadCollection;
   @override
   List<BlockCollectionTreeNode> get blockCollectionTreeNodes;
   @override
