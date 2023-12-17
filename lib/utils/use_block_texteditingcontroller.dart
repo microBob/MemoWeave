@@ -49,7 +49,7 @@ class _BlockTextEditingControllerState
     _blockTextEditingController.addListener(() {
       _blockTextEditingControllerProps
           .onBlockTextEditingControllerChangedCallback(
-        _blockTextEditingControllerProps.blockCollection.id,
+        _blockTextEditingControllerProps.blockCollection,
         _blockTextEditingController,
       );
     });
