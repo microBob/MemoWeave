@@ -36,16 +36,20 @@ class ThreadView extends HookConsumerWidget {
         Row(
           children: [
             // Spool picker.
-            DropdownMenu(
-              dropdownMenuEntries:
-                  ref.watch(provider.notifier).spoolsAsDropdownMenuEntries(),
+            DropdownMenu<String>(
+              dropdownMenuEntries: _databaseProps.databaseManager.spools
+                  .map((element) => DropdownMenuEntry(
+                        value: element,
+                        label: element,
+                      ))
+                  .toList(),
               label: const Text('Spool'),
               controller: spoolTextEditingController,
             ),
             const Spacer(),
             // Thread subject line.
             IntrinsicWidth(
-              child: TextFormField(
+              child: TextField(
                 // Placeholder with current date.
                 decoration: InputDecoration(
                   hintText: DateFormat.yMMMMEEEEd()

@@ -33,7 +33,7 @@ class ThreadViewModel extends _$ThreadViewModel {
 
     // Setup spool TextEditingController
     spoolTextEditingController.text = threadCollection.spool;
-    spoolTextEditingController.addListener(spoolSelectionChanged);
+    spoolTextEditingController.addListener(spoolChanged);
 
     // Setup subject TextEditingController
     subjectTextEditingController.text = threadCollection.subject;
@@ -78,9 +78,13 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Handle updating Thread collection when spool changes.
-  void spoolSelectionChanged() {
-    if (!spoolTextEditingController.selection.isValid) return;
-    // Create new Thread.
+  void spoolChanged() {
+    // Shortcut exit on only selection changes.
+    if (spoolTextEditingController.text == state.threadCollection.spool) {
+      return;
+    }
+
+    // Create new Thread with updated subject.
     final newThread = state.threadCollection.copyWith(
       spool: spoolTextEditingController.text,
     );
@@ -88,22 +92,31 @@ class ThreadViewModel extends _$ThreadViewModel {
     // Write to database.
     databaseProps.databaseManager.putThreadCollection(newThread);
 
-    // Update provider.
-    ref.invalidateSelf();
+    // Update state.
+    state = state.copyWith(
+      threadCollection: newThread,
+    );
   }
 
   /// Handle updating Thread collection when subject changes.
   void subjectChanged() {
-    // Create new Thread
+    // Shortcut exit on only selection changes.
+    if (subjectTextEditingController.text == state.threadCollection.subject) {
+      return;
+    }
+
+    // Create new Thread with updated subject.
     final newThread = state.threadCollection.copyWith(
       subject: subjectTextEditingController.text,
     );
 
-    // Write to database
+    // Write to database.
     databaseProps.databaseManager.putThreadCollection(newThread);
 
-    // Update provider.
-    ref.invalidateSelf();
+    // Update state.
+    state = state.copyWith(
+      threadCollection: newThread,
+    );
   }
 
   /// Handle traversal keystrokes on blocks.
