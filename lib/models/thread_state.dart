@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 import 'package:memoweave/models/thread_collection.dart';
@@ -18,8 +20,15 @@ part 'thread_state.freezed.dart';
 @freezed
 class ThreadState with _$ThreadState {
   const factory ThreadState({
+    // Block focus.
     required Id idOfBlockInFocus,
     required bool traversingBlocks,
+
+    // Caret state.
+    required int caretTextOffset,
+    required Offset caretGlobalPosition,
+
+    // Thread and its Blocks.
     required ThreadCollection threadCollection,
     required List<BlockCollectionTreeNode> blockCollectionTreeNodes,
   }) = _ThreadState;
