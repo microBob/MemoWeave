@@ -129,7 +129,8 @@ class ThreadViewModel extends _$ThreadViewModel {
       switch (keyEvent.logicalKey) {
         case LogicalKeyboardKey.arrowUp:
           // Compute position above.
-          final positionAbove = blockCallbackProps.blockRenderEditable
+          final positionAbove = blockCallbackProps
+              .blockRenderEditable()
               .getTextPositionAbove(blockCallbackProps
                   .blockTextEditingController.selection.extent);
 
@@ -153,8 +154,10 @@ class ThreadViewModel extends _$ThreadViewModel {
                 1],
             traversingBlocks: true,
             caretTextOffset: positionAbove.offset,
-            caretGlobalPosition: blockCallbackProps.blockRenderEditable
-                .localToGlobal(blockCallbackProps.blockRenderEditable
+            caretGlobalPosition: blockCallbackProps
+                .blockRenderEditable()
+                .localToGlobal(blockCallbackProps
+                    .blockRenderEditable()
                     .getLocalRectForCaret(positionAbove)
                     .center),
           );
@@ -163,7 +166,8 @@ class ThreadViewModel extends _$ThreadViewModel {
           return KeyEventResult.handled;
         case LogicalKeyboardKey.arrowDown:
           // Compute position below.
-          final positionBelow = blockCallbackProps.blockRenderEditable
+          final positionBelow = blockCallbackProps
+              .blockRenderEditable()
               .getTextPositionBelow(blockCallbackProps
                   .blockTextEditingController.selection.extent);
 
@@ -187,8 +191,10 @@ class ThreadViewModel extends _$ThreadViewModel {
                 1],
             traversingBlocks: true,
             caretTextOffset: positionBelow.offset,
-            caretGlobalPosition: blockCallbackProps.blockRenderEditable
-                .localToGlobal(blockCallbackProps.blockRenderEditable
+            caretGlobalPosition: blockCallbackProps
+                .blockRenderEditable()
+                .localToGlobal(blockCallbackProps
+                    .blockRenderEditable()
                     .getLocalRectForCaret(positionBelow)
                     .center),
           );
@@ -286,7 +292,8 @@ class ThreadViewModel extends _$ThreadViewModel {
         // Otherwise, set from the the caret's global position.
         blockCallbackProps.blockTextEditingController.selection =
             TextSelection.fromPosition(
-          blockCallbackProps.blockRenderEditable
+              blockCallbackProps
+              .blockRenderEditable()
               .getPositionForPoint(state.caretGlobalPosition),
         );
       }

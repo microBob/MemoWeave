@@ -21,7 +21,8 @@ mixin _$BlockCallbackProps {
   BlockTextEditingController get blockTextEditingController =>
       throw _privateConstructorUsedError;
 
-  RenderEditable get blockRenderEditable => throw _privateConstructorUsedError;
+  ValueGetter<RenderEditable> get blockRenderEditable =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $BlockCallbackPropsCopyWith<BlockCallbackProps> get copyWith =>
@@ -38,7 +39,7 @@ abstract class $BlockCallbackPropsCopyWith<$Res> {
   $Res call(
       {BlockCollection blockCollection,
       BlockTextEditingController blockTextEditingController,
-      RenderEditable blockRenderEditable});
+      ValueGetter<RenderEditable> blockRenderEditable});
 }
 
 /// @nodoc
@@ -48,7 +49,6 @@ class _$BlockCallbackPropsCopyWithImpl<$Res, $Val extends BlockCallbackProps>
 
   // ignore: unused_field
   final $Val _value;
-
   // ignore: unused_field
   final $Res Function($Val) _then;
 
@@ -71,7 +71,7 @@ class _$BlockCallbackPropsCopyWithImpl<$Res, $Val extends BlockCallbackProps>
       blockRenderEditable: null == blockRenderEditable
           ? _value.blockRenderEditable
           : blockRenderEditable // ignore: cast_nullable_to_non_nullable
-              as RenderEditable,
+              as ValueGetter<RenderEditable>,
     ) as $Val);
   }
 }
@@ -88,7 +88,7 @@ abstract class _$$BlockCallbackPropsImplCopyWith<$Res>
   $Res call(
       {BlockCollection blockCollection,
       BlockTextEditingController blockTextEditingController,
-      RenderEditable blockRenderEditable});
+      ValueGetter<RenderEditable> blockRenderEditable});
 }
 
 /// @nodoc
@@ -118,7 +118,7 @@ class __$$BlockCallbackPropsImplCopyWithImpl<$Res>
       blockRenderEditable: null == blockRenderEditable
           ? _value.blockRenderEditable
           : blockRenderEditable // ignore: cast_nullable_to_non_nullable
-              as RenderEditable,
+              as ValueGetter<RenderEditable>,
     ));
   }
 }
@@ -136,7 +136,7 @@ class _$BlockCallbackPropsImpl implements _BlockCallbackProps {
   @override
   final BlockTextEditingController blockTextEditingController;
   @override
-  final RenderEditable blockRenderEditable;
+  final ValueGetter<RenderEditable> blockRenderEditable;
 
   @override
   String toString() {
@@ -174,7 +174,7 @@ abstract class _BlockCallbackProps implements BlockCallbackProps {
   const factory _BlockCallbackProps(
           {required final BlockCollection blockCollection,
           required final BlockTextEditingController blockTextEditingController,
-          required final RenderEditable blockRenderEditable}) =
+          required final ValueGetter<RenderEditable> blockRenderEditable}) =
       _$BlockCallbackPropsImpl;
 
   @override
@@ -184,7 +184,7 @@ abstract class _BlockCallbackProps implements BlockCallbackProps {
   BlockTextEditingController get blockTextEditingController;
 
   @override
-  RenderEditable get blockRenderEditable;
+  ValueGetter<RenderEditable> get blockRenderEditable;
 
   @override
   @JsonKey(ignore: true)

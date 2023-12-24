@@ -33,41 +33,38 @@ class BlockView extends HookWidget {
             _blockProps.onBlockTextEditingControllerChangedCallback,
       ),
     );
+    final blockCallbackProps = BlockCallbackProps(
+      blockCollection: _blockProps.blockCollectionTreeNode.blockCollection,
+      blockTextEditingController: blockTextEditingController,
+      blockRenderEditable: () => _findRenderEditableFromBlockKey(blockKey),
+    );
+    final blockFocusNode = useFocusNode(
+      debugLabel:
+          'Block ${_blockProps.blockCollectionTreeNode.blockCollection.id}',
+      onKeyEvent: (_, event) => _blockProps.onKeyEventCallback(
+        event,
+        blockCallbackProps,
+      ),
+    );
+    // blockFocusNode.addListener(() {
+    //   _blockProps.onFocusChangedCallback(
+    //     blockFocusNode.hasPrimaryFocus,
+    //     blockCallbackProps,
+    //   );
+    // });
 
     return ListView.builder(
       itemBuilder: (context, index) {
         // Start with this block
         if (index == 0) {
-          return Focus(
-            debugLabel:
-                'BlockView ${_blockProps.blockCollectionTreeNode.blockCollection.id}',
-            onKeyEvent: (_, event) => _blockProps.onKeyEventCallback(
-              event,
-              BlockCallbackProps(
-                blockCollection:
-                    _blockProps.blockCollectionTreeNode.blockCollection,
-                blockTextEditingController: blockTextEditingController,
-                blockRenderEditable: _findRenderEditableFromBlockKey(blockKey),
-              ),
-            ),
-            onFocusChange: (hasFocus) => _blockProps.onFocusChangedCallback(
-              hasFocus,
-                  BlockCallbackProps(
-                    blockCollection:
-                    _blockProps.blockCollectionTreeNode.blockCollection,
-                    blockTextEditingController: blockTextEditingController,
-                    blockRenderEditable: _findRenderEditableFromBlockKey(blockKey),
-                  ),
-                ),
-            child: TextField(
-              key: blockKey,
-              autofocus:
-              _blockProps.blockCollectionTreeNode.blockCollection.id ==
-                  _blockProps.idOfBlockInFocus,
-              controller: blockTextEditingController,
-              textInputAction: TextInputAction.newline,
-              maxLines: null,
-            ),
+          return TextField(
+            key: blockKey,
+            focusNode: blockFocusNode,
+            autofocus: _blockProps.blockCollectionTreeNode.blockCollection.id ==
+                _blockProps.idOfBlockInFocus,
+            controller: blockTextEditingController,
+            textInputAction: TextInputAction.newline,
+            maxLines: null,
           );
         }
 

@@ -10,6 +10,6 @@ class BlockCallbackProps with _$BlockCallbackProps {
   const factory BlockCallbackProps({
     required BlockCollection blockCollection,
     required BlockTextEditingController blockTextEditingController,
-    required RenderEditable blockRenderEditable,
+    required ValueGetter<RenderEditable> blockRenderEditable,
   }) = _BlockCallbackProps;
 }
