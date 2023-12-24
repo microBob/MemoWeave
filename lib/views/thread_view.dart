@@ -60,12 +60,15 @@ class ThreadView extends HookConsumerWidget {
             ),
             const Spacer(),
             // Time stamp (use 24-hour preference).
-            Text(
-              MediaQuery.of(context).alwaysUse24HourFormat
-                  ? DateFormat.Hm()
-                      .format(threadState.threadCollection.dateTime)
-                  : DateFormat.jm()
-                      .format(threadState.threadCollection.dateTime),
+            Focus(
+              canRequestFocus: false,
+              child: Text(
+                MediaQuery.of(context).alwaysUse24HourFormat
+                    ? DateFormat.Hm()
+                        .format(threadState.threadCollection.dateTime)
+                    : DateFormat.jm()
+                        .format(threadState.threadCollection.dateTime),
+              ),
             )
           ],
         ),

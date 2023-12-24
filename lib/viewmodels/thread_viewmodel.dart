@@ -286,7 +286,7 @@ class ThreadViewModel extends _$ThreadViewModel {
         // Otherwise, set from the the caret's global position.
         blockCallbackProps.blockTextEditingController.selection =
             TextSelection.fromPosition(
-              blockCallbackProps.blockRenderEditable
+          blockCallbackProps.blockRenderEditable
               .getPositionForPoint(state.caretGlobalPosition),
         );
       }
@@ -299,7 +299,8 @@ class ThreadViewModel extends _$ThreadViewModel {
         blockCallbackProps.blockCollection.id) {
       // If we got here from a different block, update state.
       state = state.copyWith(
-          idOfBlockInFocus: blockCallbackProps.blockCollection.id);
+        idOfBlockInFocus: blockCallbackProps.blockCollection.id,
+      );
     }
   }
 

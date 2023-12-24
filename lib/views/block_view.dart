@@ -39,6 +39,8 @@ class BlockView extends HookWidget {
         // Start with this block
         if (index == 0) {
           return Focus(
+            debugLabel:
+                'BlockView ${_blockProps.blockCollectionTreeNode.blockCollection.id}',
             onKeyEvent: (_, event) => _blockProps.onKeyEventCallback(
               event,
               BlockCallbackProps(
@@ -50,18 +52,18 @@ class BlockView extends HookWidget {
             ),
             onFocusChange: (hasFocus) => _blockProps.onFocusChangedCallback(
               hasFocus,
-              BlockCallbackProps(
-                blockCollection:
+                  BlockCallbackProps(
+                    blockCollection:
                     _blockProps.blockCollectionTreeNode.blockCollection,
-                blockTextEditingController: blockTextEditingController,
-                blockRenderEditable: _findRenderEditableFromBlockKey(blockKey),
-              ),
-            ),
+                    blockTextEditingController: blockTextEditingController,
+                    blockRenderEditable: _findRenderEditableFromBlockKey(blockKey),
+                  ),
+                ),
             child: TextField(
               key: blockKey,
               autofocus:
-                  _blockProps.blockCollectionTreeNode.blockCollection.id ==
-                      _blockProps.idOfBlockInFocus,
+              _blockProps.blockCollectionTreeNode.blockCollection.id ==
+                  _blockProps.idOfBlockInFocus,
               controller: blockTextEditingController,
               textInputAction: TextInputAction.newline,
               maxLines: null,
