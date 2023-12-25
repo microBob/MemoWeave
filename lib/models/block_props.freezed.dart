@@ -18,14 +18,11 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$BlockProps {
   BlockCollectionTreeNode get blockCollectionTreeNode =>
       throw _privateConstructorUsedError;
-
   dynamic Function(BlockCollection, BlockTextEditingController)
       get onBlockTextEditingControllerChangedCallback =>
           throw _privateConstructorUsedError;
-
   KeyEventResult Function(FocusNode, KeyEvent, BlockCallbackProps)
       get onKeyEventCallback => throw _privateConstructorUsedError;
-
   void Function(FocusNode, BlockCallbackProps) get initBlockFocusAndCaret =>
       throw _privateConstructorUsedError;
 
@@ -39,7 +36,6 @@ abstract class $BlockPropsCopyWith<$Res> {
   factory $BlockPropsCopyWith(
           BlockProps value, $Res Function(BlockProps) then) =
       _$BlockPropsCopyWithImpl<$Res, BlockProps>;
-
   @useResult
   $Res call(
       {BlockCollectionTreeNode blockCollectionTreeNode,
@@ -108,7 +104,6 @@ abstract class _$$BlockPropsImplCopyWith<$Res>
   factory _$$BlockPropsImplCopyWith(
           _$BlockPropsImpl value, $Res Function(_$BlockPropsImpl) then) =
       __$$BlockPropsImplCopyWithImpl<$Res>;
-
   @override
   @useResult
   $Res call(
@@ -234,11 +229,9 @@ abstract class _BlockProps implements BlockProps {
 
   @override
   BlockCollectionTreeNode get blockCollectionTreeNode;
-
   @override
   dynamic Function(BlockCollection, BlockTextEditingController)
       get onBlockTextEditingControllerChangedCallback;
-
   @override
   KeyEventResult Function(FocusNode, KeyEvent, BlockCallbackProps)
       get onKeyEventCallback;

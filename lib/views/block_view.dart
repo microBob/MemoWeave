@@ -27,6 +27,7 @@ class BlockView extends HookWidget {
     // Components.
     final blockKey = GlobalKey();
     final blockTextEditingController = useBlockTextEditingController(
+      keys: [_blockProps],
       blockTextEditingControllerProps: BlockTextEditingControllerProps(
         blockCollection: _blockProps.blockCollectionTreeNode.blockCollection,
         onBlockTextEditingControllerChangedCallback:

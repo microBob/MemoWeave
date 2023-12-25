@@ -38,27 +38,6 @@ class ThreadViewModel extends _$ThreadViewModel {
     subjectTextEditingController.text = threadCollection.subject;
     subjectTextEditingController.addListener(onSubjectChanged);
 
-    // Subscribe to changes on the Thread collection and update state
-    // databaseProps.databaseManager.onThreadChanged(databaseProps.id).listen(
-    //   (threadCollection) {
-    //     // Shortcut exit if null.
-    //     if (threadCollection == null) return;
-    //
-    //     // Update state if datetime or direct child IDs have changed.
-    //     if (threadCollection.dateTime != threadCollection.dateTime ||
-    //         threadCollection.childIds != threadCollection.childIds) {
-    //       state = state.copyWith(
-    //         threadCollection: threadCollection,
-    //         blockCollectionTreeNodes:
-    //             _createBlockCollectionTreeNodes(threadCollection),
-    //       );
-    //     }
-    //
-    //     // Update cache.
-    //     _threadCollectionCache = threadCollection;
-    //   },
-    // );
-
     // Return state.
     return ThreadState(
       idOfBlockInFocus: threadCollection.childIds.first,
@@ -135,6 +114,8 @@ class ThreadViewModel extends _$ThreadViewModel {
   ) {
     if (keyEvent is KeyDownEvent || keyEvent is KeyRepeatEvent) {
       switch (keyEvent.logicalKey) {
+        // Block traversals.
+
         case LogicalKeyboardKey.arrowUp:
           // Compute position above.
           final positionAbove = blockCallbackProps
@@ -255,8 +236,42 @@ class ThreadViewModel extends _$ThreadViewModel {
 
           // Mark event as handled.
           return KeyEventResult.handled;
+
+        // Enter, backspace, and delete.
+
         case LogicalKeyboardKey.enter || LogicalKeyboardKey.numpadEnter:
-        // Split text between current and next Block.
+          // Split text between current and next Block.
+          final nextBlockCollection = BlockCollection(
+            parent: blockCallbackProps.blockCollection.parent,
+            text: blockCallbackProps.blockTextEditingController.selection
+                .textAfter(blockCallbackProps.blockTextEditingController.text),
+          );
+          blockCallbackProps.blockTextEditingController.text =
+              blockCallbackProps.blockTextEditingController.selection
+                  .textBefore(
+                      blockCallbackProps.blockTextEditingController.text);
+
+          // Insert new Block into parent.
+          databaseProps.databaseManager.insertBlockAfter(
+            sourceBlockCollection: blockCallbackProps.blockCollection,
+            newBlockCollection: nextBlockCollection,
+          );
+
+          // Get new Block's ID.
+          final newBlockId = databaseProps.databaseManager
+              .getIdOfBlockAfter(blockCallbackProps.blockCollection);
+
+          // Move focus to first character of next block.
+          state = state.copyWith(
+            idOfBlockInFocus: newBlockId!,
+            caretTextOffset: 0,
+            blockCollectionTreeNodes: _createBlockCollectionTreeNodes(
+              databaseProps.databaseManager
+                  .getThreadCollectionById(databaseProps.id),
+            ),
+          );
+
+          return KeyEventResult.handled;
       }
     }
 
