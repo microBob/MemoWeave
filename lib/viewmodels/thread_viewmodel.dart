@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
@@ -28,7 +30,7 @@ class ThreadViewModel extends _$ThreadViewModel {
     required final TextEditingController subjectTextEditingController,
   }) {
     final threadCollection =
-        databaseProps.databaseManager.getThreadCollectionById(databaseProps.id);
+    databaseProps.databaseManager.getThreadCollectionById(databaseProps.id);
 
     // Setup spool TextEditingController
     spoolTextEditingController.text = threadCollection.spool;
@@ -45,7 +47,7 @@ class ThreadViewModel extends _$ThreadViewModel {
       caretGlobalPosition: Offset.zero,
       threadCollection: threadCollection,
       blockCollectionTreeNodes:
-          _createBlockCollectionTreeNodes(threadCollection),
+      _createBlockCollectionTreeNodes(threadCollection),
     );
   }
 
@@ -107,21 +109,19 @@ class ThreadViewModel extends _$ThreadViewModel {
   /// Handle traversal keystrokes on blocks.
   ///
   /// Will update state with caret movement and Block focus.
-  KeyEventResult onKeyEventCallback(
-    FocusNode focusNode,
-    KeyEvent keyEvent,
-    BlockCallbackProps blockCallbackProps,
-  ) {
+  KeyEventResult onKeyEventCallback(FocusNode focusNode,
+      KeyEvent keyEvent,
+      BlockCallbackProps blockCallbackProps,) {
     if (keyEvent is KeyDownEvent || keyEvent is KeyRepeatEvent) {
       switch (keyEvent.logicalKey) {
-        // Block traversals.
+      // Block traversals.
 
         case LogicalKeyboardKey.arrowUp:
-          // Compute position above.
+        // Compute position above.
           final positionAbove = blockCallbackProps
               .blockRenderEditable()
               .getTextPositionAbove(blockCallbackProps
-                  .blockTextEditingController.selection.extent);
+              .blockTextEditingController.selection.extent);
 
           // Shortcut exit if not on first line.
           if (positionAbove.offset !=
@@ -139,25 +139,25 @@ class ThreadViewModel extends _$ThreadViewModel {
           // Otherwise, move focus to previous block and update caret state.
           state = state.copyWith(
             idOfBlockInFocus: _blocksInThreadById[_blocksInThreadById
-                    .indexOf(blockCallbackProps.blockCollection.id) -
+                .indexOf(blockCallbackProps.blockCollection.id) -
                 1],
             caretTextOffset: positionAbove.offset,
             caretGlobalPosition: blockCallbackProps
                 .blockRenderEditable()
                 .localToGlobal(blockCallbackProps
-                    .blockRenderEditable()
-                    .getLocalRectForCaret(positionAbove)
-                    .center),
+                .blockRenderEditable()
+                .getLocalRectForCaret(positionAbove)
+                .center),
           );
 
           // Mark event as handled.
           return KeyEventResult.handled;
         case LogicalKeyboardKey.arrowDown:
-          // Compute position below.
+        // Compute position below.
           final positionBelow = blockCallbackProps
               .blockRenderEditable()
               .getTextPositionBelow(blockCallbackProps
-                  .blockTextEditingController.selection.extent);
+              .blockTextEditingController.selection.extent);
 
           // Shortcut exit if not on last line.
           if (positionBelow.offset !=
@@ -175,23 +175,23 @@ class ThreadViewModel extends _$ThreadViewModel {
           // Otherwise, move focus to next block and update caret state.
           state = state.copyWith(
             idOfBlockInFocus: _blocksInThreadById[_blocksInThreadById
-                    .indexOf(blockCallbackProps.blockCollection.id) +
+                .indexOf(blockCallbackProps.blockCollection.id) +
                 1],
             caretTextOffset: positionBelow.offset,
             caretGlobalPosition: blockCallbackProps
                 .blockRenderEditable()
                 .localToGlobal(blockCallbackProps
-                    .blockRenderEditable()
-                    .getLocalRectForCaret(positionBelow)
-                    .center),
+                .blockRenderEditable()
+                .getLocalRectForCaret(positionBelow)
+                .center),
           );
 
           // Mark event as handled.
           return KeyEventResult.handled;
         case LogicalKeyboardKey.arrowLeft:
-          // Shortcut exit if not at beginning of line.
+        // Shortcut exit if not at beginning of line.
           if (blockCallbackProps
-                  .blockTextEditingController.selection.extentOffset !=
+              .blockTextEditingController.selection.extentOffset !=
               0) {
             return KeyEventResult.ignored;
           }
@@ -205,7 +205,7 @@ class ThreadViewModel extends _$ThreadViewModel {
           // Otherwise, move focus to last character of previous block.
           state = state.copyWith(
             idOfBlockInFocus: _blocksInThreadById[_blocksInThreadById
-                    .indexOf(blockCallbackProps.blockCollection.id) -
+                .indexOf(blockCallbackProps.blockCollection.id) -
                 1],
             caretTextOffset: -1,
           );
@@ -213,9 +213,9 @@ class ThreadViewModel extends _$ThreadViewModel {
           // Mark event as handled.
           return KeyEventResult.handled;
         case LogicalKeyboardKey.arrowRight:
-          // Shortcut exit if not at end of line.
+        // Shortcut exit if not at end of line.
           if (blockCallbackProps
-                  .blockTextEditingController.selection.extentOffset !=
+              .blockTextEditingController.selection.extentOffset !=
               blockCallbackProps.blockTextEditingController.text.length) {
             return KeyEventResult.ignored;
           }
@@ -229,7 +229,7 @@ class ThreadViewModel extends _$ThreadViewModel {
           // Otherwise, move focus to first character of next block.
           state = state.copyWith(
             idOfBlockInFocus: _blocksInThreadById[_blocksInThreadById
-                    .indexOf(blockCallbackProps.blockCollection.id) +
+                .indexOf(blockCallbackProps.blockCollection.id) +
                 1],
             caretTextOffset: 0,
           );
@@ -237,10 +237,10 @@ class ThreadViewModel extends _$ThreadViewModel {
           // Mark event as handled.
           return KeyEventResult.handled;
 
-        // Enter, backspace, and delete.
+      // Enter, backspace, and delete.
 
         case LogicalKeyboardKey.enter || LogicalKeyboardKey.numpadEnter:
-          // Split text between current and next Block.
+        // Split text between current and next Block.
           final nextBlockCollection = BlockCollection(
             parent: blockCallbackProps.blockCollection.parent,
             text: blockCallbackProps.blockTextEditingController.selection
@@ -249,7 +249,7 @@ class ThreadViewModel extends _$ThreadViewModel {
           blockCallbackProps.blockTextEditingController.text =
               blockCallbackProps.blockTextEditingController.selection
                   .textBefore(
-                      blockCallbackProps.blockTextEditingController.text);
+                  blockCallbackProps.blockTextEditingController.text);
 
           // Insert new Block into parent.
           databaseProps.databaseManager.insertBlockAfter(
@@ -272,6 +272,71 @@ class ThreadViewModel extends _$ThreadViewModel {
           );
 
           return KeyEventResult.handled;
+
+        case LogicalKeyboardKey.backspace:
+          // Shortcut exit if not at beginning of line.
+          if (blockCallbackProps
+                  .blockTextEditingController.selection.extentOffset !=
+              0) {
+            return KeyEventResult.ignored;
+          }
+
+          // Shortcut exit if first Block in Thread and not empty.
+          if (_blocksInThreadById.first ==
+                  blockCallbackProps.blockCollection.id &&
+              blockCallbackProps.blockTextEditingController.text.isNotEmpty) {
+            return KeyEventResult.ignored;
+          }
+
+          // Copy remaining text in Block to block above.
+          if (blockCallbackProps.blockCollection.id !=
+                  _blocksInThreadById.first &&
+              blockCallbackProps.blockTextEditingController.text.isNotEmpty) {
+            // Get previous Block.
+            final previousBlockCollection =
+                databaseProps.databaseManager.getBlockCollectionById(
+              _blocksInThreadById[_blocksInThreadById
+                      .indexOf(blockCallbackProps.blockCollection.id) -
+                  1],
+            );
+
+            // Copy text to previous Block.
+            final updatedPreviousBlockCollection =
+                previousBlockCollection.copyWith(
+              childIds: previousBlockCollection.childIds.toList()
+                ..addAll(blockCallbackProps.blockCollection.childIds),
+              text: previousBlockCollection.text +
+                  blockCallbackProps.blockTextEditingController.text,
+            );
+
+            // Write to database.
+            databaseProps.databaseManager
+                .putBlockCollection(updatedPreviousBlockCollection);
+          }
+
+          // Delete current Block.
+          databaseProps.databaseManager.deleteBlockCollection(
+            blockCallbackProps.blockCollection,
+          );
+
+          // Move focus to last character of previous Block
+          // (could be first Block).
+          state = state.copyWith(
+            idOfBlockInFocus: _blocksInThreadById[max(
+              _blocksInThreadById
+                      .indexOf(blockCallbackProps.blockCollection.id) -
+                  1,
+              0,
+            )],
+            caretTextOffset: -1,
+            blockCollectionTreeNodes: _createBlockCollectionTreeNodes(
+              databaseProps.databaseManager
+                  .getThreadCollectionById(databaseProps.id),
+            ),
+          );
+
+          // Mark event as handled.
+          return KeyEventResult.handled;
       }
     }
 
@@ -282,10 +347,8 @@ class ThreadViewModel extends _$ThreadViewModel {
   /// Initialize Block's focus and caret state.
   ///
   /// Does not change Thread state.
-  void initBlockFocusAndCaret(
-    FocusNode focusNode,
-    BlockCallbackProps blockCallbackProps,
-  ) {
+  void initBlockFocusAndCaret(FocusNode focusNode,
+      BlockCallbackProps blockCallbackProps,) {
     // Shortcut exit if not supposed to be in focus.
     if (state.idOfBlockInFocus != blockCallbackProps.blockCollection.id) {
       return;
@@ -299,34 +362,32 @@ class ThreadViewModel extends _$ThreadViewModel {
       // A zero value indicates the beginning of the text.
       blockCallbackProps.blockTextEditingController.selection =
           TextSelection.fromPosition(
-        const TextPosition(offset: 0),
-      );
+            const TextPosition(offset: 0),
+          );
     } else if (state.caretTextOffset < 0) {
       // A negative values indicates some value from the end of the text.
       blockCallbackProps.blockTextEditingController.selection =
           TextSelection.fromPosition(
-        TextPosition(
-          offset: blockCallbackProps.blockTextEditingController.text.length +
-              state.caretTextOffset +
-              1,
-        ),
-      );
+            TextPosition(
+              offset: blockCallbackProps.blockTextEditingController.text.length +
+                  state.caretTextOffset +
+                  1,
+            ),
+          );
     } else {
       // Otherwise, set from the the caret's global position.
       blockCallbackProps.blockTextEditingController.selection =
           TextSelection.fromPosition(
-        blockCallbackProps
-            .blockRenderEditable()
-            .getPositionForPoint(state.caretGlobalPosition),
-      );
+            blockCallbackProps
+                .blockRenderEditable()
+                .getPositionForPoint(state.caretGlobalPosition),
+          );
     }
   }
 
   /// Handle saving new input in a block.
-  void onBlockTextEditingControllerChangedCallback(
-    BlockCollection blockCollection,
-    BlockTextEditingController blockTextEditingController,
-  ) {
+  void onBlockTextEditingControllerChangedCallback(BlockCollection blockCollection,
+      BlockTextEditingController blockTextEditingController,) {
     // Shortcut exit if no changes to text.
     if (blockTextEditingController.text == blockCollection.text) {
       return;
@@ -343,8 +404,7 @@ class ThreadViewModel extends _$ThreadViewModel {
 
   /// Build the list of [BlockCollectionTreeNode] for
   /// a given [threadCollection].
-  List<BlockCollectionTreeNode> _createBlockCollectionTreeNodes(
-      ThreadCollection threadCollection) {
+  List<BlockCollectionTreeNode> _createBlockCollectionTreeNodes(ThreadCollection threadCollection) {
     // Reset list thread's list of block IDs.
     _blocksInThreadById = [];
 
@@ -355,7 +415,7 @@ class ThreadViewModel extends _$ThreadViewModel {
 
       // Get current Block's Collection
       final currentBlock =
-          databaseProps.databaseManager.getBlockCollectionById(blockId);
+      databaseProps.databaseManager.getBlockCollectionById(blockId);
 
       // Return the BlockCollectionTreeNode and recurse on children.
       return BlockCollectionTreeNode(

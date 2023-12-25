@@ -11,7 +11,6 @@ part 'thread_state.freezed.dart';
 /// Thread state.
 ///
 /// Records the Block ID of the Block in focus [idOfBlockInFocus],
-/// whether the user is traversing Blocks [traversingBlocks],
 /// the caret text offset [caretTextOffset] (negative values wrap from end),
 /// global screen position of the caret [caretGlobalPosition],
 /// the Thread's date and time [dateTime],
