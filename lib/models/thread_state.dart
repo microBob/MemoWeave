@@ -23,8 +23,8 @@ class ThreadState with _$ThreadState {
     required Id idOfBlockInFocus,
 
     // Caret state.
-    required int caretTextOffset,
     required Offset caretGlobalPosition,
+    required int caretTextOffset,
 
     // Thread and its Blocks.
     required ThreadCollection threadCollection,
