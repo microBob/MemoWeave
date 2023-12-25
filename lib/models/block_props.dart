@@ -1,16 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:memoweave/models/block_callback_props.dart';
+import 'package:memoweave/models/block_collection.dart';
+import 'package:memoweave/models/block_collection_tree_node.dart';
 import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
 
-/// Properties to be passed to the ViewModel.
-///
-/// [GlobalKey] to access [TextField]'s [RenderEditable],
-/// [FocusNode] to control input focus,
-/// [BlockTextEditingController] to handle input and styling,
-/// and [Id] to identify the text document in the database.
-typedef BlockProps = ({
-  GlobalKey textFieldKey,
-  FocusNode textFieldFocusNode,
-  BlockTextEditingController textEditingController,
-  Id? blockId,
-});
+part 'block_props.freezed.dart';
+
+/// Properties to be passed to [BlockViewModel].
+@freezed
+class BlockProps with _$BlockProps {
+  const factory BlockProps({
+    required BlockCollectionTreeNode blockCollectionTreeNode,
+    required Function(
+      BlockCollection,
+      BlockTextEditingController,
+    ) onBlockTextEditingControllerChangedCallback,
+    required KeyEventResult Function(
+      FocusNode,
+      KeyEvent,
+      BlockCallbackProps,
+    ) onKeyEventCallback,
+    required void Function(
+      FocusNode,
+      BlockCallbackProps,
+    ) initBlockFocusAndCaret,
+  }) = _BlockProps;
+}

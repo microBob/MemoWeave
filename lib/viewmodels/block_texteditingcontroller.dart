@@ -6,10 +6,13 @@ import 'package:memoweave/models/style_node.dart';
 ///
 /// Responsible for applying styling to the text.
 class BlockTextEditingController extends TextEditingController {
-  BlockCollection? _rootBlock;
+  final BlockCollection _blockCollection;
 
-  set rootBlock(BlockCollection rootBlock) {
-    _rootBlock = rootBlock;
+  /// Generative constructor.
+  BlockTextEditingController({required BlockCollection blockCollection})
+      : _blockCollection = blockCollection {
+    // Set initial text.
+    text = _blockCollection.text;
   }
 
   /// Apply styling to [TextField]'s text.
@@ -18,17 +21,12 @@ class BlockTextEditingController extends TextEditingController {
       {required BuildContext context,
       TextStyle? style,
       required bool withComposing}) {
-    // Shortcut exit: return unformatted text if no rootBlock
-    if (_rootBlock == null) {
-      return TextSpan(text: text);
-    }
-
     // Prepare build output and pointer.
     final children = <TextSpan>[];
     var currentIndex = 0;
 
     // Assess each inlineStyle and build TextSpans.
-    for (var inlineStyle in _rootBlock!.inlineStyles) {
+    for (var inlineStyle in _blockCollection.inlineStyles) {
       // Build plain text before inlineStyle.
       if (currentIndex < inlineStyle.startIndex) {
         children.add(

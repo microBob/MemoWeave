@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:memoweave/models/container_model.dart';
 import 'package:memoweave/models/style_node.dart';
 
 part 'block_collection.g.dart';
@@ -16,18 +17,17 @@ enum BlockStyle {
 
 /// Collection definition for a text block.
 @collection
-class BlockCollection {
-  /// Unique identifier for this block.
-  ///
-  /// Will be assigned by the database system if null.
-  Id? id;
+class BlockCollection extends ParentModel {
+  /// Parent reference.
+  final int parent;
+  final bool hasThreadAsParent;
 
   /// Block content.
   final String text;
 
   /// Block base style.
   ///
-  /// Applies to the whole block in addition to any [InlineStyle]s.
+  /// Applies to the whole block in addition to any [InlineStyle] objects.
   @enumerated
   final BlockStyle blockStyle;
 
@@ -38,20 +38,16 @@ class BlockCollection {
   /// and the responsible regions are within the text length.
   final List<StyleNode> inlineStyles;
 
-  /// Ordered set of hierarchical children to this block.
-  final children = IsarLinks<BlockCollection>();
-
-  /// Links pointing back to parent blocks.
-  @Backlink(to: 'children')
-  final parents = IsarLinks<BlockCollection>();
-
   /// Default constructor.
   ///
-  /// Defines [id], [text], [blockStyle], and [inlineStyles].
-  /// Will also supply default values if none are given.
+  /// Defines [id], [text], [blockStyle], [inlineStyles], and [childrenBlockIds].
+  /// Will supply default values if none are given.
   /// Throws [FormatException] on invalid input.
   BlockCollection({
-    this.id,
+    super.id = Isar.autoIncrement,
+    super.childIds = const [],
+    required this.parent,
+    this.hasThreadAsParent = true,
     this.text = 'Blank state text',
     this.blockStyle = BlockStyle.none,
     this.inlineStyles = const [],
@@ -82,19 +78,30 @@ class BlockCollection {
 
   /// Copy builder.
   ///
-  /// Creates a copy of the current block and updates the fields to
+  /// Creates a copy of the current Block and updates the fields to
   /// [id], [text], [blockStyle], and [inlineStyles] when provided.
+  @override
   BlockCollection copyWith({
-    Id? id,
+    List<Id>? childIds,
+    int? parent,
+    bool? hasThreadAsParent,
     String? text,
     BlockStyle? blockStyle,
     List<StyleNode>? inlineStyles,
   }) {
     return BlockCollection(
-      id: id ?? this.id,
+      id: super.id,
+      childIds: childIds ?? super.childIds,
+      parent: parent ?? this.parent,
+      hasThreadAsParent: hasThreadAsParent ?? this.hasThreadAsParent,
       text: text ?? this.text,
       blockStyle: blockStyle ?? this.blockStyle,
       inlineStyles: inlineStyles ?? this.inlineStyles,
     );
+  }
+
+  @override
+  String toString() {
+    return 'Block $id: "$text"';
   }
 }

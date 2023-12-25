@@ -40,8 +40,8 @@ class StyleNode {
   }) {
     // Verify startIndex range.
     if (0 <= startIndex && startIndex < endIndex) {
-      throw const FormatException(
-          'Invalid StyleNode startIndex. Expected range: 0 ≤ startIndex < endIndex.');
+      throw const FormatException('Invalid StyleNode startIndex. '
+          'Expected range: 0 ≤ startIndex < endIndex.');
     }
 
     // Verify endIndex range.
@@ -76,8 +76,8 @@ class StyleNode {
 
   /// Check if this style node is overlapping with another.
   ///
-  /// Returns true if [other.startIndex] or [other.endIndex]
-  /// is within this node's bounds or if this node is within [other]'s bounds.
+  /// Returns true if other's [startIndex] or [endIndex] is within this node's
+  /// bounds or if this node is within [other]'s bounds.
   bool isOverlappingWith(StyleNode other) {
     return (startIndex <= other.startIndex && other.startIndex < endIndex) ||
         (startIndex <= other.endIndex && other.endIndex < endIndex) ||

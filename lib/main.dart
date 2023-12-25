@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/utils/database.dart';
-import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
-import 'package:memoweave/widgets/block_widget.dart';
+import 'package:memoweave/views/thread_view.dart';
+import 'package:stack_trace/stack_trace.dart';
 
 void main() {
   runApp(const ProviderScope(child: MemoWeave()));
+
+  FlutterError.demangleStackTrace = (StackTrace stackTrace) {
+    if (stackTrace is Trace) return stackTrace.vmTrace;
+    if (stackTrace is Chain) return stackTrace.toTrace().vmTrace;
+    return stackTrace;
+  };
 }
 
 class MemoWeave extends ConsumerWidget {
@@ -15,33 +22,40 @@ class MemoWeave extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      title: 'MemoWeave',
+      // title: 'MemoWeave',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorSchemeSeed: Colors.blue,
         useMaterial3: true,
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          title: const Text('MemoWeave'),
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            BlockWidget(props: (
-              textFieldKey: GlobalKey(),
-              textFieldFocusNode: FocusNode(),
-              textEditingController: BlockTextEditingController(),
-              blockId: 3,
-            )),
-            ref.watch(databaseInstanceProvider).when(
-                  data: (data) => Text('Database opened: ${data.path}'),
-                  error: (error, stat) => Text(error.toString()),
-                  loading: () => const CircularProgressIndicator(),
+      home: ref.watch(databaseManagerProvider).when(
+            data: (databaseManager) {
+              final threadIds = databaseManager.threadIds;
+
+              return Scaffold(
+                appBar: AppBar(
+                  title: const Text('MemoWeave'),
                 ),
-          ],
-        ),
-      ),
+                body: SafeArea(
+                  minimum: const EdgeInsets.all(24),
+                  // child: Placeholder(),
+                  child: ListView.builder(
+                    itemBuilder: (context, index) => ThreadView(
+                      databaseProps: DatabaseProps(
+                          id: threadIds[index],
+                          databaseManager: databaseManager),
+                    ),
+                    itemCount: threadIds.length,
+                  ),
+                ),
+                floatingActionButton: FloatingActionButton(
+                  onPressed: databaseManager.createNewThread,
+                  child: const Icon(Icons.create),
+                ),
+              );
+            },
+            error: (error, stackFrame) => Text('$stackFrame: $error'),
+            loading: () => const CircularProgressIndicator(),
+          ),
     );
   }
 }
