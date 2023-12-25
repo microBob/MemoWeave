@@ -239,7 +239,7 @@ class ThreadViewModel extends _$ThreadViewModel {
           // Mark event as handled.
           return KeyEventResult.handled;
 
-      // Enter, back space, and delete.
+        // Enter, back space, and delete.
 
         case LogicalKeyboardKey.enter || LogicalKeyboardKey.numpadEnter:
         // Split text between current and next Block.
