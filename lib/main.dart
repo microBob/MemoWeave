@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/utils/database.dart';
 import 'package:memoweave/views/thread_view.dart';
 import 'package:stack_trace/stack_trace.dart';
@@ -39,10 +40,9 @@ class MemoWeave extends ConsumerWidget {
                   // child: Placeholder(),
                   child: ListView.builder(
                     itemBuilder: (context, index) => ThreadView(
-                      databaseProps: (
-                        id: threadIds[index],
-                        databaseManager: databaseManager
-                      ),
+                      databaseProps: DatabaseProps(
+                          id: threadIds[index],
+                          databaseManager: databaseManager),
                     ),
                     itemCount: threadIds.length,
                   ),

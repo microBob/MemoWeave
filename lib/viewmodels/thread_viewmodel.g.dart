@@ -31,12 +31,12 @@ class _SystemHash {
 
 abstract class _$ThreadViewModel
     extends BuildlessAutoDisposeNotifier<ThreadState> {
-  late final ({DatabaseManager databaseManager, int id}) databaseProps;
+  late final DatabaseProps databaseProps;
   late final TextEditingController spoolTextEditingController;
   late final TextEditingController subjectTextEditingController;
 
   ThreadState build({
-    required ({DatabaseManager databaseManager, int id}) databaseProps,
+    required DatabaseProps databaseProps,
     required TextEditingController spoolTextEditingController,
     required TextEditingController subjectTextEditingController,
   });
@@ -69,7 +69,7 @@ class ThreadViewModelFamily extends Family<ThreadState> {
   ///
   /// Copied from [ThreadViewModel].
   ThreadViewModelProvider call({
-    required ({DatabaseManager databaseManager, int id}) databaseProps,
+    required DatabaseProps databaseProps,
     required TextEditingController spoolTextEditingController,
     required TextEditingController subjectTextEditingController,
   }) {
@@ -119,7 +119,7 @@ class ThreadViewModelProvider
   ///
   /// Copied from [ThreadViewModel].
   ThreadViewModelProvider({
-    required ({DatabaseManager databaseManager, int id}) databaseProps,
+    required DatabaseProps databaseProps,
     required TextEditingController spoolTextEditingController,
     required TextEditingController subjectTextEditingController,
   }) : this._internal(
@@ -153,7 +153,7 @@ class ThreadViewModelProvider
     required this.subjectTextEditingController,
   }) : super.internal();
 
-  final ({DatabaseManager databaseManager, int id}) databaseProps;
+  final DatabaseProps databaseProps;
   final TextEditingController spoolTextEditingController;
   final TextEditingController subjectTextEditingController;
 
@@ -216,7 +216,7 @@ class ThreadViewModelProvider
 
 mixin ThreadViewModelRef on AutoDisposeNotifierProviderRef<ThreadState> {
   /// The parameter `databaseProps` of this provider.
-  ({DatabaseManager databaseManager, int id}) get databaseProps;
+  DatabaseProps get databaseProps;
 
   /// The parameter `spoolTextEditingController` of this provider.
   TextEditingController get spoolTextEditingController;
@@ -231,8 +231,9 @@ class _ThreadViewModelProviderElement
   _ThreadViewModelProviderElement(super.provider);
 
   @override
-  ({DatabaseManager databaseManager, int id}) get databaseProps =>
+  DatabaseProps get databaseProps =>
       (origin as ThreadViewModelProvider).databaseProps;
+
   @override
   TextEditingController get spoolTextEditingController =>
       (origin as ThreadViewModelProvider).spoolTextEditingController;

@@ -36,7 +36,7 @@ abstract class $BlockTextEditingControllerPropsCopyWith<$Res> {
   @useResult
   $Res call(
       {BlockCollection blockCollection,
-        dynamic Function(BlockCollection, BlockTextEditingController)
+      dynamic Function(BlockCollection, BlockTextEditingController)
           onBlockTextEditingControllerChangedCallback});
 }
 

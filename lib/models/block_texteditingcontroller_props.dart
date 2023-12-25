@@ -5,6 +5,11 @@ import '../viewmodels/block_texteditingcontroller.dart';
 
 part 'block_texteditingcontroller_props.freezed.dart';
 
+/// Properties for a [BlockTextEditingController].
+///
+/// Provides the Block's [blockCollection],
+/// and passes the [onBlockTextEditingControllerChangedCallback] to be
+/// attached to the [BlockTextEditingController]'s change notifier.
 @freezed
 class BlockTextEditingControllerProps with _$BlockTextEditingControllerProps {
   const factory BlockTextEditingControllerProps({

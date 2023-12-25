@@ -30,13 +30,13 @@ class _SystemHash {
 }
 
 abstract class _$BlockViewModel extends BuildlessAutoDisposeNotifier<void> {
-  late final ({DatabaseManager databaseManager, int id}) databaseProps;
+  late final DatabaseProps databaseProps;
   late final BlockTextEditingController blockTextEditingController;
   late final GlobalKey<State<StatefulWidget>> blockKey;
   late final FocusNode blockFocusNode;
 
   void build({
-    required ({DatabaseManager databaseManager, int id}) databaseProps,
+    required DatabaseProps databaseProps,
     required BlockTextEditingController blockTextEditingController,
     required GlobalKey<State<StatefulWidget>> blockKey,
     required FocusNode blockFocusNode,
@@ -78,7 +78,7 @@ class BlockViewModelFamily extends Family<void> {
   ///
   /// Copied from [BlockViewModel].
   BlockViewModelProvider call({
-    required ({DatabaseManager databaseManager, int id}) databaseProps,
+    required DatabaseProps databaseProps,
     required BlockTextEditingController blockTextEditingController,
     required GlobalKey<State<StatefulWidget>> blockKey,
     required FocusNode blockFocusNode,
@@ -135,7 +135,7 @@ class BlockViewModelProvider
   ///
   /// Copied from [BlockViewModel].
   BlockViewModelProvider({
-    required ({DatabaseManager databaseManager, int id}) databaseProps,
+    required DatabaseProps databaseProps,
     required BlockTextEditingController blockTextEditingController,
     required GlobalKey<State<StatefulWidget>> blockKey,
     required FocusNode blockFocusNode,
@@ -173,7 +173,7 @@ class BlockViewModelProvider
     required this.blockFocusNode,
   }) : super.internal();
 
-  final ({DatabaseManager databaseManager, int id}) databaseProps;
+  final DatabaseProps databaseProps;
   final BlockTextEditingController blockTextEditingController;
   final GlobalKey<State<StatefulWidget>> blockKey;
   final FocusNode blockFocusNode;
@@ -241,7 +241,7 @@ class BlockViewModelProvider
 
 mixin BlockViewModelRef on AutoDisposeNotifierProviderRef<void> {
   /// The parameter `databaseProps` of this provider.
-  ({DatabaseManager databaseManager, int id}) get databaseProps;
+  DatabaseProps get databaseProps;
 
   /// The parameter `blockTextEditingController` of this provider.
   BlockTextEditingController get blockTextEditingController;
@@ -259,8 +259,9 @@ class _BlockViewModelProviderElement
   _BlockViewModelProviderElement(super.provider);
 
   @override
-  ({DatabaseManager databaseManager, int id}) get databaseProps =>
+  DatabaseProps get databaseProps =>
       (origin as BlockViewModelProvider).databaseProps;
+
   @override
   BlockTextEditingController get blockTextEditingController =>
       (origin as BlockViewModelProvider).blockTextEditingController;
