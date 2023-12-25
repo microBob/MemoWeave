@@ -7,12 +7,21 @@ import 'package:memoweave/models/database_props.dart';
 import 'package:memoweave/viewmodels/thread_viewmodel.dart';
 import 'package:memoweave/views/block_view.dart';
 
+/// Thread View.
+///
+/// The standard unit of a note on a single topic.
+/// Is stateful and manages the state and interaction of its [BlockView]s.
 class ThreadView extends HookConsumerWidget {
+  /// Properties for this Thread.
   final DatabaseProps _databaseProps;
 
-  const ThreadView({super.key, required final DatabaseProps databaseProps})
-      : _databaseProps = databaseProps;
+  /// Generative constructor.
+  const ThreadView({
+    super.key,
+    required final DatabaseProps databaseProps,
+  }) : _databaseProps = databaseProps;
 
+  /// Build UI and attach to [ThreadViewModel].
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Header TextEditingControllers.
@@ -21,13 +30,14 @@ class ThreadView extends HookConsumerWidget {
     final subjectTextEditingController =
         useTextEditingController(keys: [_databaseProps]);
 
-    // Provider with props.
+    // View model provider.
     final provider = threadViewModelProvider(
       databaseProps: _databaseProps,
       spoolTextEditingController: spoolTextEditingController,
       subjectTextEditingController: subjectTextEditingController,
     );
 
+    // Attach to view model and get state.
     final threadState = ref.watch(provider);
 
     return Column(
@@ -42,7 +52,9 @@ class ThreadView extends HookConsumerWidget {
               label: const Text('Spool'),
               controller: spoolTextEditingController,
             ),
+
             const Spacer(),
+
             // Thread subject line.
             IntrinsicWidth(
               child: TextField(
@@ -54,7 +66,9 @@ class ThreadView extends HookConsumerWidget {
                 controller: subjectTextEditingController,
               ),
             ),
+
             const Spacer(),
+
             // Time stamp (use 24-hour preference).
             Focus(
               canRequestFocus: false,
@@ -68,6 +82,8 @@ class ThreadView extends HookConsumerWidget {
             )
           ],
         ),
+
+        // Thread body.
         ListView.builder(
           itemBuilder: (context, index) => BlockView(
             blockProps: BlockProps(
@@ -84,7 +100,7 @@ class ThreadView extends HookConsumerWidget {
           ),
           itemCount: threadState.blockCollectionTreeNodes.length,
           shrinkWrap: true,
-          physics: const ClampingScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
         ),
       ],
     );

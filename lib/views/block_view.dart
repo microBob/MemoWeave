@@ -4,13 +4,13 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:memoweave/models/block_callback_props.dart';
 import 'package:memoweave/models/block_props.dart';
 import 'package:memoweave/utils/use_block_texteditingcontroller.dart';
-import 'package:memoweave/viewmodels/block_viewmodel.dart';
 
 import '../models/block_texteditingcontroller_props.dart';
 
-/// Text editor interface.
+/// Block View.
 ///
-/// Renders text and handles input.
+/// An atomic chunk of information.
+/// The view is stateless, but the used views may have state.
 class BlockView extends HookWidget {
   /// Properties for this Block.
   final BlockProps _blockProps;
@@ -21,11 +21,10 @@ class BlockView extends HookWidget {
     required final BlockProps blockProps,
   }) : _blockProps = blockProps;
 
-  /// Attach to [BlockViewModel] and build UI.
+  /// Build UI.
   @override
   Widget build(BuildContext context) {
     // Components.
-    final blockKey = GlobalKey();
     final blockTextEditingController = useBlockTextEditingController(
       keys: [_blockProps],
       blockTextEditingControllerProps: BlockTextEditingControllerProps(
@@ -37,7 +36,7 @@ class BlockView extends HookWidget {
     final blockCallbackProps = BlockCallbackProps(
       blockCollection: _blockProps.blockCollectionTreeNode.blockCollection,
       blockTextEditingController: blockTextEditingController,
-      blockRenderEditable: () => _findRenderEditableFromBlockKey(blockKey),
+      blockRenderEditable: () => _findRenderEditableFromBlockKey(context),
     );
     final blockFocusNode = useFocusNode(
       debugLabel:
@@ -59,10 +58,9 @@ class BlockView extends HookWidget {
 
     return ListView.builder(
       itemBuilder: (_, index) {
-        // Start with this block
+        // Start with this Block.
         if (index == 0) {
           return TextField(
-            key: blockKey,
             focusNode: blockFocusNode,
             controller: blockTextEditingController,
             textInputAction: TextInputAction.newline,
@@ -80,14 +78,16 @@ class BlockView extends HookWidget {
       },
       itemCount: _blockProps.blockCollectionTreeNode.childBlocks.length + 1,
       shrinkWrap: true,
-      physics: const ClampingScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
     );
   }
 
-  RenderEditable _findRenderEditableFromBlockKey(GlobalKey blockKey) {
+  /// Find [RenderEditable] in the widget tree from the given build [context].
+  RenderEditable _findRenderEditableFromBlockKey(BuildContext context) {
     // Search for RenderEditable in child elements.
     RenderEditable? output;
 
+    /// Find RenderEditable within child elements of the given element.
     RenderEditable? findRenderEditableFromElement(Element element) {
       var renderObject = element.renderObject;
       if (renderObject is RenderEditable) {
@@ -112,7 +112,7 @@ class BlockView extends HookWidget {
       }
     }
 
-    blockKey.currentContext?.visitChildElements((childElement) {
+    context.visitChildElements((childElement) {
       // Shortcut exit if RenderEditable already found.
       if (output != null) return;
 
@@ -129,7 +129,7 @@ class BlockView extends HookWidget {
     // Throw error if no RenderEditable found.
     if (output == null) {
       throw FormatException(
-          'Unable to find RenderEditable from key: $blockKey');
+          'Unable to find RenderEditable from context: $context');
     }
 
     // Otherwise return RenderEditable.
