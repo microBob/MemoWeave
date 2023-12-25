@@ -214,7 +214,7 @@ class ThreadViewModel extends _$ThreadViewModel {
           // Mark event as handled.
           return KeyEventResult.handled;
         case LogicalKeyboardKey.arrowRight:
-        // Shortcut exit if not at end of line.
+          // Shortcut exit if not at end of line.
           if (blockCallbackProps
                   .blockTextEditingController.selection.extentOffset !=
               blockCallbackProps.blockTextEditingController.text.length) {
@@ -354,6 +354,66 @@ class ThreadViewModel extends _$ThreadViewModel {
             idOfBlockInFocus: idOfBlockInFocus,
             caretGlobalPosition: Offset.infinite,
             caretTextOffset: caretTextOffset,
+            blockCollectionTreeNodes: _createBlockCollectionTreeNodes(
+              databaseProps.databaseManager
+                  .getThreadCollectionById(databaseProps.id),
+            ),
+          );
+
+          // Mark event as handled.
+          return KeyEventResult.handled;
+        case LogicalKeyboardKey.delete:
+          // Shortcut exit if not at end of line.
+          if (blockCallbackProps
+                  .blockTextEditingController.selection.extentOffset !=
+              blockCallbackProps.blockTextEditingController.text.length) {
+            return KeyEventResult.ignored;
+          }
+
+          // Shortcut exit if last Block in Thread.
+          if (_blocksInThreadById.last ==
+              blockCallbackProps.blockCollection.id) {
+            return KeyEventResult.ignored;
+          }
+
+          // Shortcut exit if Block is only one in Thread.
+          if (_blocksInThreadById.length == 1) {
+            return KeyEventResult.ignored;
+          }
+
+          // Get next Block.
+          final nextBlockCollection =
+              databaseProps.databaseManager.getBlockCollectionById(
+            _blocksInThreadById[_blocksInThreadById
+                    .indexOf(blockCallbackProps.blockCollection.id) +
+                1],
+          );
+
+          // Update current Block with next Block's text and children.
+          final updatedBlockCollection =
+              blockCallbackProps.blockCollection.copyWith(
+            childIds: blockCallbackProps.blockCollection.childIds.toList()
+              ..addAll(nextBlockCollection.childIds),
+            text: blockCallbackProps.blockTextEditingController.text +
+                nextBlockCollection.text,
+          );
+
+          // Delete next Block.
+          databaseProps.databaseManager.deleteBlockCollection(
+            nextBlockCollection,
+          );
+
+          // Put in updated current Block.
+          databaseProps.databaseManager.putBlockCollection(
+            updatedBlockCollection,
+          );
+
+          // Update Block collection tree and maintain caret position.
+          state = state.copyWith(
+            idOfBlockInFocus: blockCallbackProps.blockCollection.id,
+            caretGlobalPosition: Offset.infinite,
+            caretTextOffset: blockCallbackProps
+                .blockTextEditingController.selection.extentOffset,
             blockCollectionTreeNodes: _createBlockCollectionTreeNodes(
               databaseProps.databaseManager
                   .getThreadCollectionById(databaseProps.id),
