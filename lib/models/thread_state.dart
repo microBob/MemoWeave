@@ -22,7 +22,6 @@ class ThreadState with _$ThreadState {
   const factory ThreadState({
     // Block focus.
     required Id idOfBlockInFocus,
-    required bool traversingBlocks,
 
     // Caret state.
     required int caretTextOffset,

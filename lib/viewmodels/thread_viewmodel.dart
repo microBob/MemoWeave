@@ -32,11 +32,11 @@ class ThreadViewModel extends _$ThreadViewModel {
 
     // Setup spool TextEditingController
     spoolTextEditingController.text = threadCollection.spool;
-    spoolTextEditingController.addListener(spoolChanged);
+    spoolTextEditingController.addListener(onSpoolChanged);
 
     // Setup subject TextEditingController
     subjectTextEditingController.text = threadCollection.subject;
-    subjectTextEditingController.addListener(subjectChanged);
+    subjectTextEditingController.addListener(onSubjectChanged);
 
     // Subscribe to changes on the Thread collection and update state
     // databaseProps.databaseManager.onThreadChanged(databaseProps.id).listen(
@@ -62,7 +62,6 @@ class ThreadViewModel extends _$ThreadViewModel {
     // Return state.
     return ThreadState(
       idOfBlockInFocus: threadCollection.childIds.first,
-      traversingBlocks: false,
       caretTextOffset: 0,
       caretGlobalPosition: Offset.zero,
       threadCollection: threadCollection,
@@ -79,7 +78,7 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Handle updating Thread collection when spool changes.
-  void spoolChanged() {
+  void onSpoolChanged() {
     // Shortcut exit on only selection changes.
     if (spoolTextEditingController.text == state.threadCollection.spool) {
       return;
@@ -93,14 +92,15 @@ class ThreadViewModel extends _$ThreadViewModel {
     // Write to database.
     databaseProps.databaseManager.putThreadCollection(newThread);
 
-    // Update state.
+    // Update state and unfocus Blocks.
     state = state.copyWith(
+      idOfBlockInFocus: -1,
       threadCollection: newThread,
     );
   }
 
   /// Handle updating Thread collection when subject changes.
-  void subjectChanged() {
+  void onSubjectChanged() {
     // Shortcut exit on only selection changes.
     if (subjectTextEditingController.text == state.threadCollection.subject) {
       return;
@@ -114,14 +114,16 @@ class ThreadViewModel extends _$ThreadViewModel {
     // Write to database.
     databaseProps.databaseManager.putThreadCollection(newThread);
 
-    // Update state.
+    // Update state and unfocus Blocks.
     state = state.copyWith(
+      idOfBlockInFocus: -1,
       threadCollection: newThread,
     );
   }
 
   /// Handle traversal keystrokes on blocks.
   KeyEventResult onKeyEventCallback(
+    FocusNode focusNode,
     KeyEvent keyEvent,
     BlockCallbackProps blockCallbackProps,
   ) {
@@ -152,7 +154,6 @@ class ThreadViewModel extends _$ThreadViewModel {
             idOfBlockInFocus: _blocksInThreadById[_blocksInThreadById
                     .indexOf(blockCallbackProps.blockCollection.id) -
                 1],
-            traversingBlocks: true,
             caretTextOffset: positionAbove.offset,
             caretGlobalPosition: blockCallbackProps
                 .blockRenderEditable()
@@ -189,7 +190,6 @@ class ThreadViewModel extends _$ThreadViewModel {
             idOfBlockInFocus: _blocksInThreadById[_blocksInThreadById
                     .indexOf(blockCallbackProps.blockCollection.id) +
                 1],
-            traversingBlocks: true,
             caretTextOffset: positionBelow.offset,
             caretGlobalPosition: blockCallbackProps
                 .blockRenderEditable()
@@ -220,7 +220,6 @@ class ThreadViewModel extends _$ThreadViewModel {
             idOfBlockInFocus: _blocksInThreadById[_blocksInThreadById
                     .indexOf(blockCallbackProps.blockCollection.id) -
                 1],
-            traversingBlocks: true,
             caretTextOffset: -1,
           );
 
@@ -245,7 +244,6 @@ class ThreadViewModel extends _$ThreadViewModel {
             idOfBlockInFocus: _blocksInThreadById[_blocksInThreadById
                     .indexOf(blockCallbackProps.blockCollection.id) +
                 1],
-            traversingBlocks: true,
             caretTextOffset: 0,
           );
 
@@ -260,53 +258,43 @@ class ThreadViewModel extends _$ThreadViewModel {
     return KeyEventResult.ignored;
   }
 
-  /// Handle block gaining focus.
-  void onFocusChangedCallback(
-    bool gainsFocus,
+  /// Initialize Block's focus and caret state.
+  void initBlockFocusAndCaret(
+    FocusNode focusNode,
     BlockCallbackProps blockCallbackProps,
   ) {
-    // Shortcut exit if losing focus.
-    if (!gainsFocus) return;
+    // Shortcut exit if not supposed to be in focus.
+    if (state.idOfBlockInFocus != blockCallbackProps.blockCollection.id) {
+      return;
+    }
 
-    // Handle traversing blocks.
-    if (state.idOfBlockInFocus == blockCallbackProps.blockCollection.id &&
-        state.traversingBlocks) {
-      // Set selection based on state.
-      if (state.caretTextOffset == 0) {
-        // A zero value indicates the beginning of the text.
-        blockCallbackProps.blockTextEditingController.selection =
-            TextSelection.fromPosition(
-          const TextPosition(offset: 0),
-        );
-      } else if (state.caretTextOffset < 0) {
-        // A negative values indicates some value from the end of the text.
-        blockCallbackProps.blockTextEditingController.selection =
-            TextSelection.fromPosition(
-          TextPosition(
-            offset: blockCallbackProps.blockTextEditingController.text.length +
-                state.caretTextOffset +
-                1,
-          ),
-        );
-      } else {
-        // Otherwise, set from the the caret's global position.
-        blockCallbackProps.blockTextEditingController.selection =
-            TextSelection.fromPosition(
-              blockCallbackProps
-              .blockRenderEditable()
-              .getPositionForPoint(state.caretGlobalPosition),
-        );
-      }
+    // Should have focus, so grab it.
+    focusNode.requestFocus();
 
-      // Update caret state info and acknowledge traversal.
-      state = state.copyWith(
-        traversingBlocks: false,
+    // Set selection based on state.
+    if (state.caretTextOffset == 0) {
+      // A zero value indicates the beginning of the text.
+      blockCallbackProps.blockTextEditingController.selection =
+          TextSelection.fromPosition(
+        const TextPosition(offset: 0),
       );
-    } else if (state.idOfBlockInFocus !=
-        blockCallbackProps.blockCollection.id) {
-      // If we got here from a different block, update state.
-      state = state.copyWith(
-        idOfBlockInFocus: blockCallbackProps.blockCollection.id,
+    } else if (state.caretTextOffset < 0) {
+      // A negative values indicates some value from the end of the text.
+      blockCallbackProps.blockTextEditingController.selection =
+          TextSelection.fromPosition(
+        TextPosition(
+          offset: blockCallbackProps.blockTextEditingController.text.length +
+              state.caretTextOffset +
+              1,
+        ),
+      );
+    } else {
+      // Otherwise, set from the the caret's global position.
+      blockCallbackProps.blockTextEditingController.selection =
+          TextSelection.fromPosition(
+        blockCallbackProps
+            .blockRenderEditable()
+            .getPositionForPoint(state.caretGlobalPosition),
       );
     }
   }

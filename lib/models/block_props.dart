@@ -15,13 +15,14 @@ class BlockProps with _$BlockProps {
     required BlockCollectionTreeNode blockCollectionTreeNode,
     required Id idOfBlockInFocus,
     required KeyEventResult Function(
+      FocusNode,
       KeyEvent,
       BlockCallbackProps,
     ) onKeyEventCallback,
-    required Function(
-      bool,
+    required void Function(
+      FocusNode,
       BlockCallbackProps,
-    ) onFocusChangedCallback,
+    ) initBlockFocusAndCaret,
     required Function(
       BlockCollection,
       BlockTextEditingController,

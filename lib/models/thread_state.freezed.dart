@@ -17,16 +17,12 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$ThreadState {
 // Block focus.
-  int get idOfBlockInFocus => throw _privateConstructorUsedError;
-
-  bool get traversingBlocks =>
+  int get idOfBlockInFocus =>
       throw _privateConstructorUsedError; // Caret state.
   int get caretTextOffset => throw _privateConstructorUsedError;
-
   Offset get caretGlobalPosition =>
       throw _privateConstructorUsedError; // Thread and its Blocks.
   ThreadCollection get threadCollection => throw _privateConstructorUsedError;
-
   List<BlockCollectionTreeNode> get blockCollectionTreeNodes =>
       throw _privateConstructorUsedError;
 
@@ -43,7 +39,6 @@ abstract class $ThreadStateCopyWith<$Res> {
   @useResult
   $Res call(
       {int idOfBlockInFocus,
-      bool traversingBlocks,
       int caretTextOffset,
       Offset caretGlobalPosition,
       ThreadCollection threadCollection,
@@ -64,7 +59,6 @@ class _$ThreadStateCopyWithImpl<$Res, $Val extends ThreadState>
   @override
   $Res call({
     Object? idOfBlockInFocus = null,
-    Object? traversingBlocks = null,
     Object? caretTextOffset = null,
     Object? caretGlobalPosition = null,
     Object? threadCollection = null,
@@ -75,10 +69,6 @@ class _$ThreadStateCopyWithImpl<$Res, $Val extends ThreadState>
           ? _value.idOfBlockInFocus
           : idOfBlockInFocus // ignore: cast_nullable_to_non_nullable
               as int,
-      traversingBlocks: null == traversingBlocks
-          ? _value.traversingBlocks
-          : traversingBlocks // ignore: cast_nullable_to_non_nullable
-              as bool,
       caretTextOffset: null == caretTextOffset
           ? _value.caretTextOffset
           : caretTextOffset // ignore: cast_nullable_to_non_nullable
@@ -109,7 +99,6 @@ abstract class _$$ThreadStateImplCopyWith<$Res>
   @useResult
   $Res call(
       {int idOfBlockInFocus,
-      bool traversingBlocks,
       int caretTextOffset,
       Offset caretGlobalPosition,
       ThreadCollection threadCollection,
@@ -128,7 +117,6 @@ class __$$ThreadStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? idOfBlockInFocus = null,
-    Object? traversingBlocks = null,
     Object? caretTextOffset = null,
     Object? caretGlobalPosition = null,
     Object? threadCollection = null,
@@ -139,10 +127,6 @@ class __$$ThreadStateImplCopyWithImpl<$Res>
           ? _value.idOfBlockInFocus
           : idOfBlockInFocus // ignore: cast_nullable_to_non_nullable
               as int,
-      traversingBlocks: null == traversingBlocks
-          ? _value.traversingBlocks
-          : traversingBlocks // ignore: cast_nullable_to_non_nullable
-              as bool,
       caretTextOffset: null == caretTextOffset
           ? _value.caretTextOffset
           : caretTextOffset // ignore: cast_nullable_to_non_nullable
@@ -168,7 +152,6 @@ class __$$ThreadStateImplCopyWithImpl<$Res>
 class _$ThreadStateImpl implements _ThreadState {
   const _$ThreadStateImpl(
       {required this.idOfBlockInFocus,
-      required this.traversingBlocks,
       required this.caretTextOffset,
       required this.caretGlobalPosition,
       required this.threadCollection,
@@ -178,20 +161,15 @@ class _$ThreadStateImpl implements _ThreadState {
 // Block focus.
   @override
   final int idOfBlockInFocus;
-  @override
-  final bool traversingBlocks;
-
 // Caret state.
   @override
   final int caretTextOffset;
   @override
   final Offset caretGlobalPosition;
-
 // Thread and its Blocks.
   @override
   final ThreadCollection threadCollection;
   final List<BlockCollectionTreeNode> _blockCollectionTreeNodes;
-
   @override
   List<BlockCollectionTreeNode> get blockCollectionTreeNodes {
     if (_blockCollectionTreeNodes is EqualUnmodifiableListView)
@@ -202,7 +180,7 @@ class _$ThreadStateImpl implements _ThreadState {
 
   @override
   String toString() {
-    return 'ThreadState(idOfBlockInFocus: $idOfBlockInFocus, traversingBlocks: $traversingBlocks, caretTextOffset: $caretTextOffset, caretGlobalPosition: $caretGlobalPosition, threadCollection: $threadCollection, blockCollectionTreeNodes: $blockCollectionTreeNodes)';
+    return 'ThreadState(idOfBlockInFocus: $idOfBlockInFocus, caretTextOffset: $caretTextOffset, caretGlobalPosition: $caretGlobalPosition, threadCollection: $threadCollection, blockCollectionTreeNodes: $blockCollectionTreeNodes)';
   }
 
   @override
@@ -212,8 +190,6 @@ class _$ThreadStateImpl implements _ThreadState {
             other is _$ThreadStateImpl &&
             (identical(other.idOfBlockInFocus, idOfBlockInFocus) ||
                 other.idOfBlockInFocus == idOfBlockInFocus) &&
-            (identical(other.traversingBlocks, traversingBlocks) ||
-                other.traversingBlocks == traversingBlocks) &&
             (identical(other.caretTextOffset, caretTextOffset) ||
                 other.caretTextOffset == caretTextOffset) &&
             (identical(other.caretGlobalPosition, caretGlobalPosition) ||
@@ -228,7 +204,6 @@ class _$ThreadStateImpl implements _ThreadState {
   int get hashCode => Object.hash(
       runtimeType,
       idOfBlockInFocus,
-      traversingBlocks,
       caretTextOffset,
       caretGlobalPosition,
       threadCollection,
@@ -244,7 +219,6 @@ class _$ThreadStateImpl implements _ThreadState {
 abstract class _ThreadState implements ThreadState {
   const factory _ThreadState(
       {required final int idOfBlockInFocus,
-      required final bool traversingBlocks,
       required final int caretTextOffset,
       required final Offset caretGlobalPosition,
       required final ThreadCollection threadCollection,
@@ -253,22 +227,14 @@ abstract class _ThreadState implements ThreadState {
 
   @override // Block focus.
   int get idOfBlockInFocus;
-
-  @override
-  bool get traversingBlocks;
-
   @override // Caret state.
   int get caretTextOffset;
-
   @override
   Offset get caretGlobalPosition;
-
   @override // Thread and its Blocks.
   ThreadCollection get threadCollection;
-
   @override
   List<BlockCollectionTreeNode> get blockCollectionTreeNodes;
-
   @override
   @JsonKey(ignore: true)
   _$$ThreadStateImplCopyWith<_$ThreadStateImpl> get copyWith =>

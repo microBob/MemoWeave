@@ -41,27 +41,28 @@ class BlockView extends HookWidget {
     final blockFocusNode = useFocusNode(
       debugLabel:
           'Block ${_blockProps.blockCollectionTreeNode.blockCollection.id}',
-      onKeyEvent: (_, event) => _blockProps.onKeyEventCallback(
+      onKeyEvent: (focusNode, event) => _blockProps.onKeyEventCallback(
+        focusNode,
         event,
         blockCallbackProps,
       ),
     );
-    // blockFocusNode.addListener(() {
-    //   _blockProps.onFocusChangedCallback(
-    //     blockFocusNode.hasPrimaryFocus,
-    //     blockCallbackProps,
-    //   );
-    // });
+
+    // Initialize block focus and caret after widgets are built.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _blockProps.initBlockFocusAndCaret(
+        blockFocusNode,
+        blockCallbackProps,
+      ),
+    );
 
     return ListView.builder(
-      itemBuilder: (context, index) {
+      itemBuilder: (_, index) {
         // Start with this block
         if (index == 0) {
           return TextField(
             key: blockKey,
             focusNode: blockFocusNode,
-            autofocus: _blockProps.blockCollectionTreeNode.blockCollection.id ==
-                _blockProps.idOfBlockInFocus,
             controller: blockTextEditingController,
             textInputAction: TextInputAction.newline,
             maxLines: null,
