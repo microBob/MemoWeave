@@ -189,7 +189,7 @@ class ThreadViewModel extends _$ThreadViewModel {
           // Mark event as handled.
           return KeyEventResult.handled;
         case LogicalKeyboardKey.arrowLeft:
-        // Shortcut exit if not at beginning of line.
+          // Shortcut exit if not at beginning of line.
           if (blockCallbackProps
                   .blockTextEditingController.selection.extentOffset !=
               0) {
