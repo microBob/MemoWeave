@@ -71,13 +71,15 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Generate spool dropdown menu entries.
-  List<DropdownMenuEntry> spoolsAsDropdownMenuEntries() {
+  List<DropdownMenuEntry<String>> spoolsAsDropdownMenuEntries() {
     return databaseProps.databaseManager.spools
         .map((element) => DropdownMenuEntry(value: element, label: element))
         .toList();
   }
 
   /// Handle updating Thread collection when spool changes.
+  ///
+  /// Changes state with updated Thread collection.
   void onSpoolChanged() {
     // Shortcut exit on only selection changes.
     if (spoolTextEditingController.text == state.threadCollection.spool) {
@@ -100,6 +102,8 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Handle updating Thread collection when subject changes.
+  ///
+  /// Changes state with updated Thread collection.
   void onSubjectChanged() {
     // Shortcut exit on only selection changes.
     if (subjectTextEditingController.text == state.threadCollection.subject) {
@@ -122,6 +126,8 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Handle traversal keystrokes on blocks.
+  ///
+  /// Will update state with caret movement and Block focus.
   KeyEventResult onKeyEventCallback(
     FocusNode focusNode,
     KeyEvent keyEvent,
@@ -259,6 +265,8 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Initialize Block's focus and caret state.
+  ///
+  /// Does not change Thread state.
   void initBlockFocusAndCaret(
     FocusNode focusNode,
     BlockCallbackProps blockCallbackProps,

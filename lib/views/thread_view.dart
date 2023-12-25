@@ -37,12 +37,8 @@ class ThreadView extends HookConsumerWidget {
           children: [
             // Spool picker.
             DropdownMenu<String>(
-              dropdownMenuEntries: _databaseProps.databaseManager.spools
-                  .map((element) => DropdownMenuEntry(
-                        value: element,
-                        label: element,
-                      ))
-                  .toList(),
+              dropdownMenuEntries:
+                  ref.watch(provider.notifier).spoolsAsDropdownMenuEntries(),
               label: const Text('Spool'),
               controller: spoolTextEditingController,
             ),
@@ -77,7 +73,6 @@ class ThreadView extends HookConsumerWidget {
             blockProps: BlockProps(
               blockCollectionTreeNode:
                   threadState.blockCollectionTreeNodes[index],
-              idOfBlockInFocus: threadState.idOfBlockInFocus,
               onKeyEventCallback:
                   ref.watch(provider.notifier).onKeyEventCallback,
               initBlockFocusAndCaret:

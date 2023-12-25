@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:isar/isar.dart';
 import 'package:memoweave/models/block_callback_props.dart';
 import 'package:memoweave/models/block_collection.dart';
 import 'package:memoweave/models/block_collection_tree_node.dart';
@@ -13,7 +12,10 @@ part 'block_props.freezed.dart';
 class BlockProps with _$BlockProps {
   const factory BlockProps({
     required BlockCollectionTreeNode blockCollectionTreeNode,
-    required Id idOfBlockInFocus,
+    required Function(
+      BlockCollection,
+      BlockTextEditingController,
+    ) onBlockTextEditingControllerChangedCallback,
     required KeyEventResult Function(
       FocusNode,
       KeyEvent,
@@ -23,9 +25,5 @@ class BlockProps with _$BlockProps {
       FocusNode,
       BlockCallbackProps,
     ) initBlockFocusAndCaret,
-    required Function(
-      BlockCollection,
-      BlockTextEditingController,
-    ) onBlockTextEditingControllerChangedCallback,
   }) = _BlockProps;
 }
