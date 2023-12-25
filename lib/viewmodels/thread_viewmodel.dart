@@ -154,7 +154,7 @@ class ThreadViewModel extends _$ThreadViewModel {
           // Mark event as handled.
           return KeyEventResult.handled;
         case LogicalKeyboardKey.arrowDown:
-        // Compute position below.
+          // Compute position below.
           final positionBelow = blockCallbackProps
               .blockRenderEditable()
               .getTextPositionBelow(blockCallbackProps
@@ -248,10 +248,11 @@ class ThreadViewModel extends _$ThreadViewModel {
             text: blockCallbackProps.blockTextEditingController.selection
                 .textAfter(blockCallbackProps.blockTextEditingController.text),
           );
-          blockCallbackProps.blockTextEditingController.text =
-              blockCallbackProps.blockTextEditingController.selection
-                  .textBefore(
-                      blockCallbackProps.blockTextEditingController.text);
+          final updatedBlockCollection =
+              blockCallbackProps.blockCollection.copyWith(
+            text: blockCallbackProps.blockTextEditingController.selection
+                .textBefore(blockCallbackProps.blockTextEditingController.text),
+          );
 
           // Insert new Block into parent.
           databaseProps.databaseManager.insertBlockAfter(
@@ -259,13 +260,15 @@ class ThreadViewModel extends _$ThreadViewModel {
             newBlockCollection: nextBlockCollection,
           );
 
-          // Get new Block's ID.
-          final newBlockId = databaseProps.databaseManager
-              .getIdOfBlockAfter(blockCallbackProps.blockCollection);
+          // Update current Block.
+          databaseProps.databaseManager.putBlockCollection(
+            updatedBlockCollection,
+          );
 
           // Move focus to first character of next block.
           state = state.copyWith(
-            idOfBlockInFocus: newBlockId!,
+            idOfBlockInFocus: databaseProps.databaseManager
+                .getIdOfBlockAfter(blockCallbackProps.blockCollection)!,
             caretGlobalPosition: Offset.infinite,
             caretTextOffset: 0,
             blockCollectionTreeNodes: _createBlockCollectionTreeNodes(
@@ -274,8 +277,8 @@ class ThreadViewModel extends _$ThreadViewModel {
             ),
           );
 
+          // Mark event as handled.
           return KeyEventResult.handled;
-
         case LogicalKeyboardKey.backspace:
           // Shortcut exit if not at beginning of line.
           if (blockCallbackProps
@@ -345,19 +348,16 @@ class ThreadViewModel extends _$ThreadViewModel {
             blockCallbackProps.blockCollection,
           );
 
-          // Recompute Block tree.
-          final newBlockTree = _createBlockCollectionTreeNodes(
-            databaseProps.databaseManager
-                .getThreadCollectionById(databaseProps.id),
-          );
-
           // Move focus to previous Block
           // (could be first Block in Thread).
           state = state.copyWith(
             idOfBlockInFocus: idOfBlockInFocus,
             caretGlobalPosition: Offset.infinite,
             caretTextOffset: caretTextOffset,
-            blockCollectionTreeNodes: newBlockTree,
+            blockCollectionTreeNodes: _createBlockCollectionTreeNodes(
+              databaseProps.databaseManager
+                  .getThreadCollectionById(databaseProps.id),
+            ),
           );
 
           // Mark event as handled.
