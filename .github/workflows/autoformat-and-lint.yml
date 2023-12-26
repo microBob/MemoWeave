@@ -1,0 +1,36 @@
+name: Autoformat and Lint
+
+on:
+  pull_request:
+
+jobs:
+  autoformat:
+    name: Autoformat and Lint
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.WORKFLOW_COMMIT }}
+
+      - name: 🐦 Setup Dart
+        uses: dart-lang/setup-dart@v1
+
+      - name: 📝 Format Code
+        run: dart format .
+
+      - name: 🔧 Fix Linting Issues
+        run: dart fix --apply
+
+      - name: ✅ Commit code format changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Autoformat code"
+
+      - name: 🔍 Lint
+        run: dart analyze
