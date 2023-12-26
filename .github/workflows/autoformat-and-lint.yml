@@ -18,7 +18,7 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.WORKFLOW_COMMIT }}
 
-      - name: 🐦 Setup Dart
+      - name: 🎯 Setup Dart
         uses: dart-lang/setup-dart@v1
 
       - name: 📝 Format Code
@@ -32,5 +32,10 @@ jobs:
         with:
           commit_message: "Autoformat code"
 
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
       - name: 🔍 Lint
-        run: dart analyze
+        run: flutter analyze
