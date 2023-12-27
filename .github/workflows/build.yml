@@ -1,0 +1,154 @@
+name: Build
+
+on:
+  pull_request:
+
+jobs:
+  macos:
+    name: macOS
+    runs-on: macos-latest
+
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: 📦 Get dependencies
+        run: flutter pub get
+
+      - name:  Enable macOS
+        run: flutter config --enable-macos-desktop
+
+      - name: 🛠️ Build
+        run: flutter build macos
+
+  windows:
+    name: Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: 📦 Get dependencies
+        run: flutter pub get
+
+      - name: 🪟 Enable Windows
+        run: flutter config --enable-windows-desktop
+
+      - name: 🛠️ Build
+        run: flutter build windows
+
+  linux:
+    name: Linux
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: 📦 Install Linux build dependencies
+        run: |
+          sudo apt update -y
+          sudo apt install libgtk-3-0 libblkid1 liblzma5
+
+      - name: 📦 Get dependencies
+        run: flutter pub get
+
+      - name: 🐧 Enable Linux
+        run: flutter config --enable-linux-desktop
+
+      - name: 🛠️ Build
+        run: flutter build linux
+
+  android:
+    name: Android
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: 📦 Get dependencies
+        run: flutter pub get
+
+      - name: 🛠️ Build APK
+        run: flutter build apk
+
+      - name: 🛠️ Build App Bundle
+        run: flutter build appbundle
+
+  ios:
+    name: iOS
+    runs-on: macos-latest
+
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: 📦 Get dependencies
+        run: flutter pub get
+
+      - name: 🛠️ Build
+        run: flutter build ios --no-codesign
+
+  web:
+    name: Web
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎 Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: 📦 Get dependencies
+        run: flutter pub get
+
+      - name: 🛠️ Build
+        run: flutter build web
