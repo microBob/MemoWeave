@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:stack_trace/stack_trace.dart';
 
 import 'models/database_props.dart';
-import 'utils/database.dart';
 import 'views/thread_view.dart';
 
 void main() {
