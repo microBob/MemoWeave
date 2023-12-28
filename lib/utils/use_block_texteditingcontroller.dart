@@ -7,14 +7,12 @@ import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
 BlockTextEditingController useBlockTextEditingController({
   required List keys,
   required BlockTextEditingControllerProps blockTextEditingControllerProps,
-}) {
-  return use(
+}) => use(
     _BlockTextEditingController(
       keys: keys,
       blockTextEditingControllerProps: blockTextEditingControllerProps,
     ),
   );
-}
 
 /// Hook for [BlockTextEditingController].
 class _BlockTextEditingController extends Hook<BlockTextEditingController> {

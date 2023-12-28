@@ -82,7 +82,7 @@ abstract class _$$BlockTextEditingControllerPropsImplCopyWith<$Res>
   @useResult
   $Res call(
       {BlockCollection blockCollection,
-        dynamic Function(BlockCollection, BlockTextEditingController)
+      dynamic Function(BlockCollection, BlockTextEditingController)
           onBlockTextEditingControllerChangedCallback});
 }
 
@@ -164,7 +164,7 @@ class _$BlockTextEditingControllerPropsImpl
 abstract class _BlockTextEditingControllerProps
     implements BlockTextEditingControllerProps {
   const factory _BlockTextEditingControllerProps(
-      {required final BlockCollection blockCollection,
+          {required final BlockCollection blockCollection,
           required final dynamic Function(
                   BlockCollection, BlockTextEditingController)
               onBlockTextEditingControllerChangedCallback}) =

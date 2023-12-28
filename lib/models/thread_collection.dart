@@ -40,19 +40,14 @@ class ThreadCollection extends ParentModel {
     String? spool,
     String? subject,
     DateTime? dateTime,
-  }) {
-    return ThreadCollection(
+  }) => ThreadCollection(
       id: super.id,
       childIds: childIds ?? super.childIds,
       spool: spool ?? this.spool,
       subject: subject ?? this.subject,
       dateTime: dateTime ?? this.dateTime,
     );
-  }
-
 
   @override
-  String toString() {
-    return 'Thread $id: "$subject"';
-  }
+  String toString() => 'Thread $id: "$subject"';
 }

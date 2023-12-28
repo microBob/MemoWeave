@@ -66,31 +66,23 @@ class StyleNode {
     int? newStartIndex,
     int? newEndIndex,
     List<InlineStyle>? newStyles,
-  }) {
-    return StyleNode(
+  }) => StyleNode(
       startIndex: newStartIndex ?? startIndex,
       endIndex: newEndIndex ?? endIndex,
       styles: newStyles ?? styles,
     );
-  }
 
   /// Check if this style node is overlapping with another.
   ///
   /// Returns true if other's [startIndex] or [endIndex] is within this node's
   /// bounds or if this node is within [other]'s bounds.
-  bool isOverlappingWith(StyleNode other) {
-    return (startIndex <= other.startIndex && other.startIndex < endIndex) ||
+  bool isOverlappingWith(StyleNode other) => (startIndex <= other.startIndex && other.startIndex < endIndex) ||
         (startIndex <= other.endIndex && other.endIndex < endIndex) ||
         (other.startIndex <= startIndex && endIndex <= other.endIndex);
-  }
 
   /// Determines if this style node ends before [other] begins.
-  bool operator <(StyleNode other) {
-    return endIndex <= other.startIndex;
-  }
+  bool operator <(StyleNode other) => endIndex <= other.startIndex;
 
   /// Determines if this style node starts after [other] ends.
-  bool operator >(StyleNode other) {
-    return startIndex >= other.endIndex;
-  }
+  bool operator >(StyleNode other) => startIndex >= other.endIndex;
 }

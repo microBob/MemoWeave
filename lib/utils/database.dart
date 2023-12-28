@@ -36,13 +36,9 @@ class DatabaseManager {
     return threadCollection;
   }
 
-  Stream<BlockCollection?> onBlockChanged(Id id) {
-    return _isar.blockCollections.watchObject(id);
-  }
+  Stream<BlockCollection?> onBlockChanged(Id id) => _isar.blockCollections.watchObject(id);
 
-  Stream<ThreadCollection?> onThreadChanged(Id id) {
-    return _isar.threadCollections.watchObject(id);
-  }
+  Stream<ThreadCollection?> onThreadChanged(Id id) => _isar.threadCollections.watchObject(id);
 
   /// Setter function for the given [blockCollection].
   ///
@@ -60,17 +56,13 @@ class DatabaseManager {
   }
 
   /// Get all spool names.
-  Set<String> get spools {
-    return _isar.threadCollections
+  Set<String> get spools => _isar.threadCollections
         .where()
         .spoolProperty()
         .findAllSync()
         .toSet();
-  }
 
-  List<Id> get threadIds {
-    return _isar.threadCollections.where().idProperty().findAllSync();
-  }
+  List<Id> get threadIds => _isar.threadCollections.where().idProperty().findAllSync();
 
   Id? getIdOfBlockBefore(BlockCollection sourceBlockCollection) {
     // TODO: handle looking at child blocks
@@ -177,11 +169,9 @@ class DatabaseManager {
   }
 
   IsarCollection<ParentModel> _getParentCollectionsOf(
-      BlockCollection blockCollection) {
-    return blockCollection.hasThreadAsParent
+      BlockCollection blockCollection) => blockCollection.hasThreadAsParent
         ? _isar.threadCollections
         : _isar.blockCollections;
-  }
 
   ParentModel _getParentCollectionOf(BlockCollection blockCollection) {
     final parentCollection = _getParentCollectionsOf(blockCollection)

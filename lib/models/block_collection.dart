@@ -88,8 +88,7 @@ class BlockCollection extends ParentModel {
     String? text,
     BlockStyle? blockStyle,
     List<StyleNode>? inlineStyles,
-  }) {
-    return BlockCollection(
+  }) => BlockCollection(
       id: super.id,
       childIds: childIds ?? super.childIds,
       parent: parent ?? this.parent,
@@ -98,10 +97,7 @@ class BlockCollection extends ParentModel {
       blockStyle: blockStyle ?? this.blockStyle,
       inlineStyles: inlineStyles ?? this.inlineStyles,
     );
-  }
 
   @override
-  String toString() {
-    return 'Block $id: "$text"';
-  }
+  String toString() => 'Block $id: "$text"';
 }

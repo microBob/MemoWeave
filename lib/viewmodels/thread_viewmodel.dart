@@ -52,11 +52,9 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Generate spool dropdown menu entries.
-  List<DropdownMenuEntry<String>> spoolsAsDropdownMenuEntries() {
-    return databaseProps.databaseManager.spools
+  List<DropdownMenuEntry<String>> spoolsAsDropdownMenuEntries() => databaseProps.databaseManager.spools
         .map((element) => DropdownMenuEntry(value: element, label: element))
         .toList();
-  }
 
   /// Handle updating Thread collection when spool changes.
   ///
@@ -242,7 +240,7 @@ class ThreadViewModel extends _$ThreadViewModel {
         // Enter, back space, and delete.
 
         case LogicalKeyboardKey.enter || LogicalKeyboardKey.numpadEnter:
-        // Split text between current and next Block.
+          // Split text between current and next Block.
           final nextBlockCollection = BlockCollection(
             parent: blockCallbackProps.blockCollection.parent,
             text: blockCallbackProps.blockTextEditingController.selection
@@ -510,14 +508,14 @@ class ThreadViewModel extends _$ThreadViewModel {
       return BlockCollectionTreeNode(
         blockCollection: currentBlock,
         childBlocks: currentBlock.childIds
-            .map((childId) => createBlockCollectionTree(childId))
+            .map(createBlockCollectionTree)
             .toList(),
       );
     }
 
     // Create the list of trees.
     return threadCollection.childIds
-        .map((childId) => createBlockCollectionTree(childId))
+        .map(createBlockCollectionTree)
         .toList();
   }
 }

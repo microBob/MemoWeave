@@ -222,12 +222,13 @@ class _$ThreadStateImpl implements _ThreadState {
 }
 
 abstract class _ThreadState implements ThreadState {
-  const factory _ThreadState({required final int idOfBlockInFocus,
-    required final Offset caretGlobalPosition,
-    required final int caretTextOffset,
-    required final ThreadCollection threadCollection,
-    required final List<BlockCollectionTreeNode>
-    blockCollectionTreeNodes}) = _$ThreadStateImpl;
+  const factory _ThreadState(
+      {required final int idOfBlockInFocus,
+      required final Offset caretGlobalPosition,
+      required final int caretTextOffset,
+      required final ThreadCollection threadCollection,
+      required final List<BlockCollectionTreeNode>
+          blockCollectionTreeNodes}) = _$ThreadStateImpl;
 
   @override // Block focus.
   int get idOfBlockInFocus;

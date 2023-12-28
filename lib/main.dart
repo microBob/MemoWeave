@@ -8,7 +8,7 @@ import 'package:stack_trace/stack_trace.dart';
 void main() {
   runApp(const ProviderScope(child: MemoWeave()));
 
-  FlutterError.demangleStackTrace = (StackTrace stackTrace) {
+  FlutterError.demangleStackTrace = (stackTrace) {
     if (stackTrace is Trace) return stackTrace.vmTrace;
     if (stackTrace is Chain) return stackTrace.toTrace().vmTrace;
     return stackTrace;
@@ -20,8 +20,7 @@ class MemoWeave extends ConsumerWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) => MaterialApp(
       // title: 'MemoWeave',
       theme: ThemeData(
         colorSchemeSeed: Colors.blue,
@@ -57,5 +56,4 @@ class MemoWeave extends ConsumerWidget {
             loading: () => const CircularProgressIndicator(),
           ),
     );
-  }
 }

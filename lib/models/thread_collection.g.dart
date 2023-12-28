@@ -112,41 +112,28 @@ P _threadCollectionDeserializeProp<P>(
   }
 }
 
-Id _threadCollectionGetId(ThreadCollection object) {
-  return object.id;
-}
+Id _threadCollectionGetId(ThreadCollection object) => object.id;
 
-List<IsarLinkBase<dynamic>> _threadCollectionGetLinks(ThreadCollection object) {
-  return [];
-}
+List<IsarLinkBase<dynamic>> _threadCollectionGetLinks(ThreadCollection object) => [];
 
 void _threadCollectionAttach(
     IsarCollection<dynamic> col, Id id, ThreadCollection object) {}
 
 extension ThreadCollectionQueryWhereSort
     on QueryBuilder<ThreadCollection, ThreadCollection, QWhere> {
-  QueryBuilder<ThreadCollection, ThreadCollection, QAfterWhere> anyId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(const IdWhereClause.any());
-    });
-  }
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterWhere> anyId() => QueryBuilder.apply(this, (query) => query.addWhereClause(const IdWhereClause.any()));
 }
 
 extension ThreadCollectionQueryWhere
     on QueryBuilder<ThreadCollection, ThreadCollection, QWhereClause> {
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterWhereClause> idEqualTo(
-      Id id) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
+      Id id) => QueryBuilder.apply(this, (query) => query.addWhereClause(IdWhereClause.between(
         lower: id,
         upper: id,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterWhereClause>
-      idNotEqualTo(Id id) {
-    return QueryBuilder.apply(this, (query) {
+      idNotEqualTo(Id id) => QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
             .addWhereClause(
@@ -165,82 +152,57 @@ extension ThreadCollectionQueryWhere
             );
       }
     });
-  }
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterWhereClause>
-      idGreaterThan(Id id, {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
+      idGreaterThan(Id id, {bool include = false}) => QueryBuilder.apply(this, (query) => query.addWhereClause(
         IdWhereClause.greaterThan(lower: id, includeLower: include),
-      );
-    });
-  }
+      ));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterWhereClause>
-      idLessThan(Id id, {bool include = false}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(
+      idLessThan(Id id, {bool include = false}) => QueryBuilder.apply(this, (query) => query.addWhereClause(
         IdWhereClause.lessThan(upper: id, includeUpper: include),
-      );
-    });
-  }
+      ));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
     bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IdWhereClause.between(
+  }) => QueryBuilder.apply(this, (query) => query.addWhereClause(IdWhereClause.between(
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
         includeUpper: includeUpper,
-      ));
-    });
-  }
+      )));
 }
 
 extension ThreadCollectionQueryFilter
     on QueryBuilder<ThreadCollection, ThreadCollection, QFilterCondition> {
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childIdsElementEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
+      childIdsElementEqualTo(int value) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.equalTo(
         property: r'childIds',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       childIdsElementGreaterThan(
     int value, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'childIds',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       childIdsElementLessThan(
     int value, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'childIds',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       childIdsElementBetween(
@@ -248,88 +210,64 @@ extension ThreadCollectionQueryFilter
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.between(
         property: r'childIds',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      )));
+
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
+      childIdsLengthEqualTo(int length) => QueryBuilder.apply(this, (query) => query.listLength(
+        r'childIds',
+        length,
+        true,
+        length,
+        true,
       ));
-    });
-  }
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childIdsLengthEqualTo(int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'childIds',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childIdsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
+      childIdsIsEmpty() => QueryBuilder.apply(this, (query) => query.listLength(
         r'childIds',
         0,
         true,
         0,
         true,
-      );
-    });
-  }
+      ));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      childIdsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
+      childIdsIsNotEmpty() => QueryBuilder.apply(this, (query) => query.listLength(
         r'childIds',
         0,
         false,
         999999,
         true,
-      );
-    });
-  }
+      ));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       childIdsLengthLessThan(
     int length, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
+  }) => QueryBuilder.apply(this, (query) => query.listLength(
         r'childIds',
         0,
         true,
         length,
         include,
-      );
-    });
-  }
+      ));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       childIdsLengthGreaterThan(
     int length, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
+  }) => QueryBuilder.apply(this, (query) => query.listLength(
         r'childIds',
         length,
         include,
         999999,
         true,
-      );
-    });
-  }
+      ));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       childIdsLengthBetween(
@@ -337,55 +275,39 @@ extension ThreadCollectionQueryFilter
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
+  }) => QueryBuilder.apply(this, (query) => query.listLength(
         r'childIds',
         lower,
         includeLower,
         upper,
         includeUpper,
-      );
-    });
-  }
+      ));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      dateTimeEqualTo(DateTime value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
+      dateTimeEqualTo(DateTime value) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.equalTo(
         property: r'dateTime',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       dateTimeGreaterThan(
     DateTime value, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'dateTime',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       dateTimeLessThan(
     DateTime value, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'dateTime',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       dateTimeBetween(
@@ -393,55 +315,39 @@ extension ThreadCollectionQueryFilter
     DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.between(
         property: r'dateTime',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      idEqualTo(Id value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
+      idEqualTo(Id value) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       idGreaterThan(
     Id value, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'id',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       idLessThan(
     Id value, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'id',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       idBetween(
@@ -449,63 +355,47 @@ extension ThreadCollectionQueryFilter
     Id upper, {
     bool includeLower = true,
     bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.between(
         property: r'id',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       spoolEqualTo(
     String value, {
     bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.equalTo(
         property: r'spool',
         value: value,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       spoolGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'spool',
         value: value,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       spoolLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'spool',
         value: value,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       spoolBetween(
@@ -514,134 +404,94 @@ extension ThreadCollectionQueryFilter
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.between(
         property: r'spool',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       spoolStartsWith(
     String value, {
     bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.startsWith(
         property: r'spool',
         value: value,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       spoolEndsWith(
     String value, {
     bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.endsWith(
         property: r'spool',
         value: value,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      spoolContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
+      spoolContains(String value, {bool caseSensitive = true}) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.contains(
         property: r'spool',
         value: value,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      spoolMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
+      spoolMatches(String pattern, {bool caseSensitive = true}) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.matches(
         property: r'spool',
         wildcard: pattern,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      spoolIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
+      spoolIsEmpty() => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.equalTo(
         property: r'spool',
         value: '',
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      spoolIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
+      spoolIsNotEmpty() => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.greaterThan(
         property: r'spool',
         value: '',
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       subjectEqualTo(
     String value, {
     bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.equalTo(
         property: r'subject',
         value: value,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       subjectGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'subject',
         value: value,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       subjectLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'subject',
         value: value,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       subjectBetween(
@@ -650,88 +500,60 @@ extension ThreadCollectionQueryFilter
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.between(
         property: r'subject',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       subjectStartsWith(
     String value, {
     bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.startsWith(
         property: r'subject',
         value: value,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
       subjectEndsWith(
     String value, {
     bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.endsWith(
         property: r'subject',
         value: value,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      subjectContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
+      subjectContains(String value, {bool caseSensitive = true}) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.contains(
         property: r'subject',
         value: value,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      subjectMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
+      subjectMatches(String pattern, {bool caseSensitive = true}) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.matches(
         property: r'subject',
         wildcard: pattern,
         caseSensitive: caseSensitive,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      subjectIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
+      subjectIsEmpty() => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.equalTo(
         property: r'subject',
         value: '',
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterFilterCondition>
-      subjectIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
+      subjectIsNotEmpty() => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.greaterThan(
         property: r'subject',
         value: '',
-      ));
-    });
-  }
+      )));
 }
 
 extension ThreadCollectionQueryObject
@@ -743,166 +565,74 @@ extension ThreadCollectionQueryLinks
 extension ThreadCollectionQuerySortBy
     on QueryBuilder<ThreadCollection, ThreadCollection, QSortBy> {
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
-      sortByDateTime() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dateTime', Sort.asc);
-    });
-  }
+      sortByDateTime() => QueryBuilder.apply(this, (query) => query.addSortBy(r'dateTime', Sort.asc));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
-      sortByDateTimeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dateTime', Sort.desc);
-    });
-  }
+      sortByDateTimeDesc() => QueryBuilder.apply(this, (query) => query.addSortBy(r'dateTime', Sort.desc));
 
-  QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy> sortBySpool() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'spool', Sort.asc);
-    });
-  }
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy> sortBySpool() => QueryBuilder.apply(this, (query) => query.addSortBy(r'spool', Sort.asc));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
-      sortBySpoolDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'spool', Sort.desc);
-    });
-  }
+      sortBySpoolDesc() => QueryBuilder.apply(this, (query) => query.addSortBy(r'spool', Sort.desc));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
-      sortBySubject() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'subject', Sort.asc);
-    });
-  }
+      sortBySubject() => QueryBuilder.apply(this, (query) => query.addSortBy(r'subject', Sort.asc));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
-      sortBySubjectDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'subject', Sort.desc);
-    });
-  }
+      sortBySubjectDesc() => QueryBuilder.apply(this, (query) => query.addSortBy(r'subject', Sort.desc));
 }
 
 extension ThreadCollectionQuerySortThenBy
     on QueryBuilder<ThreadCollection, ThreadCollection, QSortThenBy> {
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
-      thenByDateTime() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dateTime', Sort.asc);
-    });
-  }
+      thenByDateTime() => QueryBuilder.apply(this, (query) => query.addSortBy(r'dateTime', Sort.asc));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
-      thenByDateTimeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'dateTime', Sort.desc);
-    });
-  }
+      thenByDateTimeDesc() => QueryBuilder.apply(this, (query) => query.addSortBy(r'dateTime', Sort.desc));
 
-  QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy> thenById() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.asc);
-    });
-  }
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy> thenById() => QueryBuilder.apply(this, (query) => query.addSortBy(r'id', Sort.asc));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
-      thenByIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'id', Sort.desc);
-    });
-  }
+      thenByIdDesc() => QueryBuilder.apply(this, (query) => query.addSortBy(r'id', Sort.desc));
 
-  QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy> thenBySpool() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'spool', Sort.asc);
-    });
-  }
+  QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy> thenBySpool() => QueryBuilder.apply(this, (query) => query.addSortBy(r'spool', Sort.asc));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
-      thenBySpoolDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'spool', Sort.desc);
-    });
-  }
+      thenBySpoolDesc() => QueryBuilder.apply(this, (query) => query.addSortBy(r'spool', Sort.desc));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
-      thenBySubject() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'subject', Sort.asc);
-    });
-  }
+      thenBySubject() => QueryBuilder.apply(this, (query) => query.addSortBy(r'subject', Sort.asc));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QAfterSortBy>
-      thenBySubjectDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'subject', Sort.desc);
-    });
-  }
+      thenBySubjectDesc() => QueryBuilder.apply(this, (query) => query.addSortBy(r'subject', Sort.desc));
 }
 
 extension ThreadCollectionQueryWhereDistinct
     on QueryBuilder<ThreadCollection, ThreadCollection, QDistinct> {
   QueryBuilder<ThreadCollection, ThreadCollection, QDistinct>
-      distinctByChildIds() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'childIds');
-    });
-  }
+      distinctByChildIds() => QueryBuilder.apply(this, (query) => query.addDistinctBy(r'childIds'));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QDistinct>
-      distinctByDateTime() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'dateTime');
-    });
-  }
+      distinctByDateTime() => QueryBuilder.apply(this, (query) => query.addDistinctBy(r'dateTime'));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QDistinct> distinctBySpool(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'spool', caseSensitive: caseSensitive);
-    });
-  }
+      {bool caseSensitive = true}) => QueryBuilder.apply(this, (query) => query.addDistinctBy(r'spool', caseSensitive: caseSensitive));
 
   QueryBuilder<ThreadCollection, ThreadCollection, QDistinct> distinctBySubject(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'subject', caseSensitive: caseSensitive);
-    });
-  }
+      {bool caseSensitive = true}) => QueryBuilder.apply(this, (query) => query.addDistinctBy(r'subject', caseSensitive: caseSensitive));
 }
 
 extension ThreadCollectionQueryProperty
     on QueryBuilder<ThreadCollection, ThreadCollection, QQueryProperty> {
-  QueryBuilder<ThreadCollection, int, QQueryOperations> idProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'id');
-    });
-  }
+  QueryBuilder<ThreadCollection, int, QQueryOperations> idProperty() => QueryBuilder.apply(this, (query) => query.addPropertyName(r'id'));
 
   QueryBuilder<ThreadCollection, List<int>, QQueryOperations>
-      childIdsProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'childIds');
-    });
-  }
+      childIdsProperty() => QueryBuilder.apply(this, (query) => query.addPropertyName(r'childIds'));
 
   QueryBuilder<ThreadCollection, DateTime, QQueryOperations>
-      dateTimeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'dateTime');
-    });
-  }
+      dateTimeProperty() => QueryBuilder.apply(this, (query) => query.addPropertyName(r'dateTime'));
 
-  QueryBuilder<ThreadCollection, String, QQueryOperations> spoolProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'spool');
-    });
-  }
+  QueryBuilder<ThreadCollection, String, QQueryOperations> spoolProperty() => QueryBuilder.apply(this, (query) => query.addPropertyName(r'spool'));
 
-  QueryBuilder<ThreadCollection, String, QQueryOperations> subjectProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'subject');
-    });
-  }
+  QueryBuilder<ThreadCollection, String, QQueryOperations> subjectProperty() => QueryBuilder.apply(this, (query) => query.addPropertyName(r'subject'));
 }

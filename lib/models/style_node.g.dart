@@ -109,149 +109,105 @@ const _StyleNodestylesValueEnumMap = {
 extension StyleNodeQueryFilter
     on QueryBuilder<StyleNode, StyleNode, QFilterCondition> {
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> endIndexEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
+      int value) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.equalTo(
         property: r'endIndex',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> endIndexGreaterThan(
     int value, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'endIndex',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> endIndexLessThan(
     int value, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'endIndex',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> endIndexBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.between(
         property: r'endIndex',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> startIndexEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
+      int value) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.equalTo(
         property: r'startIndex',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
       startIndexGreaterThan(
     int value, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'startIndex',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> startIndexLessThan(
     int value, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'startIndex',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> startIndexBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.between(
         property: r'startIndex',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
-      stylesElementEqualTo(InlineStyle value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
+      stylesElementEqualTo(InlineStyle value) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.equalTo(
         property: r'styles',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
       stylesElementGreaterThan(
     InlineStyle value, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'styles',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
       stylesElementLessThan(
     InlineStyle value, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'styles',
         value: value,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
       stylesElementBetween(
@@ -259,103 +215,75 @@ extension StyleNodeQueryFilter
     InlineStyle upper, {
     bool includeLower = true,
     bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
+  }) => QueryBuilder.apply(this, (query) => query.addFilterCondition(FilterCondition.between(
         property: r'styles',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
+      )));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> stylesLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
+      int length) => QueryBuilder.apply(this, (query) => query.listLength(
         r'styles',
         length,
         true,
         length,
         true,
-      );
-    });
-  }
+      ));
 
-  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> stylesIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> stylesIsEmpty() => QueryBuilder.apply(this, (query) => query.listLength(
         r'styles',
         0,
         true,
         0,
         true,
-      );
-    });
-  }
+      ));
 
-  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> stylesIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
+  QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> stylesIsNotEmpty() => QueryBuilder.apply(this, (query) => query.listLength(
         r'styles',
         0,
         false,
         999999,
         true,
-      );
-    });
-  }
+      ));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
       stylesLengthLessThan(
     int length, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
+  }) => QueryBuilder.apply(this, (query) => query.listLength(
         r'styles',
         0,
         true,
         length,
         include,
-      );
-    });
-  }
+      ));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition>
       stylesLengthGreaterThan(
     int length, {
     bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
+  }) => QueryBuilder.apply(this, (query) => query.listLength(
         r'styles',
         length,
         include,
         999999,
         true,
-      );
-    });
-  }
+      ));
 
   QueryBuilder<StyleNode, StyleNode, QAfterFilterCondition> stylesLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
+  }) => QueryBuilder.apply(this, (query) => query.listLength(
         r'styles',
         lower,
         includeLower,
         upper,
         includeUpper,
-      );
-    });
-  }
+      ));
 }
 
 extension StyleNodeQueryObject
