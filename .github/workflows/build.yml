@@ -76,8 +76,8 @@ jobs:
 
       - name: 📦 Install Linux build dependencies
         run: |
-          sudo apt update -y
-          sudo apt install ninja-build libgtk-3-0 libblkid1 liblzma5
+          sudo apt-get update -y
+          sudo apt-get install ninja-build libgtk-3-0 libblkid1 liblzma5
 
       - name: 📦 Get dependencies
         run: flutter pub get
