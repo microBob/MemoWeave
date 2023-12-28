@@ -4,19 +4,22 @@ part 'style_node.g.dart';
 
 /// Styles on inline text.
 enum InlineStyle {
+  /// Bold text styling
   bold,
+
+  /// Italic text styling
   italic,
 }
 
 /// An [Isar] embedded object definition for a formatted piece of text.
 @embedded
 class StyleNode {
-  /// First index in [BlockCollection]'s text that this style applies to.
+  /// First index in a Block's text that this style applies to.
   ///
   /// Requirement: 0 ≤ [startIndex] < [endIndex].
   final int startIndex;
 
-  /// Index after the last character in [BlockCollection]'s text that this
+  /// Index after the last character in a Block's text that this
   /// style applies to.
   ///
   /// Requirement: [startIndex] < [endIndex] ≤ text length (unverifiable).
@@ -66,31 +69,25 @@ class StyleNode {
     int? newStartIndex,
     int? newEndIndex,
     List<InlineStyle>? newStyles,
-  }) {
-    return StyleNode(
-      startIndex: newStartIndex ?? startIndex,
-      endIndex: newEndIndex ?? endIndex,
-      styles: newStyles ?? styles,
-    );
-  }
+  }) =>
+      StyleNode(
+        startIndex: newStartIndex ?? startIndex,
+        endIndex: newEndIndex ?? endIndex,
+        styles: newStyles ?? styles,
+      );
 
   /// Check if this style node is overlapping with another.
   ///
   /// Returns true if other's [startIndex] or [endIndex] is within this node's
   /// bounds or if this node is within [other]'s bounds.
-  bool isOverlappingWith(StyleNode other) {
-    return (startIndex <= other.startIndex && other.startIndex < endIndex) ||
-        (startIndex <= other.endIndex && other.endIndex < endIndex) ||
-        (other.startIndex <= startIndex && endIndex <= other.endIndex);
-  }
+  bool isOverlappingWith(StyleNode other) =>
+      (startIndex <= other.startIndex && other.startIndex < endIndex) ||
+      (startIndex <= other.endIndex && other.endIndex < endIndex) ||
+      (other.startIndex <= startIndex && endIndex <= other.endIndex);
 
   /// Determines if this style node ends before [other] begins.
-  bool operator <(StyleNode other) {
-    return endIndex <= other.startIndex;
-  }
+  bool operator <(StyleNode other) => endIndex <= other.startIndex;
 
   /// Determines if this style node starts after [other] ends.
-  bool operator >(StyleNode other) {
-    return startIndex >= other.endIndex;
-  }
+  bool operator >(StyleNode other) => startIndex >= other.endIndex;
 }

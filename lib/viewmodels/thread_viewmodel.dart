@@ -3,21 +3,22 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
-import 'package:memoweave/models/block_callback_props.dart';
-import 'package:memoweave/models/block_collection.dart';
-import 'package:memoweave/models/block_collection_tree_node.dart';
-import 'package:memoweave/models/database_props.dart';
-import 'package:memoweave/models/thread_collection.dart';
-import 'package:memoweave/models/thread_state.dart';
-import 'package:memoweave/utils/database.dart';
-import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../models/block_callback_props.dart';
+import '../models/block_collection.dart';
+import '../models/block_collection_tree_node.dart';
+import '../models/database_props.dart';
+import '../models/thread_collection.dart';
+import '../models/thread_state.dart';
+import 'block_texteditingcontroller.dart';
 
 part 'thread_viewmodel.g.dart';
 
 /// ViewModel for a Thread.
 ///
-/// Used by [ThreadView].
+/// State from Blocks are hoisted up and managed
+/// here so that Blocks are stateless.
 @riverpod
 class ThreadViewModel extends _$ThreadViewModel {
   /// Ordered list of blocks by ID.
@@ -52,11 +53,10 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Generate spool dropdown menu entries.
-  List<DropdownMenuEntry<String>> spoolsAsDropdownMenuEntries() {
-    return databaseProps.databaseManager.spools
-        .map((element) => DropdownMenuEntry(value: element, label: element))
-        .toList();
-  }
+  List<DropdownMenuEntry<String>> spoolsAsDropdownMenuEntries() =>
+      databaseProps.databaseManager.spools
+          .map((element) => DropdownMenuEntry(value: element, label: element))
+          .toList();
 
   /// Handle updating Thread collection when spool changes.
   ///
@@ -242,7 +242,7 @@ class ThreadViewModel extends _$ThreadViewModel {
         // Enter, back space, and delete.
 
         case LogicalKeyboardKey.enter || LogicalKeyboardKey.numpadEnter:
-        // Split text between current and next Block.
+          // Split text between current and next Block.
           final nextBlockCollection = BlockCollection(
             parent: blockCallbackProps.blockCollection.parent,
             text: blockCallbackProps.blockTextEditingController.selection
@@ -509,15 +509,12 @@ class ThreadViewModel extends _$ThreadViewModel {
       // Return the BlockCollectionTreeNode and recurse on children.
       return BlockCollectionTreeNode(
         blockCollection: currentBlock,
-        childBlocks: currentBlock.childIds
-            .map((childId) => createBlockCollectionTree(childId))
-            .toList(),
+        childBlocks:
+            currentBlock.childIds.map(createBlockCollectionTree).toList(),
       );
     }
 
     // Create the list of trees.
-    return threadCollection.childIds
-        .map((childId) => createBlockCollectionTree(childId))
-        .toList();
+    return threadCollection.childIds.map(createBlockCollectionTree).toList();
   }
 }

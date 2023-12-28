@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:memoweave/models/block_collection.dart';
-import 'package:memoweave/models/style_node.dart';
+
+import '../models/block_collection.dart';
+import '../models/style_node.dart';
 
 /// [TextEditingController] managing a Block's [TextField].
 ///

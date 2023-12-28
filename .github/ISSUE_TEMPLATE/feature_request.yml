@@ -1,0 +1,36 @@
+name: Feature Request
+description: Suggest a new feature
+title: "[Feature]: "
+labels: [ "feature" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We encourage suggestions on how to make this app better!
+  - type: textarea
+    id: request
+    attributes:
+      label: What do you want to see?
+      description: Describe how it works and who it is for.
+      placeholder: I wish...
+    validations:
+      required: true
+  - type: dropdown
+    id: development
+    attributes:
+      label: Responsibility
+      description: Will you be implementing this yourself?
+      options:
+        - Yes!
+        - Can you do it for me?
+      default: 0
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

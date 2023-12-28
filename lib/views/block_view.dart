@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:memoweave/models/block_callback_props.dart';
-import 'package:memoweave/models/block_props.dart';
-import 'package:memoweave/utils/use_block_texteditingcontroller.dart';
 
+import '../models/block_callback_props.dart';
+import '../models/block_props.dart';
 import '../models/block_texteditingcontroller_props.dart';
+import '../utils/use_block_texteditingcontroller.dart';
 
 /// Block View.
 ///

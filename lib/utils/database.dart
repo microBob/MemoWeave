@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:isar/isar.dart';
-import 'package:memoweave/models/block_collection.dart';
-import 'package:memoweave/models/container_model.dart';
-import 'package:memoweave/models/thread_collection.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../models/block_collection.dart';
+import '../models/container_model.dart';
+import '../models/thread_collection.dart';
 
 part 'database.g.dart';
 
@@ -28,6 +29,7 @@ class DatabaseManager {
     return blockCollection;
   }
 
+  /// Getter function for Threads by [id].
   ThreadCollection getThreadCollectionById(Id id) {
     final threadCollection = _isar.threadCollections.getSync(id);
     if (threadCollection == null) {
@@ -36,13 +38,13 @@ class DatabaseManager {
     return threadCollection;
   }
 
-  Stream<BlockCollection?> onBlockChanged(Id id) {
-    return _isar.blockCollections.watchObject(id);
-  }
+  /// Create and return a watch stream for a Block by [id].
+  Stream<BlockCollection?> onBlockChanged(Id id) =>
+      _isar.blockCollections.watchObject(id);
 
-  Stream<ThreadCollection?> onThreadChanged(Id id) {
-    return _isar.threadCollections.watchObject(id);
-  }
+  /// Create and return a watch stream for a Thread by [id].
+  Stream<ThreadCollection?> onThreadChanged(Id id) =>
+      _isar.threadCollections.watchObject(id);
 
   /// Setter function for the given [blockCollection].
   ///
@@ -53,6 +55,9 @@ class DatabaseManager {
     });
   }
 
+  /// Updates the [threadCollection] in the database.
+  ///
+  /// Creates a new record if it's new or updates an existing record.
   void putThreadCollection(ThreadCollection threadCollection) {
     _isar.writeTxnSync(() {
       _isar.threadCollections.putSync(threadCollection);
@@ -60,18 +65,15 @@ class DatabaseManager {
   }
 
   /// Get all spool names.
-  Set<String> get spools {
-    return _isar.threadCollections
-        .where()
-        .spoolProperty()
-        .findAllSync()
-        .toSet();
-  }
+  Set<String> get spools =>
+      _isar.threadCollections.where().spoolProperty().findAllSync().toSet();
 
-  List<Id> get threadIds {
-    return _isar.threadCollections.where().idProperty().findAllSync();
-  }
+  /// List of all Thread IDs.
+  List<Id> get threadIds =>
+      _isar.threadCollections.where().idProperty().findAllSync();
 
+  /// Get the ID of the sibling Block located
+  /// before the [sourceBlockCollection].
   Id? getIdOfBlockBefore(BlockCollection sourceBlockCollection) {
     // TODO: handle looking at child blocks
     final parentCollection = (sourceBlockCollection.hasThreadAsParent
@@ -101,6 +103,7 @@ class DatabaseManager {
     return parentCollection.childIds[sourceBlockIndex - 1];
   }
 
+  /// Remove the [blockCollection] from the database.
   void deleteBlockCollection(BlockCollection blockCollection) {
     _isar.writeTxnSync(() {
       // Remove Block from parent's children ID list.
@@ -116,6 +119,8 @@ class DatabaseManager {
     });
   }
 
+  /// Get the ID of the sibling Block located
+  /// after the [sourceBlockCollection].
   Id? getIdOfBlockAfter(BlockCollection sourceBlockCollection) {
     // TODO: handle looking at child blocks first if it has any
     final parentCollection = _getParentCollectionOf(sourceBlockCollection);
@@ -135,6 +140,8 @@ class DatabaseManager {
     return parentCollection.childIds[sourceBlockIndex + 1];
   }
 
+  /// Insert a sibling Block [newBlockCollection]
+  /// after the [sourceBlockCollection].
   void insertBlockAfter({
     required BlockCollection sourceBlockCollection,
     BlockCollection? newBlockCollection,
@@ -162,6 +169,9 @@ class DatabaseManager {
     });
   }
 
+  /// Create a new blank Thread.
+  ///
+  /// Defaults the time to the time of creation and adds a blank Block.
   void createNewThread() {
     _isar.writeTxnSync(() {
       final newThreadId = _isar.threadCollections
@@ -177,11 +187,10 @@ class DatabaseManager {
   }
 
   IsarCollection<ParentModel> _getParentCollectionsOf(
-      BlockCollection blockCollection) {
-    return blockCollection.hasThreadAsParent
-        ? _isar.threadCollections
-        : _isar.blockCollections;
-  }
+          BlockCollection blockCollection) =>
+      blockCollection.hasThreadAsParent
+          ? _isar.threadCollections
+          : _isar.blockCollections;
 
   ParentModel _getParentCollectionOf(BlockCollection blockCollection) {
     final parentCollection = _getParentCollectionsOf(blockCollection)
