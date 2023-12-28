@@ -77,7 +77,7 @@ jobs:
       - name: 📦 Install Linux build dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install ninja-build libgtk-3-0 libblkid1 liblzma5
+          sudo apt-get install ninja-build libgtk-3-dev
 
       - name: 📦 Get dependencies
         run: flutter pub get
@@ -107,8 +107,8 @@ jobs:
       - name: ☕ Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '20'
+          distribution: 'zulu'
+          java-version: '11'
 
       - name: 📦 Get dependencies
         run: flutter pub get
