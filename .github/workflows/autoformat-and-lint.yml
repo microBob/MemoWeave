@@ -25,6 +25,9 @@ jobs:
       - name: 🎯 Setup Dart
         uses: dart-lang/setup-dart@v1
 
+      - name: 🤖 Build dart files
+        run: dart run build_runner build -d
+
       - name: 📝 Format Code
         run: dart format .
 
@@ -40,6 +43,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+
 
       - name: 🔍 Lint Flutter
         run: flutter analyze
