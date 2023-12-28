@@ -52,9 +52,10 @@ class ThreadViewModel extends _$ThreadViewModel {
   }
 
   /// Generate spool dropdown menu entries.
-  List<DropdownMenuEntry<String>> spoolsAsDropdownMenuEntries() => databaseProps.databaseManager.spools
-        .map((element) => DropdownMenuEntry(value: element, label: element))
-        .toList();
+  List<DropdownMenuEntry<String>> spoolsAsDropdownMenuEntries() =>
+      databaseProps.databaseManager.spools
+          .map((element) => DropdownMenuEntry(value: element, label: element))
+          .toList();
 
   /// Handle updating Thread collection when spool changes.
   ///
@@ -507,15 +508,12 @@ class ThreadViewModel extends _$ThreadViewModel {
       // Return the BlockCollectionTreeNode and recurse on children.
       return BlockCollectionTreeNode(
         blockCollection: currentBlock,
-        childBlocks: currentBlock.childIds
-            .map(createBlockCollectionTree)
-            .toList(),
+        childBlocks:
+            currentBlock.childIds.map(createBlockCollectionTree).toList(),
       );
     }
 
     // Create the list of trees.
-    return threadCollection.childIds
-        .map(createBlockCollectionTree)
-        .toList();
+    return threadCollection.childIds.map(createBlockCollectionTree).toList();
   }
 }

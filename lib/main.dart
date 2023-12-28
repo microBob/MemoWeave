@@ -21,39 +21,39 @@ class MemoWeave extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) => MaterialApp(
-      // title: 'MemoWeave',
-      theme: ThemeData(
-        colorSchemeSeed: Colors.blue,
-        useMaterial3: true,
-      ),
-      home: ref.watch(databaseManagerProvider).when(
-            data: (databaseManager) {
-              final threadIds = databaseManager.threadIds;
+        // title: 'MemoWeave',
+        theme: ThemeData(
+          colorSchemeSeed: Colors.blue,
+          useMaterial3: true,
+        ),
+        home: ref.watch(databaseManagerProvider).when(
+              data: (databaseManager) {
+                final threadIds = databaseManager.threadIds;
 
-              return Scaffold(
-                appBar: AppBar(
-                  title: const Text('MemoWeave'),
-                ),
-                body: SafeArea(
-                  minimum: const EdgeInsets.all(24),
-                  // child: Placeholder(),
-                  child: ListView.builder(
-                    itemBuilder: (context, index) => ThreadView(
-                      databaseProps: DatabaseProps(
-                          id: threadIds[index],
-                          databaseManager: databaseManager),
-                    ),
-                    itemCount: threadIds.length,
+                return Scaffold(
+                  appBar: AppBar(
+                    title: const Text('MemoWeave'),
                   ),
-                ),
-                floatingActionButton: FloatingActionButton(
-                  onPressed: databaseManager.createNewThread,
-                  child: const Icon(Icons.create),
-                ),
-              );
-            },
-            error: (error, stackFrame) => Text('$stackFrame: $error'),
-            loading: () => const CircularProgressIndicator(),
-          ),
-    );
+                  body: SafeArea(
+                    minimum: const EdgeInsets.all(24),
+                    // child: Placeholder(),
+                    child: ListView.builder(
+                      itemBuilder: (context, index) => ThreadView(
+                        databaseProps: DatabaseProps(
+                            id: threadIds[index],
+                            databaseManager: databaseManager),
+                      ),
+                      itemCount: threadIds.length,
+                    ),
+                  ),
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: databaseManager.createNewThread,
+                    child: const Icon(Icons.create),
+                  ),
+                );
+              },
+              error: (error, stackFrame) => Text('$stackFrame: $error'),
+              loading: () => const CircularProgressIndicator(),
+            ),
+      );
 }

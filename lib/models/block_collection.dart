@@ -88,15 +88,16 @@ class BlockCollection extends ParentModel {
     String? text,
     BlockStyle? blockStyle,
     List<StyleNode>? inlineStyles,
-  }) => BlockCollection(
-      id: super.id,
-      childIds: childIds ?? super.childIds,
-      parent: parent ?? this.parent,
-      hasThreadAsParent: hasThreadAsParent ?? this.hasThreadAsParent,
-      text: text ?? this.text,
-      blockStyle: blockStyle ?? this.blockStyle,
-      inlineStyles: inlineStyles ?? this.inlineStyles,
-    );
+  }) =>
+      BlockCollection(
+        id: super.id,
+        childIds: childIds ?? super.childIds,
+        parent: parent ?? this.parent,
+        hasThreadAsParent: hasThreadAsParent ?? this.hasThreadAsParent,
+        text: text ?? this.text,
+        blockStyle: blockStyle ?? this.blockStyle,
+        inlineStyles: inlineStyles ?? this.inlineStyles,
+      );
 
   @override
   String toString() => 'Block $id: "$text"';
