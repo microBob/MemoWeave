@@ -3,10 +3,6 @@ name: Autoformat and Lint
 on:
   pull_request:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   autoformat:
     name: Autoformat and Lint
