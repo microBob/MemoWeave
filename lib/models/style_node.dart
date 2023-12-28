@@ -4,19 +4,22 @@ part 'style_node.g.dart';
 
 /// Styles on inline text.
 enum InlineStyle {
+  /// Bold text styling
   bold,
+
+  /// Italic text styling
   italic,
 }
 
 /// An [Isar] embedded object definition for a formatted piece of text.
 @embedded
 class StyleNode {
-  /// First index in [BlockCollection]'s text that this style applies to.
+  /// First index in a Block's text that this style applies to.
   ///
   /// Requirement: 0 ≤ [startIndex] < [endIndex].
   final int startIndex;
 
-  /// Index after the last character in [BlockCollection]'s text that this
+  /// Index after the last character in a Block's text that this
   /// style applies to.
   ///
   /// Requirement: [startIndex] < [endIndex] ≤ text length (unverifiable).

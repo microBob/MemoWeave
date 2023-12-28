@@ -3,21 +3,22 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:isar/isar.dart';
-import 'package:memoweave/models/block_callback_props.dart';
-import 'package:memoweave/models/block_collection.dart';
-import 'package:memoweave/models/block_collection_tree_node.dart';
-import 'package:memoweave/models/database_props.dart';
-import 'package:memoweave/models/thread_collection.dart';
-import 'package:memoweave/models/thread_state.dart';
-import 'package:memoweave/utils/database.dart';
-import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../models/block_callback_props.dart';
+import '../models/block_collection.dart';
+import '../models/block_collection_tree_node.dart';
+import '../models/database_props.dart';
+import '../models/thread_collection.dart';
+import '../models/thread_state.dart';
+import 'block_texteditingcontroller.dart';
 
 part 'thread_viewmodel.g.dart';
 
 /// ViewModel for a Thread.
 ///
-/// Used by [ThreadView].
+/// State from Blocks are hoisted up and managed
+/// here so that Blocks are stateless.
 @riverpod
 class ThreadViewModel extends _$ThreadViewModel {
   /// Ordered list of blocks by ID.

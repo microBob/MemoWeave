@@ -1,25 +1,41 @@
 import 'package:isar/isar.dart';
-import 'package:memoweave/models/container_model.dart';
-import 'package:memoweave/models/style_node.dart';
+
+import 'container_model.dart';
+import 'style_node.dart';
 
 part 'block_collection.g.dart';
 
 /// Styles that affect the whole block.
 enum BlockStyle {
+  /// No style (plain text).
   none,
+
+  /// Heading 1 style.
   heading1,
+
+  /// Heading 2 style.
   heading2,
+
+  /// Heading 3 style.
   heading3,
+
+  /// Heading 4 style.
   heading4,
+
+  /// Heading 5 style.
   heading5,
+
+  /// Heading 6 style.
   heading6,
 }
 
 /// Collection definition for a text block.
 @collection
 class BlockCollection extends ParentModel {
-  /// Parent reference.
+  /// Parent ID reference.
   final int parent;
+
+  /// Whether the parent is a Thread.
   final bool hasThreadAsParent;
 
   /// Block content.
@@ -40,7 +56,7 @@ class BlockCollection extends ParentModel {
 
   /// Default constructor.
   ///
-  /// Defines [id], [text], [blockStyle], [inlineStyles], and [childrenBlockIds].
+  /// Defines [id], [text], [blockStyle], and [inlineStyles].
   /// Will supply default values if none are given.
   /// Throws [FormatException] on invalid input.
   BlockCollection({

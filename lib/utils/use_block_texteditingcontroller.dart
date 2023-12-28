@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:memoweave/models/block_texteditingcontroller_props.dart';
-import 'package:memoweave/viewmodels/block_texteditingcontroller.dart';
+
+import '../models/block_texteditingcontroller_props.dart';
+import '../viewmodels/block_texteditingcontroller.dart';
 
 /// Hook function for [BlockTextEditingController].
 BlockTextEditingController useBlockTextEditingController({

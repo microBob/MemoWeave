@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:memoweave/models/database_props.dart';
-import 'package:memoweave/utils/database.dart';
-import 'package:memoweave/views/thread_view.dart';
 import 'package:stack_trace/stack_trace.dart';
+
+import 'models/database_props.dart';
+import 'utils/database.dart';
+import 'views/thread_view.dart';
 
 void main() {
   runApp(const ProviderScope(child: MemoWeave()));
@@ -15,7 +16,9 @@ void main() {
   };
 }
 
+/// The root widget of the application.
 class MemoWeave extends ConsumerWidget {
+  /// Default constructor.
   const MemoWeave({super.key});
 
   // This widget is the root of your application.

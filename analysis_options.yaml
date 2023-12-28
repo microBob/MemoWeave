@@ -86,6 +86,7 @@ linter:
 analyzer:
   plugins:
     - custom_lint
+  exclude: [ lib/**.freezed.dart, lib/**.g.dart ]
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

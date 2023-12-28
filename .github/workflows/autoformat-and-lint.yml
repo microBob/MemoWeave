@@ -36,9 +36,6 @@ jobs:
         with:
           commit_message: "Autoformat code"
 
-      - name: 🔍 Lint Dart
-        run: dart analyze
-
       - name: 🐦 Setup Flutter
         uses: subosito/flutter-action@v2
         with:

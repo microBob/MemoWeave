@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
-import 'package:memoweave/models/container_model.dart';
+
+import 'container_model.dart';
 
 part 'thread_collection.g.dart';
 
@@ -32,7 +33,7 @@ class ThreadCollection extends ParentModel {
   /// Copy builder.
   ///
   /// Creates a copy of the current Thread and updates the fields to
-  /// [id], [spool], [subject], [dateTime], and [blockIds] when provided.
+  /// [id], [spool], [subject], and [dateTime] when provided.
   @override
   ThreadCollection copyWith({
     List<Id>? childIds,

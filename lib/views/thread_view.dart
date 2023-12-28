@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:memoweave/models/block_props.dart';
-import 'package:memoweave/models/database_props.dart';
-import 'package:memoweave/viewmodels/thread_viewmodel.dart';
-import 'package:memoweave/views/block_view.dart';
+
+import '../models/block_props.dart';
+import '../models/database_props.dart';
+import '../viewmodels/thread_viewmodel.dart';
+import 'block_view.dart';
 
 /// Thread View.
 ///
