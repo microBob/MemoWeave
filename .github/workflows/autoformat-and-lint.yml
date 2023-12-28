@@ -25,8 +25,17 @@ jobs:
       - name: 🎯 Setup Dart
         uses: dart-lang/setup-dart@v1
 
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Get dependencies
+        run: flutter pub get
+
       - name: 🤖 Build dart files
-        run: dart run build_runner build -d
+        run: dart run build_runner build
 
       - name: 📝 Format Code
         run: dart format .

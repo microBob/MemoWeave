@@ -31,7 +31,7 @@ jobs:
         run: flutter pub get
 
       - name: 🤖 Build dart files
-        run: dart run build_runner build -d
+        run: dart run build_runner build
 
       - name: 🛠️ Build
         run: flutter build macos
@@ -59,7 +59,7 @@ jobs:
         run: flutter pub get
 
       - name: 🤖 Build dart files
-        run: dart run build_runner build -d
+        run: dart run build_runner build
 
       - name: 🛠️ Build
         run: flutter build windows
@@ -92,7 +92,7 @@ jobs:
         run: flutter pub get
 
       - name: 🤖 Build dart files
-        run: dart run build_runner build -d
+        run: dart run build_runner build
 
       - name: 🛠️ Build
         run: flutter build linux
@@ -123,7 +123,7 @@ jobs:
         run: flutter pub get
 
       - name: 🤖 Build dart files
-        run: dart run build_runner build -d
+        run: dart run build_runner build
 
       - name: 🛠️ Build APK
         run: flutter build apk
@@ -151,7 +151,7 @@ jobs:
         run: flutter pub get
 
       - name: 🤖 Build dart files
-        run: dart run build_runner build -d
+        run: dart run build_runner build
 
       - name: 🛠️ Build
         run: flutter build ios --no-codesign
