@@ -44,11 +44,5 @@ jobs:
         with:
           commit_message: "Autoformat code"
 
-      - name: 🐦 Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-
-
       - name: 🔍 Lint Flutter
         run: flutter analyze
