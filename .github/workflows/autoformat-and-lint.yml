@@ -43,6 +43,7 @@ jobs:
         run: dart fix --apply
 
       - name: ✅ Commit code format changes
+        if: github.ref != 'refs/heads/main'
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Autoformat code"
